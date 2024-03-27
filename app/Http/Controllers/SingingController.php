@@ -49,7 +49,7 @@ class SingingController extends Controller
             'role_model_inspiration' => 'nullable|string|max:5000',
             'prepared_songs' => 'nullable|string|max:5000',
             'how_know_about_auditions' => 'required|max:5000',
-            'how_know_about_auditions_details' => 'nullable|string|max:5000',
+            'how_know_about_auditions_detail' => 'nullable|string|max:5000',
 
             'genre_of_singing' => 'nullable|string|max:300',
             'previous_performance' => 'nullable|string|max:5000',
@@ -107,7 +107,7 @@ class SingingController extends Controller
             'role_model_inspiration' => 'nullable|string|max:5000',
             'prepared_songs' => 'nullable|string|max:5000',
             'how_know_about_auditions' => 'required|max:5000',
-            'how_know_about_auditions_details' => 'nullable|string|max:5000',
+            'how_know_about_auditions_detail' => 'nullable|string|max:5000',
 
             'genre_of_singing' => 'nullable|string|max:300',
             'previous_performance' => 'nullable|string|max:5000',
@@ -115,8 +115,25 @@ class SingingController extends Controller
             'music_qualification' => 'nullable|string|max:5000',
         ]);
 
-        // Update the user detail with the validated data
-        $userDetail->update($validatedData);
+        // $userDetail->update($validatedData);
+        $plan = $request->plan;
+        $user_id = Auth::id();
+        $plan_id = $this->plan_id($plan);
+
+        if (!$plan_id) {
+            $plan = Payment::where('user_id', $user_id)->where('stripe_payment_id', '!=', '')->first()->plan_id ?? '';
+            $plan_id = $plan;
+            // return redirect()->route('home')->with('error', 'Plan not found');
+        }
+        if (!Payment::where('user_id', Auth::id())->where('plan_id', $plan_id)->where('stripe_payment_id', '!=', '')->exists()) {
+            return redirect()->route('upload-video', ['plan' => $plan]);
+        }
+
+        // Create or update user details
+        Singing::updateOrCreate(
+            ['user_id' => $user_id, 'plan_id' => $plan_id], // Assuming user_id is associated with the user details
+            $validatedData
+        );
 
         // Redirect to the index page with success message
         return redirect()->route('upload-video')->with('success', 'Audition details updated successfully, Now you can upload your video.');

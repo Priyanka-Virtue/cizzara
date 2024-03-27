@@ -1,4 +1,4 @@
-@extends('layouts.auth', ['title' => __('Make Payment!'), 'description' => '[lan name]', 'width' => 'col-3', 'step' => 'Payment'])
+@extends('layouts.auth', ['title' => __('Make Payment!'), 'description' => '[lan name]', 'width' => 'col-md-3', 'step' => 'Payment'])
 
 @section('content')
 

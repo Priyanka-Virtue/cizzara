@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\PostTooLargeException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -45,6 +46,12 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+        $this->renderable(function (\Spatie\Permission\Exceptions\UnauthorizedException $e, $request) {
+            return redirect()->route('login')->with('error', 'You must be logged in as admin to access admin pages.');
+        });
+        $this->renderable(function (PostTooLargeException $e, $request) {
+            return redirect()->back()->with('error', 'Server is not able to process the request as file is big.');
         });
     }
 }

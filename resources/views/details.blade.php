@@ -1,6 +1,11 @@
 @extends('layouts.auth')
 
 @section('content')
+<style>
+    .wizard .nav-tabs>li a i {
+        color: #000;
+    }
+</style>
 @include('partials.steps', ['active' => 'Profile'])
 <h4 class="mb-2">Tell us about your self </h4>
 <p class="mb-4">Just few step away!</p>

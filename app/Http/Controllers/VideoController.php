@@ -18,30 +18,48 @@ class VideoController extends Controller
 
         $plan_id = Plan::where('name', $request->plan)->first()->id ?? null;
         $user_id = Auth::id();
-        $video_exists = Payment::where('payments.user_id', $user_id)->where('payments.stripe_payment_id', '!=', '')->where('payments.plan_id', '=', $plan_id)
-            ->join('videos', 'payments.stripe_payment_id', '=', 'videos.stripe_payment_id')
-            ->exists();
 
-        if ($video_exists) {
-            return view('thanks');
+        if ($plan_id) {
+            $video_exists = Payment::where('payments.user_id', $user_id)->where('payments.stripe_payment_id', '!=', '')->where('payments.plan_id', '=', $plan_id)
+                ->join('videos', 'payments.stripe_payment_id', '=', 'videos.stripe_payment_id')
+                ->exists();
+
+            if ($video_exists) {
+                return view('thanks');
+            }
         }
-
 
         if ($request->has('step') && $request->step == 'profile') {
             $userDetail = UserDetail::where('user_id', Auth::id())->first();
             return view('details', compact('userDetail'));
         } else if ($request->has('step') && $request->step == 'audition') {
-            $userDetail = Singing::where('user_id', Auth::id())->where('plan_id', '=', $plan_id)->first();
+            if ($plan_id) {
+
+
+                $userDetail = Singing::where('user_id', Auth::id())->where('plan_id', '=', $plan_id)->first();
+            } else {
+                $plan = Payment::where('user_id', $user_id)->where('stripe_payment_id', '!=', '')->first()->plan_id ?? '';
+
+                $userDetail = Singing::where('user_id', Auth::id())->where('plan_id', '=', $plan)->first();
+            }
             return view('singing', compact('userDetail'));
         } else {
 
             $plan = Payment::where('user_id', $user_id)->where('stripe_payment_id', '!=', '')->first()->plan_id ?? '';
+
             $hasUserDetails = UserDetail::where('user_id', $user_id)->exists();
             $hasSinging = Singing::where('user_id', $user_id)->where('plan_id', $plan)->exists();
-            if ($hasUserDetails && $hasSinging)
+
+            $video_exists = Payment::where('payments.user_id', $user_id)->where('payments.stripe_payment_id', '!=', '')->where('payments.plan_id', '=', $plan)
+                ->join('videos', 'payments.stripe_payment_id', '=', 'videos.stripe_payment_id')
+                ->exists();
+
+            if ($video_exists) {
+                return view('thanks');
+            } else if ($hasUserDetails && $hasSinging)
                 return view('upload-video');
             else if ($hasUserDetails) {
-                $userDetail = Singing::where('user_id', Auth::id())->where('plan_id', '=', $plan_id)->first();
+                $userDetail = Singing::where('user_id', Auth::id())->where('plan_id', '=', $plan)->first();
                 return view('singing', compact('userDetail'));
             }
         }
@@ -53,7 +71,7 @@ class VideoController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'videoTitle' => 'required',
-            'videoFile' => 'required|mimetypes:video/*|max:512000',
+            'videoFile' => 'required|mimetypes:video/*|max:80000',
         ]);
 
         if ($validator->fails()) {

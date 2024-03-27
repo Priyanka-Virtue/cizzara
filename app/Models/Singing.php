@@ -28,7 +28,6 @@ class Singing extends Model
         'prepared_songs',
         'how_know_about_auditions',
         'how_know_about_auditions_detail',
-
         'genre_of_singing',
         'previous_performance',
         'music_experience',

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('assets') }}" data-template="vertical-menu-template-free">
+<html lang="en" class="dark-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-dark" data-assets-path="{{ asset('assets') }}" data-template="vertical-menu-template-free">
 
 <head>
     <meta charset="utf-8" />
@@ -51,14 +51,15 @@
 <body>
     <div class="position-relative">
 
-        <div class="pt-5">
-            @if($step ?? null)
-            @include('partials.steps', ['active' => $step])
-            @endif
-        </div>
-        <div class="authentication-wrapper authentication-basic container-p-y pt-0">
+        <div class="authentication-wrapper authentication-basic container-p-y pt-0" style="flex-direction: column;">
 
-            <div class="justify-content-center d-flex {{$width ?? 'col-6'}}">
+        <div class="col-10">
+                    @if($step ?? null)
+                    @include('partials.steps', ['active' => $step])
+                    @endif
+                </div>
+
+            <div class="justify-content-center d-flex {{$width ?? 'col-md-6'}}">
                 <div class="authentication-inner py-4">
 
                     <!-- Register Card -->
@@ -93,9 +94,9 @@
                         </div>
                     </div>
                     <!-- Register Card -->
-                    <img src="../assets/img/illustrations/tree-3.png" alt="auth-tree" class="authentication-image-object-left d-none d-lg-block hue" />
-                    <img src="../assets/img/illustrations/auth-basic-mask-light.png" class="authentication-image d-none d-lg-block hue" alt="triangle-bg" data-app-light-img="illustrations/auth-basic-mask-light.png" data-app-dark-img="illustrations/auth-basic-mask-dark.png" />
-                    <img src="../assets/img/illustrations/tree.png" alt="auth-tree" class="authentication-image-object-right d-none d-lg-block hue" />
+                    <img src="{{ asset('assets/img/illustrations/tree-3.png') }}" alt="auth-tree" class="authentication-image-object-left d-none d-lg-block hue" />
+                    <img src="{{ asset('assets/img/illustrations/auth-basic-mask-light.png') }}" class="authentication-image d-none d-lg-block hue" alt="triangle-bg" data-app-light-img="illustrations/auth-basic-mask-light.png" data-app-dark-img="illustrations/auth-basic-mask-dark.png" />
+                    <img src="{{ asset('assets/img/illustrations/tree.png') }}" alt="auth-tree" class="authentication-image-object-right d-none d-lg-block hue" />
                 </div>
             </div>
         </div>

@@ -1,8 +1,6 @@
 <style>
     /*---------signup-step-------------*/
-    .bg-color {
-        background-color: #333;
-    }
+
 
     .signup-step-container {
         padding: 150px 0px;
@@ -28,7 +26,7 @@
         height: 2px;
         background: #e0e0e0;
         position: absolute;
-        width: 75%;
+        width: 80%;
         margin: 0 auto;
         left: 0;
         right: 0;
@@ -81,7 +79,7 @@
     }
 
     .wizard .nav-tabs>li {
-        width: 25%;
+        width: 20%;
     }
 
     .wizard li:after {
@@ -119,7 +117,7 @@
         transform: translate(-24%, -50%);
         font-size: 12px;
         font-weight: 700;
-        color: #000;
+        color: #fff;
     }
 
     .wizard .nav-tabs>li a:hover {

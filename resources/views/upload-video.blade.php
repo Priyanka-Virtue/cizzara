@@ -47,7 +47,7 @@
                         </div>
                         <div class="form-group">
                             <label for="videoFile">Choose Video File</label>
-                            <input type="file" accept="video/*" class="form-control-file" id="videoFile" name="videoFile" required>Max file size allowed: 500MB
+                            <input type="file" accept="video/*" class="form-control-file" id="videoFile" name="videoFile" required>Max file size allowed: 80MB
                         </div>
                         <button type="submit" class="btn btn-primary">Upload Video</button>
                     </form>

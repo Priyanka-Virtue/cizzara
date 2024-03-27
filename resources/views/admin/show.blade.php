@@ -146,7 +146,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <video width="100%" controls>
-                    <source src="{{ asset('storage/'.$video->file_path) }}">
+                <source src="{{ asset('/storage/app/public/'.$video->file_path) }}">
                     Your browser does not support the video tag.
                 </video>
             </div>

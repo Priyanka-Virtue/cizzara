@@ -1,6 +1,11 @@
 @extends('layouts.auth')
 
 @section('content')
+<style>
+    .wizard .nav-tabs>li a i {
+        color: #000;
+    }
+</style>
 @include('partials.steps', ['active' => 'Audition'])
 <h4 class="mb-2">Adventure starts here 🚀</h4>
 <p class="mb-4">Just one step away!</p>
