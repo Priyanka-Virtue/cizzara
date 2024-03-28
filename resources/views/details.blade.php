@@ -2,8 +2,8 @@
 
 @section('content')
 <style>
-    .wizard .nav-tabs>li a i {
-        color: #000;
+    .wizard .nav-tabsxxx>li:not(.active) a i {
+        color: #000 !important;
     }
 </style>
 @include('partials.steps', ['active' => 'Profile'])

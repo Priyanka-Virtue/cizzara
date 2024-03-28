@@ -119,10 +119,7 @@ class UserDetailController extends Controller
             'education' => 'nullable|string',
             'occupation' => 'nullable|string',
             'work_experience' => 'nullable|string',
-            // 'genre_of_singing' => 'nullable|string',
-            // 'previous_performance' => 'nullable|string',
-            // 'music_experience' => 'nullable|string',
-            // 'music_qualification' => 'nullable|string',
+
             'hobbies' => 'nullable|string',
             'describe_yourself' => 'nullable|string',
             'instagram' => 'nullable|url',
@@ -141,7 +138,7 @@ class UserDetailController extends Controller
             'photo' => 'nullable|image|max:11264|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
-        $path = null;
+        // $path = null;
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
 
@@ -149,9 +146,10 @@ class UserDetailController extends Controller
             $fileName = uniqid() . '.' . $photo->getClientOriginalExtension();
             // $oname = $photo->getClientOriginalName();
             $path = $photo->storeAs('profile/', $fileName, 'public');
+            $validatedData['photo'] = $path;
         }
 
-        $validatedData['photo'] = $path;
+
         // Update the user detail with the validated data
         $userDetail->update($validatedData);
 

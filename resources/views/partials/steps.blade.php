@@ -10,7 +10,7 @@
 
 
 
-    .wizard .nav-tabs {
+    .wizard .nav-tabsxxx {
         position: relative;
         margin-bottom: 0;
         border-bottom-color: transparent;
@@ -34,9 +34,9 @@
         z-index: 1;
     }
 
-    .wizard .nav-tabs>li.active>a,
-    .wizard .nav-tabs>li.active>a:hover,
-    .wizard .nav-tabs>li.active>a:focus {
+    .wizard .nav-tabsxxx>li.active>a,
+    .wizard .nav-tabsxxx>li.active>a:hover,
+    .wizard .nav-tabsxxx>li.active>a:focus {
         color: #555555;
         cursor: default;
         border: 0;
@@ -74,11 +74,11 @@
         color: #5bc0de;
     }
 
-    .wizard .nav-tabs>li.active>a i {
+    .wizard .nav-tabsxxx>li.active>a i {
         color: #9c6868;
     }
 
-    .wizard .nav-tabs>li {
+    .wizard .nav-tabsxxx>li {
         width: 20%;
     }
 
@@ -96,7 +96,7 @@
 
 
 
-    .wizard .nav-tabs>li a {
+    .wizard .nav-tabsxxx>li a {
         width: 30px;
         height: 30px;
         margin: 20px auto;
@@ -107,7 +107,7 @@
         top: 0;
     }
 
-    .wizard .nav-tabs>li a i {
+    .wizard .nav-tabsxxx>li a i {
         position: absolute;
         top: -15px;
         font-style: normal;
@@ -120,7 +120,7 @@
         color: #fff;
     }
 
-    .wizard .nav-tabs>li a:hover {
+    .wizard .nav-tabsxxx>li a:hover {
         background: transparent;
     }
 
@@ -139,25 +139,25 @@
             font-size: 40px;
         }
 
-        .wizard .nav-tabs>li a i {
+        .wizard .nav-tabsxxx>li a i {
             display: none;
         }
 
     }
 
-    .wizard .nav-tabs>li.disabled>a,
-    .wizard .nav-tabs>li.disabled>a:hover,
-    .wizard .nav-tabs>li.disabled>a:focus {
+    .wizard .nav-tabsxxx>li.disabled>a,
+    .wizard .nav-tabsxxx>li.disabled>a:hover,
+    .wizard .nav-tabsxxx>li.disabled>a:focus {
 
         cursor: default;
 
     }
 
-    ul.nav.nav-tabs {
+    ul.nav.nav-tabsxxx {
         min-height: 100px;
     }
 
-    .wizard .nav-tabs>li a i {
+    .wizard .nav-tabsxxx>li a i {
         top: 55px
     }
 
@@ -171,25 +171,25 @@
 
     <div class="container">
         <div class="row d-flex justify-content-center">
-            <div class="col-md-10">
+            <div class="col-md-12">
                 <div class="wizard">
                     <div class="wizard-inner">
                         <div class="connecting-line"></div>
-                        <ul class="nav nav-tabs" role="tablist">
+                        <ul class="nav nav-tabsxxx">
                             <li role="presentation" class="{{$active == 'registration' ? 'active' : 'disabled'}}">
-                                <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" aria-expanded="true"><span class="round-tab">✔ </span> <i>Sign up</i></a>
+                                <a href="#step1" aria-expanded="true"><span class="round-tab mdi mdi-account-plus mdi-24px"></span> <i>Sign up</i></a>
                             </li>
                             <li role="presentation" class="{{$active == 'Payment' ? 'active' : 'disabled'}}">
-                                <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" aria-expanded="false"><span class="round-tab">✔</span> <i>Payment</i></a>
+                                <a href="#step2" aria-expanded="false"><span class="round-tab mdi mdi-credit-card mdi-24px"></span> <i>Payment</i></a>
                             </li>
                             <li role="presentation" class="{{$active == 'Profile' ? 'active' : ''}}">
-                                <a href="{{$active == 'Profile' ? '#' : '?step=profile'}}" data-toggle="tab" aria-controls="step3" role="tab"><span class="round-tab">✔</span> <i>Profile details</i></a>
+                                <a href="{{$active == 'Profile' ? '#' : '?step=profile'}}"><span class="round-tab mdi mdi-account-details mdi-24px"></span> <i>Profile details</i></a>
                             </li>
                             <li role="presentation" class="{{$active == 'Audition' ? 'active' : ''}}">
-                                <a href="{{$active == 'Audition' ? '#' : '?step=audition'}}" data-toggle="tab" aria-controls="step4" role="tab"><span class="round-tab">✔</span> <i>Audition details</i></a>
+                                <a href="{{$active == 'Audition' ? '#' : '?step=audition'}}"><span class="round-tab mdi mdi-dance-ballroom mdi-24px"></span> <i>Audition details</i></a>
                             </li>
                             <li role="presentation" class="{{$active == 'upload' ? 'active' : 'disabled'}}">
-                                <a href="#step5" data-toggle="tab" aria-controls="step5" role="tab"><span class="round-tab">✔</span> <i>Upload Video</i></a>
+                                <a href="#step5"><span class="round-tab mdi mdi-upload mdi-24px"></span> <i>Upload Video</i></a>
                             </li>
                         </ul>
                     </div>

@@ -53,11 +53,13 @@
 
         <div class="authentication-wrapper authentication-basic container-p-y pt-0" style="flex-direction: column;">
 
-        <div class="col-10">
+
+                <div class="col-10">
                     @if($step ?? null)
                     @include('partials.steps', ['active' => $step])
                     @endif
                 </div>
+
 
             <div class="justify-content-center d-flex {{$width ?? 'col-md-6'}}">
                 <div class="authentication-inner py-4">

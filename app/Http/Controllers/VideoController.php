@@ -90,7 +90,8 @@ class VideoController extends Controller
             $plan = Payment::where('user_id', $user->id)->where('stripe_payment_id', '!=', '')->first() ?? "";
             // Save the video file to the storage disk
             // $plan =  session()->get('plan') ?? $request->plan;
-            $path = $videoFile->storeAs('videos/' . $plan->name, $fileName, 'public');
+            $get_plan = Plan::find($plan->plan_id);
+            $path = $videoFile->storeAs('videos/' . $get_plan->name, $fileName, 'public');
 
             // Create a new Video model instance
             $video = new Video();
