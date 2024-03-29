@@ -78,15 +78,7 @@
         <label for="music_qualification">Music Qualification</label>
     </div>
 
-    <!-- <div class="form-floating form-floating-outline mb-3">
-        <textarea class="form-control" id="hobbies" name="hobbies" rows="3">{{ old('hobbies', isset($userDetail) ? $userDetail->hobbies : '') }}</textarea>
-        <label for="hobbies">Hobbies</label>
-    </div>
 
-    <div class="form-floating form-floating-outline mb-3">
-        <textarea class="form-control" id="describe_yourself" name="describe_yourself" rows="3">{{ old('describe_yourself', isset($userDetail) ? $userDetail->describe_yourself : '') }}</textarea>
-        <label for="describe_yourself">Describe Yourself</label>
-    </div> -->
 
     <div class="form-floating form-floating-outline mb-3">
         <select class="form-select" id="how_know_about_auditions" name="how_know_about_auditions">
@@ -102,9 +94,6 @@
         <textarea class="form-control" id="how_know_about_auditions_detail" name="how_know_about_auditions_detail" rows="3">{{ old('how_know_about_auditions_detail', isset($userDetail) ? $userDetail->how_know_about_auditions_detail : '') }}</textarea>
         <label for="how_know_about_auditions_detail">Please provide details</label>
     </div>
-
-
-
 
 
     <div class="form-floating form-floating-outline mb-3">
