@@ -55,5 +55,6 @@ Route::middleware(['role:admin'])->group(function () {
     Route::put('/admin/videos/{video}/status', [AdminVideoController::class, 'updateStatus'])->name('admin.videos.updateStatus');
     Route::get('/admin/videos/{video}', [AdminVideoController::class, 'show'])->name('admin.videos.show');
 
+    Route::get('/admin/users', [AdminVideoController::class, 'userList'])->name('admin.users.index');
     Route::get('/admin/users/{user}', [AdminVideoController::class, 'user'])->name('admin.users.show');
 });

@@ -52,4 +52,23 @@ class AdminVideoController extends Controller
 
         return redirect()->route('admin.videos.index')->with('success', 'Video status updated successfully.');
     }
+
+
+
+    public function userList(Request $request)
+    {
+        $query = User::where('id', '!=', auth()->user()->id);
+
+        if ($request->has('contestant') && !empty($request->contestant)) {
+            $query->whereHas('details', function ($userQuery) use ($request) {
+                $userQuery->where('first_name', 'like', '%' . $request->contestant . '%')
+                    ->orWhere('last_name', 'like', '%' . $request->contestant . '%');
+            });
+        }
+        else {
+            $query->whereHas('details');
+        }
+        $users = $query->paginate(2);
+        return view('admin.users.index', compact('users'));
+    }
 }

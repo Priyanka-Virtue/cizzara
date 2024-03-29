@@ -19,7 +19,13 @@
             <li class="menu-item active">
               <a href="{{route('admin.videos.index')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-table"></i>
-                <div data-i18n="Tables">Videos</div>
+                <div data-i18n="Videos">Videos</div>
+              </a>
+            </li>
+            <li class="menu-item active">
+              <a href="{{route('admin.users.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons mdi mdi-human-female-dance"></i>
+                <div data-i18n="Contestants">Contestants</div>
               </a>
             </li>
           </ul>
