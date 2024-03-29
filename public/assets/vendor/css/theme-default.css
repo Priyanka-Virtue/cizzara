@@ -13,7 +13,12 @@
 .text-body[href]:hover {
   color: #78576d !important;
 }
-
+.btn-link{
+    background: none !important;
+    border: none;
+    box-shadow: none !important;
+    color: #9c6868;
+}
 .bg-primary {
   background-color: #9c6868 !important;
 }
