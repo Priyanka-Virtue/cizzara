@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
         // Create roles
         $adminRole = Role::create(['name' => 'admin']);
         $userRole = Role::create(['name' => 'user']);
+        $guruRole = Role::create(['name' => 'guru']);
 
         // Optionally, you can create permissions and assign them to roles
         // For example:
@@ -34,6 +35,30 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
         $user->assignRole('admin');
+
+        $user = User::create([
+            'name' => 'Guru1',
+            'email' => 'g1@guru.com',
+            'email_verified_at' => date('Y-m-d h:i:s'),
+            'password' => bcrypt('password'),
+        ]);
+        $user->assignRole('guru');
+
+        $user = User::create([
+            'name' => 'Guru2',
+            'email' => 'g2@guru.com',
+            'email_verified_at' => date('Y-m-d h:i:s'),
+            'password' => bcrypt('password'),
+        ]);
+        $user->assignRole('guru');
+
+        $user = User::create([
+            'name' => 'Guru3',
+            'email' => 'g3@guru.com',
+            'email_verified_at' => date('Y-m-d h:i:s'),
+            'password' => bcrypt('password'),
+        ]);
+        $user->assignRole('guru');
 
         $plans = Plan::create([
             'name' => 'SingTUV2024',
