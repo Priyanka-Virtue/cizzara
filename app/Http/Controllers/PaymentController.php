@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Models\Plan;
 use App\Models\UserDetail;
+use App\Notifications\PaymentSuccessNotification;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
+    use Notifiable;
     private $price;
     public function __construct()
     {
@@ -20,12 +23,8 @@ class PaymentController extends Controller
     }
     function plan_id($plan)
     {
-        $plan_id = Plan::where('name', $plan)->first()->id ?? null;
-        // if (!$plan_id) {
-        //     // print_r($plan_id);die;
-        //     return false;
-        // }
-        return $plan_id;
+        return Plan::where('name', $plan)->first()->id ?? null;
+
     }
     public function charge(String $plan)
     {
@@ -63,22 +62,38 @@ class PaymentController extends Controller
             $payment = $user->charge($this->price * 100, $paymentMethod, [
                 'return_url' => route('upload-video', ['plan' => $request->plan]),
             ]);
-            Log::info($payment);
+
             // Get the payment ID from the returned object
-            $paymentId = $payment->id;
+            if ($payment->id ?? null) {
+                $paymentId = $payment->id;
 
 
-            // Create or update the payment record in your database
-            $paymentRecord = Payment::updateOrCreate(['stripe_payment_id' => $paymentId, 'plan_id' => $plan_id], [
-                'user_id' => $user->id,
-                'plan_id' => $plan_id
-            ]);
-            Log::info($paymentRecord);
+                // Create or update the payment record in your database
+                $paymentRecord = Payment::updateOrCreate(['stripe_payment_id' => $paymentId, 'plan_id' => $plan_id], [
+                    'user_id' => $user->id,
+                    'plan_id' => $plan_id
+                ]);
+                Log::info($paymentRecord);
+                if($paymentRecord) {
+                    $paymentRecord['price'] = $this->price;
+                    $user->notify(new PaymentSuccessNotification($paymentRecord));
+                    return redirect()->route('upload-video', ['plan' => $request->plan]);
+                }
+                else {
+                    Log::info($paymentRecord);
+                    return redirect()->back()->with('error', 'Something went wrong. Please try again. #PDE400');
+                }
 
-            if (UserDetail::where('user_id', Auth::user()->id)->exists())
-                return redirect()->route('upload-video', ['plan' => $request->plan]);
-            else
-                return redirect()->route('upload-video', ['plan' => $request->plan]);
+                // if (UserDetail::where('user_id', Auth::user()->id)->exists())
+                //     return redirect()->route('upload-video', ['plan' => $request->plan]);
+                // else
+                // return redirect()->route('upload-video', ['plan' => $request->plan]);
+            }
+            else {
+                Log::info($payment);
+                Log::info($user);
+                return back()->withErrors(['message' => 'Looks like your payment was not successful. Please try again.']);
+            }
 
             // redirect('upload-video');
         } catch (\Exception $e) {

@@ -57,9 +57,10 @@
                             <span class="h6">Genre of Singing:</span>
                             <span>{{$video->auditionDetails->genre_of_singing}}</span>
                         </li>
-                        
+
 
                     </ul>
+                    @role('admin')
                     <hr />
                     <ul class="list-unstyled mb-4">
                         <li class="mb-3">
@@ -89,6 +90,7 @@
                             <span>United Kingdom</span>
                         </li>
                     </ul>
+                    @endrole
 
                     <div class="d-grid w-100 mt-4">
                         <form action="{{ route('admin.videos.updateStatus', $video) }}" method="POST">
@@ -134,6 +136,17 @@
                     <source src="{{ asset('storage/' . $video->file_path) }}">
                     Your browser does not support the video tag.
                 </video>
+                <form action="{{ route('guru.rate.video', $video->id) }}" method="post">
+            @csrf
+            <label for="rating">Rate this video:</label>
+            <div class="rating-options">
+                @for ($i = 1; $i <= 10; $i++)
+                    <input type="radio" id="rating{{ $i }}" name="rating" value="{{ $i }}">
+                    <label for="rating{{ $i }}">{{ $i }}</label>
+                @endfor
+            </div>
+            <button type="submit">Submit Rating</button>
+        </form>
                 <hr />
                 <form method="POST" action="{{ isset($video->auditionDetails) ? route('singing.update', [$video->auditionDetails->id, 'plan' => request()->plan]) : route('singing.store',['plan' => request()->plan]) }}">
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SingingController;
 use App\Http\Controllers\UserDetailController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\VideoRatingController;
 use App\Models\Payment;
 use App\Models\Singing;
 use App\Models\UserDetail;
@@ -57,4 +58,6 @@ Route::middleware(['role:admin'])->group(function () {
 
     Route::get('/admin/users', [AdminVideoController::class, 'userList'])->name('admin.users.index');
     Route::get('/admin/users/{user}', [AdminVideoController::class, 'user'])->name('admin.users.show');
+
+    Route::post('/admin/{video}/rate_video', [VideoRatingController::class, 'rateVideo'])->name('guru.rate.video');
 });

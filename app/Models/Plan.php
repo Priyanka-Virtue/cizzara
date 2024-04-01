@@ -13,5 +13,14 @@ class Plan extends Model
         'price',
         'is_active'
     ];
+    public function gurus()
+    {
+        return $this->belongsToMany(User::class, 'plan_guru', 'plan_id', 'guru_id');
+    }
+
+    public function videos()
+    {
+        return $this->hasMany(Video::class);
+    }
 }
 

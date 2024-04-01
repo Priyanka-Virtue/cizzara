@@ -19,7 +19,8 @@ class Video extends Model
         'original_name',
         'title',
         'description',
-        'state'
+        'state',
+        'rating'
     ];
 
     public function user()
@@ -30,6 +31,13 @@ class Video extends Model
     public function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+
+
+    public function ratings()
+    {
+        return $this->hasMany(VideoRating::class);
     }
 
 
