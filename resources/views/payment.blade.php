@@ -23,7 +23,7 @@
         </div>
     </div>
     <label for="card-holder-name">Card Holder Name</label>
-    <input id="card-holder-name" class="form-control" type="text" value="{{$user->name}}" disabled>
+    <input id="card-holder-name" class="form-control" type="text" value="{{$user->name}}" required>
     @csrf
     <div class="form-row">
         <label for="card-element">Credit or debit card</label>

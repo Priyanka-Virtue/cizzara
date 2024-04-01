@@ -10,6 +10,7 @@ use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class VideoController extends Controller
 {
@@ -20,11 +21,14 @@ class VideoController extends Controller
         $user_id = Auth::id();
 
         if ($plan_id) {
-            $video_exists = Payment::where('payments.user_id', $user_id)->where('payments.stripe_payment_id', '!=', '')->where('payments.plan_id', '=', $plan_id)
+            $uploaded_videos_count = Payment::where('payments.user_id', $user_id)
+                ->where('payments.stripe_payment_id', '!=', '')
+                ->where('payments.plan_id', '=', $plan_id)
                 ->join('videos', 'payments.stripe_payment_id', '=', 'videos.stripe_payment_id')
-                ->exists();
+                ->count();
 
-            if ($video_exists) {
+            // Allow up to 2 video uploads
+            if ($uploaded_videos_count >= 2) {
                 return view('thanks');
             }
         }
@@ -50,11 +54,14 @@ class VideoController extends Controller
             $hasUserDetails = UserDetail::where('user_id', $user_id)->exists();
             $hasSinging = Singing::where('user_id', $user_id)->where('plan_id', $plan)->exists();
 
-            $video_exists = Payment::where('payments.user_id', $user_id)->where('payments.stripe_payment_id', '!=', '')->where('payments.plan_id', '=', $plan)
+            $uploaded_videos_count = Payment::where('payments.user_id', $user_id)
+                ->where('payments.stripe_payment_id', '!=', '')
+                ->where('payments.plan_id', '=', $plan)
                 ->join('videos', 'payments.stripe_payment_id', '=', 'videos.stripe_payment_id')
-                ->exists();
+                ->count();
 
-            if ($video_exists) {
+            if ($uploaded_videos_count >= 2) {
+
                 return view('thanks');
             } else if ($hasUserDetails && $hasSinging)
                 return view('upload-video');
@@ -69,16 +76,54 @@ class VideoController extends Controller
     }
     public function upload(Request $request)
     {
+
+
+        $user = auth()->user();
+        if(!empty($request->plan)){
+            $plan = Plan::where('name', $request->plan)->first();
+            $payment = Payment::where('user_id', $user->id)->where('plan_id', $plan->id)->where('stripe_payment_id', '!=', '')->first();
+            // dd("planif", $request->plan, $plan);
+        }
+        else {
+            $payment = Payment::where('user_id', $user->id)->where('stripe_payment_id', '!=', '')->last() ?? "";
+            $plan = Plan::find($payment->plan_id);
+            // dd("plan", $plan_id, $plan);
+        }
+
+        if(!$plan || !$payment){
+            return redirect()->back()->with('error', 'No plan found #P404');
+        }
+
+
         $validator = Validator::make($request->all(), [
+            'style' => [
+                'required',
+                Rule::unique('videos')->where(function ($query) use ($request) {
+                    return $query->where('user_id', Auth::id())
+                                 ->where('style', $request->style);
+                }),
+            ],
             'videoTitle' => 'required',
-            'videoFile' => 'required|mimetypes:video/*|max:80000',
+            'videoFile' => [
+                'required',
+                'mimetypes:video/*',
+                'max:100000',
+                function ($attribute, $value, $fail) {
+                    $uploaded_videos_count = Video::where('user_id', Auth::id())->count();
+                    if ($uploaded_videos_count >= env('MAX_VIDEO_FILE_UPLOAD', 2)) {
+                        $fail('You have reached the maximum limit of '.env('MAX_VIDEO_FILE_UPLOAD', 2).' videos.');
+                    }
+                },
+            ],
+        ],[
+            'style.unique', 'You have already uploaded a video with this style.'
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $user = auth()->user();
+
 
         if ($request->hasFile('videoFile')) {
             $videoFile = $request->file('videoFile');
@@ -87,20 +132,21 @@ class VideoController extends Controller
             $fileName = uniqid() . '.' . $videoFile->getClientOriginalExtension();
             $oname = $videoFile->getClientOriginalName();
 
-            $plan = Payment::where('user_id', $user->id)->where('stripe_payment_id', '!=', '')->first() ?? "";
+            // $plan = Payment::where('user_id', $user->id)->where('stripe_payment_id', '!=', '')->last() ?? "";
             // Save the video file to the storage disk
             // $plan =  session()->get('plan') ?? $request->plan;
-            $get_plan = Plan::find($plan->plan_id);
-            $path = $videoFile->storeAs('videos/' . $get_plan->name, $fileName, 'public');
+            // $get_plan = Plan::find($plan->plan_id);
+            $path = $videoFile->storeAs('videos/' . $plan->name, $fileName, 'public');
 
             // Create a new Video model instance
             $video = new Video();
             $video->user_id = $user->id;
-            $video->plan_id = $plan->plan_id;
-            $video->stripe_payment_id = $plan->stripe_payment_id;
+            $video->plan_id = $plan->id;
+            $video->stripe_payment_id = $payment->stripe_payment_id;
             $video->file_path = $path;
             $video->original_name = $oname;
             $video->title = $request->videoTitle;
+            $video->style = $request->style;
             $video->description = $request->videoDescription;
             $video->save();
 

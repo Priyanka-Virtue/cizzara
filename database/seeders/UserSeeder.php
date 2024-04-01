@@ -37,39 +37,49 @@ class UserSeeder extends Seeder
         $user->assignRole('admin');
 
         $user = User::create([
+            'name' => 'Constent',
+            'email' => 'test@cizzara.in',
+            'email_verified_at' => date('Y-m-d h:i:s'),
+            'password' => bcrypt('password'),
+        ]);
+        $user->assignRole('user');
+
+        $j1 = User::create([
             'name' => 'Guru1',
             'email' => 'g1@guru.com',
             'email_verified_at' => date('Y-m-d h:i:s'),
             'password' => bcrypt('password'),
         ]);
-        $user->assignRole('guru');
+        $j1->assignRole('guru');
 
-        $user = User::create([
+        $j2 = User::create([
             'name' => 'Guru2',
             'email' => 'g2@guru.com',
             'email_verified_at' => date('Y-m-d h:i:s'),
             'password' => bcrypt('password'),
         ]);
-        $user->assignRole('guru');
+        $j2->assignRole('guru');
 
-        $user = User::create([
+        $j3 = User::create([
             'name' => 'Guru3',
             'email' => 'g3@guru.com',
             'email_verified_at' => date('Y-m-d h:i:s'),
             'password' => bcrypt('password'),
         ]);
-        $user->assignRole('guru');
+        $j3->assignRole('guru');
 
         $plans = Plan::create([
             'name' => 'SingTUV2024',
             'is_active' => 1,
-            'price' => '10'
+            'price' => '10',
+            'gurus' => json_encode([$j1->id, $j2->id, $j3->id])
         ]);
-        Log::info("insert seed".$plans->id ?? 0000);
+
         $plans = Plan::create([
             'name' => 'DanceTUV2023',
             'is_active' => 0,
-            'price' => '999.99'
+            'price' => '999.99',
+            'gurus' => json_encode([$j1->id, $j2->id, $j3->id])
         ]);
     }
 }

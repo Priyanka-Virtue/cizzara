@@ -45,7 +45,7 @@ class AdminVideoController extends Controller
     public function updateStatus(Request $request, Video $video)
     {
         $request->validate([
-            'status' => 'required|in:pending,round-1,round-2,rejected',
+            'status' => 'required|in:pending,top-500,top-10,rejected',
         ]);
         $video->state = $request->status;
         $video->save();
