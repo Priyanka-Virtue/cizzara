@@ -81,7 +81,7 @@ class VideoController extends Controller
             $plan = Plan::where('name', $request->plan)->first();
             $payment = Payment::where('user_id', $user->id)->where('plan_id', $plan->id)->where('stripe_payment_id', '!=', '')->first();
         } else {
-            $payment = Payment::where('user_id', $user->id)->where('stripe_payment_id', '!=', '')->last() ?? "";
+            $payment = Payment::where('user_id', $user->id)->where('stripe_payment_id', '!=', '')->latest()->first() ?? "";
             $plan = Plan::find($payment->plan_id);
         }
 
@@ -138,7 +138,7 @@ class VideoController extends Controller
             $video->description = $request->videoDescription;
             $video->save();
 
-            return redirect('/thank-you')->with('success', 'Video uploaded successfully.');
+            return redirect()->back()->with('success', 'Video uploaded successfully.');
         }
 
         return redirect()->back()->withErrors(['message' => 'No video file found.'])->withInput();
@@ -146,5 +146,5 @@ class VideoController extends Controller
 
 
 
-    
+
 }

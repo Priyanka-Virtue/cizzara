@@ -17,7 +17,7 @@ class IsPaidMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $payment = Payment::where('user_id', Auth::id())->where('stripe_payment_id', '!=', '') ->first();
+        $payment = Payment::where('user_id', Auth::id())->where('stripe_payment_id', '!=', '')->latest()->first();
         if(!$payment)
         {
             return redirect('/home')->with('error', 'Please make payment first');
