@@ -131,6 +131,12 @@
                                 @endforeach
                             </div>
                             @if(!$ratedByGuru)
+                            <div class="form-floating form-floating-outline my-3">
+                                <textarea class="form-control" id="comments" name="comments" rows="3" placeholder="Your comments, eg ask for different style">{{ old('comments') }}</textarea>
+                                <label for="comments">Your comments</label>
+                            </div>
+
+
                             <div class="alert alert-danger" role="alert">
                                 <strong>Note:</strong> Once rated, you cannot change the rating.
                                 <button class="btn btn-primary waves-effect mt-1 waves-light w-100">Submit Rating</button>
@@ -148,8 +154,8 @@
                                 <label for="status">Change Status:</label>
                                 <select class="form-select" id="status" name="status">
                                     <option value="pending" @if ($video->state == 'pending') selected @endif>Pending</option>
-                                    <option value="round-1" @if ($video->state == 'top-500') selected @endif>Top-500</option>
-                                    <option value="round-2" @if ($video->state == 'top-25') selected @endif>Top-25</option>
+                                    <option value="top-500" @if ($video->state == 'top-500') selected @endif>Top-500</option>
+                                    <option value="top-10" @if ($video->state == 'top-10') selected @endif>Top-10</option>
                                     <option value="rejected" @if ($video->state == 'rejected') selected @endif>Rejected</option>
                                 </select>
                             </div>

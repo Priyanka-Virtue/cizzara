@@ -38,19 +38,18 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @forelse ($users as $user)
+                @forelse ($topUsers as $i => $user)
                 <tr>
-                    <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
+                    <td><a href="{{ route('admin.users.show', $user['user']) }}">{{ $user['user']->name }}</a></td>
                     <td>
                         @php
 
 
            $videoRatings = [];
-    foreach ($user->videos as $video) {
+    foreach ($user['user']->videos as $video) {
         echo "<br>- Video: {$video->id} ";
                 foreach ($video->ratings as $rating) {
                     echo "<br>";
-                    <!-- <a href="{{ route('admin.videos.show', $video) }}">{{ $video->original_name }}</a> -->
                   echo "-- Rating: {$rating->rating}\n";
                   echo "-- Guru: {$rating->guru_id}\n";
                }
@@ -66,10 +65,10 @@
     }
            @endphp
                     </td>
-                    <td>{{ $user->email }}</td>
+                    <td>{{ $user['user']->email }}</td>
 
                     <td>
-                        <a href="{{ route('admin.users.show', $user) }}" class="btn btn-primary">View</a>
+                        <a href="{{ route('admin.users.show', $user['user']) }}" class="btn btn-primary">View</a>
                     </td>
                 </tr>
                 @empty
@@ -83,7 +82,7 @@
     <div class="justify-content-center">
         <div class="col-md-6 mx-auto">
             <hr />
-            {{ $users->appends(request()->input())->links() }}
+
         </div>
     </div>
 

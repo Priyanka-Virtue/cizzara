@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Video;
 use App\Models\VideoRating;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AdminVideoController extends Controller
@@ -85,47 +87,50 @@ class AdminVideoController extends Controller
         $user = User::where('id', $user_id)->with('details')->first();
         return view('admin.users.show', compact('user'));
     }
+
+
+
+
+    public function topList(Request $request)
+    {
+        $plan = Plan::where('name', 'SingTUV2024')->first();
+        $topUsers = User::withVideosByAudition($plan->id)
+    ->get() // Retrieve the results first
+    ->map(function ($user) {
+        $videoRatings = [];
+        foreach ($user->videos as $video) {
+            $averageRating = $video->ratings->avg('rating');
+            $videoRatings[] = $averageRating;
+        }
+
+        // If the user has two videos, combine their average ratings into one
+        if (count($videoRatings) === 2) {
+            $userAverageRating = array_sum($videoRatings) / count($videoRatings);
+        } else {
+            $userAverageRating = $videoRatings[0] ?? 0; // If only one video, take its average
+        }
+
+        return [
+            'user' => $user,
+            'average_rating' => $userAverageRating,
+        ];
+    })
+    ->sortByDesc('average_rating')
+    ->take($request->top ?? 10);
+// dd($topUsers);
+    return view('admin.auditions.top', compact('topUsers'));
+
+    }
+
+
+
     public function auditionList(Request $request)
     {
         $plan = Plan::where('name', 'SingTUV2024')->first();
-        // dd($plan);
-        // $query = User::doesntHave('roles')->withVideosByAudition($plan->id);
+
         $query = User::withVideosByAudition($plan->id);//->get();
 
-
-        // foreach ($usersWithVideos as $user) {
-        //     echo "User: {$user->name}\n";
-        //     foreach ($user->videos as $video) {
-        //         echo "- Video: {$video->title}\n";
-        //         foreach ($video->ratings as $rating) {
-        //             echo "-- Rating: {$rating->rating}\n";
-        //         }
-        //     }
-        // }
-        // dd('done');
-        // $auditions = Video::where('plan_id', $plan->id)->orderBy('user_id')->get();
-        // dd($auditions);
-
-
-        // if ($request->has('contestant') && !empty($request->contestant)) {
-        //     $query->whereHas('details', function ($userQuery) use ($request) {
-        //         $userQuery->where('first_name', 'like', '%' . $request->contestant . '%')
-        //             ->orWhere('last_name', 'like', '%' . $request->contestant . '%');
-        //     });
-        // } else {
-        //     $query->whereHas('details');
-        // }
         $users = $query->paginate(2);
         return view('admin.auditions.index', compact('users'));
     }
-
-    // public function auditionList(Request $request)
-    // {
-    //     $plan = Plan::where('name', 'SingTUV2024')->first();
-
-    //     $query = User::withVideosByAudition($plan->id);//->get();
-
-    //     $users = $query->paginate(2);
-    //     return view('admin.auditions.index', compact('users'));
-    // }
 }

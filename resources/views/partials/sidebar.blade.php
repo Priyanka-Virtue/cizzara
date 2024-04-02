@@ -25,8 +25,36 @@
             @role('admin')
             <li class="menu-item active">
               <a href="{{route('admin.auditions.index')}}" class="menu-link">
-                <i class="menu-icon tf-icons mdi mdi-human-dance"></i>
+                <i class="menu-icon tf-icons mdi mdi-human-female-dance"></i>
                 <div data-i18n="Contestants">Auditions</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
+              <a href="{{route('admin.auditions.top', 500)}}" class="menu-link">
+                <i class="menu-icon tf-icons mdi mdi-human-female-dance"></i>
+                <div data-i18n="Contestants">Top 500</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
+              <a href="{{route('admin.auditions.top', 100)}}" class="menu-link">
+                <i class="menu-icon tf-icons mdi mdi-human-female-dance"></i>
+                <div data-i18n="Contestants">Top 100</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
+              <a href="{{route('admin.auditions.top', 10)}}" class="menu-link">
+                <i class="menu-icon tf-icons mdi mdi-human-female-dance"></i>
+                <div data-i18n="Contestants">Top 10</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
+              <a href="{{route('admin.auditions.top', 3)}}" class="menu-link">
+                <i class="menu-icon tf-icons mdi mdi-human-female-dance"></i>
+                <div data-i18n="Contestants">Top 3</div>
               </a>
             </li>
 
