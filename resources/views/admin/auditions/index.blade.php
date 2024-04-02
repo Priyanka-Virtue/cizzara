@@ -33,6 +33,8 @@
                 <tr>
                     <th>Contestant</th>
                     <th>Videos</th>
+
+                    <th>Rating</th>
                     <th>Email</th>
                     <th>Action</th>
                 </tr>
@@ -45,27 +47,31 @@
                         @php
 
 
-           $videoRatings = [];
-    foreach ($user->videos as $video) {
-        echo "<br>- Video: {$video->id} ";
-                foreach ($video->ratings as $rating) {
-                    echo "<br>";
-                    <!-- <a href="{{ route('admin.videos.show', $video) }}">{{ $video->original_name }}</a> -->
-                  echo "-- Rating: {$rating->rating}\n";
-                  echo "-- Guru: {$rating->guru_id}\n";
-               }
-        echo "<br>--- Video Average Rating: " . $averageRating = $video->ratings->avg('rating');
-        $videoRatings[] = $averageRating;
-    }
-    echo "<br>".count($videoRatings);
-    // If the user has two videos, combine their average ratings into one
-    if (count($videoRatings) > 1) {
-        echo "Final Average Rating: " . $userAverageRating = array_sum($videoRatings) / count($videoRatings);
-    } else {
-        echo "Final Average Rating: " . $userAverageRating = $videoRatings[0] ?? 0; // If only one video, take its average
-    }
-           @endphp
+                        $videoRatings = [];
+                        foreach ($user->videos as $video) {
+                        //echo "<br>- Video: {$video->id} ";
+                        echo '<a href="'. route('admin.videos.show', $video) .'">' .$video->original_name.' </a>
+                        <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>
+                        <br/>';
+                        foreach ($video->ratings as $rating) {
+                        //echo "<br>";
+
+                        // echo "-- Rating: {$rating->rating}\n";
+                        //echo "-- Guru: {$rating->guru_id}\n";
+                        }
+                        $averageRating = $video->ratings->avg('rating');
+                        $videoRatings[] = $averageRating;
+                        }
+
+                        // If the user has two videos, combine their average ratings into one
+                        if (count($videoRatings) > 1) {
+                        $userAverageRating = array_sum($videoRatings) / count($videoRatings);
+                        } else {
+                        $userAverageRating = $videoRatings[0] ?? 0;
+                        }
+                        @endphp
                     </td>
+                    <td>{{ $userAverageRating }}</td>
                     <td>{{ $user->email }}</td>
 
                     <td>

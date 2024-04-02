@@ -111,6 +111,7 @@
 
 
                     $user = auth()->user();
+                    $ratedByGuru = true;
                     if($user->hasRole('guru')){
                     $ratedByGuru = App\Models\VideoRating::where('video_id', $video->id)->where('guru_id', $user->id)->first();
                     }
