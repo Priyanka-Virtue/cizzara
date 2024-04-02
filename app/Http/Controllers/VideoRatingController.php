@@ -46,6 +46,6 @@ class VideoRatingController extends Controller
             'rating' => $request->rating,
         ]);
 
-        return redirect()->back()->with('success', 'Video rated successfully.');
+        return redirect()->route('admin.videos.index')->with('success', 'Video rated successfully.');
     }
 }

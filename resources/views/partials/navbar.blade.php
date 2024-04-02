@@ -48,6 +48,8 @@
                         <span class="align-middle">Settings</span>
                       </a>
                     </li> -->
+
+                    @can('admin')
                     <li>
                         <a class="dropdown-item" href="{{ route('admin.videos.index') }}">
                             <span class="d-flex align-items-center align-middle">
@@ -61,6 +63,7 @@
                             </span>
                         </a>
                     </li>
+                    @endcan
                     <li>
                         <div class="dropdown-divider my-1"></div>
                     </li>

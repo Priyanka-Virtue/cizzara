@@ -13,6 +13,9 @@ class Plan extends Model
         'price',
         'is_active'
     ];
+    protected $casts = [
+        'gurus' => 'json'
+    ];
     public function gurus()
     {
         return $this->belongsToMany(User::class, 'plan_guru', 'plan_id', 'guru_id');
@@ -23,4 +26,3 @@ class Plan extends Model
         return $this->hasMany(Video::class);
     }
 }
-

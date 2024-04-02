@@ -72,7 +72,7 @@ class LoginController extends Controller
 
     protected function authenticated($request, $user){
         // dd( $user->getRoleNames()->first() );
-        if($user->hasRole('admin')){
+        if($user->hasRole(['admin','guru'])){
             return redirect('/admin/videos');
         } else {
 

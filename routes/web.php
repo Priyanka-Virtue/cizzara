@@ -29,7 +29,9 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/home', function() { return view('welcome');})->name('home');
+Route::get('/home', function () {
+    return view('welcome');
+})->name('home');
 Route::group(['middleware' => ['auth', 'verified']], function () {
     // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -51,13 +53,17 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
 
 // ========== Admin ================
-Route::middleware(['role:admin'])->group(function () {
+Route::middleware(['role:guru|admin'])->group(function () {
     Route::get('/admin/videos', [AdminVideoController::class, 'index'])->name('admin.videos.index');
     Route::put('/admin/videos/{video}/status', [AdminVideoController::class, 'updateStatus'])->name('admin.videos.updateStatus');
     Route::get('/admin/videos/{video}', [AdminVideoController::class, 'show'])->name('admin.videos.show');
 
-    Route::get('/admin/users', [AdminVideoController::class, 'userList'])->name('admin.users.index');
-    Route::get('/admin/users/{user}', [AdminVideoController::class, 'user'])->name('admin.users.show');
-
     Route::post('/admin/{video}/rate_video', [VideoRatingController::class, 'rateVideo'])->name('guru.rate.video');
+
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/admin/users', [AdminVideoController::class, 'userList'])->name('admin.users.index');
+        Route::get('/admin/users/{user}', [AdminVideoController::class, 'user'])->name('admin.users.show');
+
+
+    });
 });

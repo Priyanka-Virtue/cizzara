@@ -35,11 +35,15 @@ class Video extends Model
 
 
 
+    // public function ratings()
+    // {
+    //     return $this->hasMany(VideoRating::class);
+    // }
+
     public function ratings()
     {
-        return $this->hasMany(VideoRating::class);
+        return $this->hasOne(VideoRating::class);
     }
-
 
 
     public function auditionDetails()

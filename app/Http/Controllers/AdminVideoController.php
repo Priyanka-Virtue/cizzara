@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Video;
+use App\Models\VideoRating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -34,6 +35,7 @@ class AdminVideoController extends Controller
     public function show(Video $video)
     {
         $video->auditionDetails = $video->auditionDetails();
+        
         return view('admin.show', compact('video'));
     }
 

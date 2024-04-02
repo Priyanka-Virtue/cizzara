@@ -44,6 +44,7 @@
                 <tr>
                     <th>Video</th>
                     <th>Status</th>
+                    <th>Rating</th>
                     <th>Contestant</th>
                     <th>Action</th>
                 </tr>
@@ -53,6 +54,7 @@
                 <tr>
                     <td><a href="{{ route('admin.videos.show', $video) }}">{{ $video->original_name }}</a></td>
                     <td>{{ $video->state }}</td>
+                    <td>{{ $video->ratings->rating ?? 'N/A' }} / 10</td>
                     <td>{{ $video->user->name }}</td>
                     <td>
                         <a href="{{ route('admin.videos.show', $video) }}" class="btn btn-primary">View</a>

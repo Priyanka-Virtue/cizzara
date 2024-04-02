@@ -17,6 +17,8 @@
         resize: none;
     }
 </style>
+
+
 <div class="row">
     <div class="col-xl-4 col-lg-5 col-md-5 order-1 order-md-0">
         <!-- User Card -->
@@ -92,31 +94,68 @@
                     </ul>
                     @endrole
 
+                    @php
+                    $rating_levels = [
+                    'Poor',
+                    'Fair',
+                    'Average',
+                    'Satisfactory',
+                    'Good',
+                    'Very Good',
+                    'Excellent',
+                    'Outstanding',
+                    'Exceptional',
+                    'Superb'
+                    ];
+
+
+
+                    $user = auth()->user();
+                    if($user->hasRole('guru')){
+                    $ratedByGuru = App\Models\VideoRating::where('video_id', $video->id)->where('guru_id', $user->id)->first();
+                    }
+                    @endphp
+
                     <div class="d-grid w-100 mt-4">
+                        <form action="{{ route('guru.rate.video', $video->id) }}" method="post">
+                            @csrf
+                            <label for="rating">Rate this video:</label>
+                            <div class="list-group">
+                                @foreach ($rating_levels as $i => $rating_level)
+                                <label class="list-group-item">
+                                    <span class="form-check mb-0">
+                                        <input id="rating{{ $i+1 }}" class="form-check-input me-1" type="radio" name="rating" value="{{ $i+1 }}" {{$ratedByGuru['rating'] ?? null == $i+1 ? 'checked' : ''}}>
+                                        {{($i+1) .'. '. $rating_level}}
+                                    </span>
+                                </label>
+                                @endforeach
+                            </div>
+                            @if(!$ratedByGuru)
+                            <div class="alert alert-danger" role="alert">
+                                <strong>Note:</strong> Once rated, you cannot change the rating.
+                                <button class="btn btn-primary waves-effect mt-1 waves-light w-100">Submit Rating</button>
+                            </div>
+                            @endif
+
+                        </form>
+                        @can('admin')
+                        <hr />
                         <form action="{{ route('admin.videos.updateStatus', $video) }}" method="POST">
                             @csrf
                             @method('PUT')
 
-                            <!-- <div class="input-group">
-                            <select class="form-select" id="inputGroupSelect03" id="status" name="status" aria-label="status">
-                            <option value="pending" @if ($video->state == 'pending') selected @endif>Pending</option>
-                                    <option value="round-1" @if ($video->state == 'round-1') selected @endif>Round 1</option>
-                                    <option value="round-2" @if ($video->state == 'round-2') selected @endif>Round 2</option>
-                                    <option value="rejected" @if ($video->state == 'rejected') selected @endif>Rejected</option>
-                            </select>
-                            <button class="btn btn-primary waves-effect" type="submit">Change Status</button>
-                          </div> -->
                             <div class="form-group">
                                 <label for="status">Change Status:</label>
                                 <select class="form-select" id="status" name="status">
                                     <option value="pending" @if ($video->state == 'pending') selected @endif>Pending</option>
-                                    <option value="round-1" @if ($video->state == 'round-1') selected @endif>Round 1</option>
-                                    <option value="round-2" @if ($video->state == 'round-2') selected @endif>Round 2</option>
+                                    <option value="round-1" @if ($video->state == 'top-500') selected @endif>Top-500</option>
+                                    <option value="round-2" @if ($video->state == 'top-25') selected @endif>Top-25</option>
                                     <option value="rejected" @if ($video->state == 'rejected') selected @endif>Rejected</option>
                                 </select>
                             </div>
                             <button class="btn btn-primary waves-effect mt-1 waves-light w-100">Change Status</button>
                         </form>
+                        @endcan
 
 
                     </div>
@@ -136,17 +175,16 @@
                     <source src="{{ asset('storage/' . $video->file_path) }}">
                     Your browser does not support the video tag.
                 </video>
-                <form action="{{ route('guru.rate.video', $video->id) }}" method="post">
-            @csrf
-            <label for="rating">Rate this video:</label>
-            <div class="rating-options">
-                @for ($i = 1; $i <= 10; $i++)
-                    <input type="radio" id="rating{{ $i }}" name="rating" value="{{ $i }}">
-                    <label for="rating{{ $i }}">{{ $i }}</label>
-                @endfor
-            </div>
-            <button type="submit">Submit Rating</button>
-        </form>
+                <!-- <form action="{{ route('guru.rate.video', $video->id) }}" method="post">
+                    @csrf
+                    <label for="rating">Rate this video:</label>
+                    <div class="rating-options">
+                        @for ($i = 1; $i <= 10; $i++) <input type="radio" id="rating{{ $i }}" name="rating" value="{{ $i }}">
+                            <label for="rating{{ $i }}">{{ $i }}</label>
+                            @endfor
+                    </div>
+                    <button type="submit">Submit Rating</button>
+                </form> -->
                 <hr />
                 <form method="POST" action="{{ isset($video->auditionDetails) ? route('singing.update', [$video->auditionDetails->id, 'plan' => request()->plan]) : route('singing.store',['plan' => request()->plan]) }}">
 
