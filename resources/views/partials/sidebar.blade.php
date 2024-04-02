@@ -24,9 +24,16 @@
             </li>
             @role('admin')
             <li class="menu-item active">
+              <a href="{{route('admin.auditions.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons mdi mdi-human-dance"></i>
+                <div data-i18n="Contestants">Auditions</div>
+              </a>
+            </li>
+
+            <li class="menu-item active">
               <a href="{{route('admin.users.index')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-human-female-dance"></i>
-                <div data-i18n="Contestants">Contestants</div>
+                <div data-i18n="Contestants">All Contestants</div>
               </a>
             </li>
             @endcan

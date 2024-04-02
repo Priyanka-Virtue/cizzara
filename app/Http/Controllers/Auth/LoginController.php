@@ -83,7 +83,7 @@ class LoginController extends Controller
             // } else {
             //     return redirect()->route('goToPayment', ['plan' => $payment->plan]);
             // }
-            return redirect()->route('upload-video');
+            return redirect()->route('home');
             // return redirect('/home');
         }
     }

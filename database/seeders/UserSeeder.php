@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
     {
         // Create roles
         $adminRole = Role::create(['name' => 'admin']);
-        $userRole = Role::create(['name' => 'user']);
+        // $userRole = Role::create(['name' => 'user']);
         $guruRole = Role::create(['name' => 'guru']);
 
         // Optionally, you can create permissions and assign them to roles
@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
             'email_verified_at' => date('Y-m-d h:i:s'),
             'password' => bcrypt('password'),
         ]);
-        $user->assignRole('user');
+        // $user->assignRole('user');
 
         $j1 = User::create([
             'name' => 'Guru1',

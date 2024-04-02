@@ -98,8 +98,8 @@
                     $rating_levels = [
                     'Poor',
                     'Fair',
-                    'Average',
                     'Satisfactory',
+                    'Average',
                     'Good',
                     'Very Good',
                     'Excellent',
@@ -124,7 +124,7 @@
                                 @foreach ($rating_levels as $i => $rating_level)
                                 <label class="list-group-item">
                                     <span class="form-check mb-0">
-                                        <input id="rating{{ $i+1 }}" class="form-check-input me-1" type="radio" name="rating" value="{{ $i+1 }}" {{$ratedByGuru['rating'] ?? null == $i+1 ? 'checked' : ''}}>
+                                        <input id="rating{{ ($i+1) }}" class="form-check-input me-1" type="radio" name="rating" value="{{ ($i+1) }}" {{($ratedByGuru['rating'] ?? null) == ($i+1) ? 'checked' : ''}}>
                                         {{($i+1) .'. '. $rating_level}}
                                     </span>
                                 </label>

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class Video extends Model
 {
@@ -35,14 +36,14 @@ class Video extends Model
 
 
 
-    // public function ratings()
-    // {
-    //     return $this->hasMany(VideoRating::class);
-    // }
-
     public function ratings()
     {
-        return $this->hasOne(VideoRating::class);
+        return $this->hasMany(VideoRating::class);
+    }
+
+    public function guruRatings()
+    {
+        return $this->hasOne(VideoRating::class)->where('guru_id','=', Auth::id());
     }
 
 

@@ -44,7 +44,9 @@
                 <tr>
                     <th>Video</th>
                     <th>Status</th>
+                    @role('guru')
                     <th>Rating</th>
+                    @endrole
                     <th>Contestant</th>
                     <th>Action</th>
                 </tr>
@@ -54,7 +56,9 @@
                 <tr>
                     <td><a href="{{ route('admin.videos.show', $video) }}">{{ $video->original_name }}</a></td>
                     <td>{{ $video->state }}</td>
-                    <td>{{ $video->ratings->rating ?? 'N/A' }} / 10</td>
+                    @role('guru')
+                    <td>{{ $video->guruRatings->rating ?? 'N/A' }} / 10</td>
+                    @endrole
                     <td>{{ $video->user->name }}</td>
                     <td>
                         <a href="{{ route('admin.videos.show', $video) }}" class="btn btn-primary">View</a>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plan;
 use App\Models\User;
 use App\Models\Video;
 use App\Models\VideoRating;
@@ -35,7 +36,7 @@ class AdminVideoController extends Controller
     public function show(Video $video)
     {
         $video->auditionDetails = $video->auditionDetails();
-        
+
         return view('admin.show', compact('video'));
     }
 
@@ -75,41 +76,56 @@ class AdminVideoController extends Controller
     }
 
 
-    // public function rateVideo(Request $request, $videoId)
+
+    public function audition($user_id)
+    {
+        // $plan = Plan::where('name', 'SingTUV2024');
+        // $auditions = Video::where('plan_id', $plan->id)->orderBy('user_id')->get();
+        // dd($auditions);
+        $user = User::where('id', $user_id)->with('details')->first();
+        return view('admin.users.show', compact('user'));
+    }
+    public function auditionList(Request $request)
+    {
+        $plan = Plan::where('name', 'SingTUV2024')->first();
+        // dd($plan);
+        // $query = User::doesntHave('roles')->withVideosByAudition($plan->id);
+        $query = User::withVideosByAudition($plan->id);//->get();
+
+
+        // foreach ($usersWithVideos as $user) {
+        //     echo "User: {$user->name}\n";
+        //     foreach ($user->videos as $video) {
+        //         echo "- Video: {$video->title}\n";
+        //         foreach ($video->ratings as $rating) {
+        //             echo "-- Rating: {$rating->rating}\n";
+        //         }
+        //     }
+        // }
+        // dd('done');
+        // $auditions = Video::where('plan_id', $plan->id)->orderBy('user_id')->get();
+        // dd($auditions);
+
+
+        // if ($request->has('contestant') && !empty($request->contestant)) {
+        //     $query->whereHas('details', function ($userQuery) use ($request) {
+        //         $userQuery->where('first_name', 'like', '%' . $request->contestant . '%')
+        //             ->orWhere('last_name', 'like', '%' . $request->contestant . '%');
+        //     });
+        // } else {
+        //     $query->whereHas('details');
+        // }
+        $users = $query->paginate(2);
+        return view('admin.auditions.index', compact('users'));
+    }
+
+    // public function auditionList(Request $request)
     // {
-    //     $user = auth()->user();
+    //     $plan = Plan::where('name', 'SingTUV2024')->first();
 
-    //     // Check if the user is a guru
-    //     if (!$user->hasRole('guru')) {
-    //         return redirect()->back()->with('error', 'You do not have permission to rate videos.');
-    //     }
+    //     $query = User::withVideosByAudition($plan->id);//->get();
 
-    //     // Find the video
-    //     $video = Video::findOrFail($videoId);
-
-    //     // Find the associated plan
-    //     $plan = $video->plan;
-
-    //     // Check if the guru is associated with the plan
-    //     if (!$plan->gurus()->where('guru_id', $user->id)->exists()) {
-    //         return redirect()->back()->with('error', 'You are not authorized to rate videos for this plan.');
-    //     }
-
-    //     // Validate the rating
-    //     $validator = Validator::make($request->all(), [
-    //         'rating' => 'required|integer|between:1,10',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return redirect()->back()->withErrors($validator)->withInput();
-    //     }
-
-    //     // Store the rating
-    //     $video->ratings()->create([
-    //         'guru_id' => $user->id,
-    //         'rating' => $request->rating,
-    //     ]);
-
-    //     return redirect()->back()->with('success', 'Video rated successfully.');
+    //     $users = $query->paginate(2);
+    //     return view('admin.auditions.index', compact('users'));
     // }
 }
