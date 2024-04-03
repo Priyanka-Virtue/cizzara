@@ -26,55 +26,58 @@
             </div>
         </div>
     </form>
-
+@php
+//dd($topUsers[0]);
+@endphp
     <div class="table-responsive text-nowrap">
         <table class="table">
             <thead class="table-light">
                 <tr>
                     <th>Contestant</th>
                     <th>Videos</th>
+
+                    <th>Rating</th>
                     <th>Email</th>
-                    <th>Action</th>
+
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @foreach($topUsers as $i => $user)
-
-@endforeach
-@dd("end");
+                @forelse ($topUsers as $user)
                 <tr>
-                    <td><a href="{{ route('admin.users.show', $user->id) }}">{{ $user->name }}</a></td>
+                    <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
                     <td>
                         @php
 
 
-           $videoRatings = [];
-    foreach ($user->videos as $video) {
-        echo "<br>- Video: {$video->id} ";
-                foreach ($video->ratings as $rating) {
-                    echo "<br>";
-                  echo "-- Rating: {$rating->rating}\n";
-                  echo "-- Guru: {$rating->guru_id}\n";
-               }
-        echo "<br>--- Video Average Rating: " . $averageRating = $video->ratings->avg('rating');
-        $videoRatings[] = $averageRating;
-    }
-    echo "<br>".count($videoRatings);
-    // If the user has two videos, combine their average ratings into one
-    if (count($videoRatings) > 1) {
-        echo "Final Average Rating: " . $userAverageRating = array_sum($videoRatings) / count($videoRatings);
-    } else {
-        echo "Final Average Rating: " . $userAverageRating = $videoRatings[0] ?? 0; // If only one video, take its average
-    }
-           @endphp
+                        $videoRatings = [];
+                        foreach ($user->videos as $video) {
+                        //echo "<br>- Video: {$video->id} ";
+                        echo '<a href="'. route('admin.videos.show', $video) .'">' .$video->original_name.' </a>
+                        <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>
+                        <br/>';
+                        foreach ($video->ratings as $rating) {
+                        //echo "<br>";
+
+                        // echo "-- Rating: {$rating->rating}\n";
+                        //echo "-- Guru: {$rating->guru_id}\n";
+                        }
+                        $averageRating = $video->ratings->avg('rating');
+                        $videoRatings[] = $averageRating;
+                        }
+
+                        // If the user has two videos, combine their average ratings into one
+                        if (count($videoRatings) > 1) {
+                        $userAverageRating = array_sum($videoRatings) / count($videoRatings);
+                        } else {
+                        $userAverageRating = $videoRatings[0] ?? 0;
+                        }
+                        @endphp
                     </td>
+                    <td>{{ $userAverageRating }}</td>
                     <td>{{ $user->email }}</td>
 
-                    <td>
-                        <a href="{{ route('admin.users.show', $user) }}" class="btn btn-primary">View</a>
-                    </td>
-                </tr>
 
+                </tr>
                 @empty
                 <tr>
                     <td colspan="4">No records found.</td>
@@ -86,7 +89,7 @@
     <div class="justify-content-center">
         <div class="col-md-6 mx-auto">
             <hr />
-            {{ $paginatedTopUsers->links() }}
+            {{ $users->appends(request()->input())->links() }}
         </div>
     </div>
 
