@@ -176,7 +176,8 @@ public function topList(Request $request)
 
         $query = User::withVideosByAudition($plan->id);//->get();
 
-        $users = $query->paginate(2);
+        // $users = $query->paginate(2);
+        $users = $query->get();
         return view('admin.auditions.index', compact('users'));
     }
 }
