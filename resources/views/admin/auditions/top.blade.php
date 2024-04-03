@@ -38,7 +38,7 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @foreach($topUsers as $i => $userx)
+                @foreach($topUsers as $i => $user)
 
 @endforeach
 @dd("end");
