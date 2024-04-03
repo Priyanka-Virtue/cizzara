@@ -36,7 +36,7 @@
 
                     <th>Rating</th>
                     <th>Email</th>
-                    <th>Action</th>
+                    
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -74,9 +74,7 @@
                     <td>{{ $userAverageRating }}</td>
                     <td>{{ $user->email }}</td>
 
-                    <td>
-                        <a href="{{ route('admin.users.show', $user) }}" class="btn btn-primary">View</a>
-                    </td>
+
                 </tr>
                 @empty
                 <tr>

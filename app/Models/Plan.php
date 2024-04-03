@@ -16,10 +16,10 @@ class Plan extends Model
     protected $casts = [
         'gurus' => 'json'
     ];
-    public function gurus()
-    {
-        return $this->belongsToMany(User::class, 'plan_guru', 'plan_id', 'guru_id');
-    }
+    // public function gurus()
+    // {
+    //     return $this->belongsToMany(User::class, 'plan_guru', 'plan_id', 'guru_id');
+    // }
 
     public function videos()
     {

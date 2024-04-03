@@ -110,7 +110,7 @@ class VideoController extends Controller
                 },
             ],
         ], [
-            'style.unique', 'You have already uploaded a video with this style.'
+            'style.unique' => 'You have already uploaded a video with this style.'
         ]);
 
         if ($validator->fails()) {
@@ -138,7 +138,7 @@ class VideoController extends Controller
             $video->description = $request->videoDescription;
             $video->save();
 
-            return redirect()->back()->with('success', 'Video uploaded successfully.');
+            return redirect()->back()->withInput()->with('success', 'Video uploaded successfully.');
         }
 
         return redirect()->back()->withErrors(['message' => 'No video file found.'])->withInput();

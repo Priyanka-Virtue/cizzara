@@ -80,11 +80,7 @@ class UserDetailController extends Controller
             $validatedData
         );
 
-
-
-
         return redirect()->route('upload-video', ['plan' => $request->plan])->with('success', 'User detail created successfully. #199');
-        // return redirect()->route('upload-video')->with('success', 'User detail created successfully, Now upload your video.');
     }
 
     public function show(UserDetail $userDetail)

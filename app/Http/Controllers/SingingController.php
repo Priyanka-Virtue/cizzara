@@ -71,7 +71,7 @@ class SingingController extends Controller
             $validatedData
         );
 
-        return redirect()->route('upload-video')->with('success', 'Audition details created successfully, Now you can upload your video.');
+        return redirect()->route('upload-video', ['plan' => $plan])->with('success', 'Audition details created successfully, Now you can upload your video.');
     }
 
     public function show(Singing $userDetail)
@@ -88,10 +88,8 @@ class SingingController extends Controller
 
     public function update(Request $request, Singing $userDetail)
     {
-        // Validate the request data
         $validatedData = $request->validate([
             'auditioncity' => 'required',
-            // 'plan' => 'required',
             'stagename' => 'nullable|string|max:5000',
             'why_tup_expectations' => 'nullable|string|max:5000',
             'why_we_select_you' => 'nullable|string|max:5000',
@@ -115,7 +113,6 @@ class SingingController extends Controller
             'music_qualification' => 'nullable|string|max:5000',
         ]);
 
-        // $userDetail->update($validatedData);
         $plan = $request->plan;
         $user_id = Auth::id();
         $plan_id = $this->plan_id($plan);
@@ -136,7 +133,7 @@ class SingingController extends Controller
         );
 
         // Redirect to the index page with success message
-        return redirect()->route('upload-video')->with('success', 'Audition details updated successfully, Now you can upload your video.');
+        return redirect()->route('upload-video', ['plan' => $plan])->with('success', 'Audition details updated successfully, Now you can upload your video.');
     }
 
     public function destroy(Singing $userDetail)

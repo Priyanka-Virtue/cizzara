@@ -112,12 +112,7 @@
                             </div>
                         </div>
 
-                        <!-- <div class="col-md-4">
-            <div class="form-floating form-floating-outline mb-3">
-                <input disabled type="text" class="form-control" id="stagename" name="stagename" value="{{ old('stagename', isset($user->details) ? $user->details->stagename : '') }}" placeholder="Enter your stage name">
-                <label for="stagename">Stage Name</label>
-            </div>
-        </div> -->
+                        
                     </div>
 
                     <div class="row">

@@ -79,7 +79,7 @@
                         </li>
 
 
-                        <li class="mb-3">
+                        <!-- <li class="mb-3">
                             <span class="h6">Contact:</span>
                             <span>(123) 456-7890</span>
                         </li>
@@ -90,7 +90,7 @@
                         <li class="mb-3">
                             <span class="h6">Country:</span>
                             <span>United Kingdom</span>
-                        </li>
+                        </li> -->
                     </ul>
                     @endrole
 
@@ -136,6 +136,11 @@
                                 <textarea class="form-control" id="comments" name="comments" rows="3" placeholder="Your comments, eg ask for different style">{{ old('comments') }}</textarea>
                                 <label for="comments">Your comments</label>
                             </div>
+
+                            <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="checkbox" id="send_to_contestant" value="send_to_contestant" checked>
+                          <label class="form-check-label" for="send_to_contestant">Send comment to contestant</label> <small>(If checked your comment will be sent to contestant)</small>
+                        </div>
 
 
                             <div class="alert alert-danger" role="alert">
