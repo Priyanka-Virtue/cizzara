@@ -30,6 +30,13 @@
                     {{ session('succcess') }}
                 </div>
                 @endif
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                    {{ $error }}<br>
+                    @endforeach
+                </div>
+                @endif
                 <h5 class="pb-3 border-bottom mb-3">Details</h5>
                 <div class="info-container">
                     <ul class="list-unstyled mb-4">
@@ -138,9 +145,9 @@
                             </div>
 
                             <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="checkbox" id="send_to_contestant" value="send_to_contestant" checked>
-                          <label class="form-check-label" for="send_to_contestant">Send comment to contestant</label> <small>(If checked your comment will be sent to contestant)</small>
-                        </div>
+                                <input class="form-check-input" type="checkbox" id="send_to_contestant" name="send_to_contestant" value="1" checked>
+                                <label class="form-check-label" for="send_to_contestant">Send comment to contestant</label> <small>(If checked your comment will be sent to contestant)</small>
+                            </div>
 
 
                             <div class="alert alert-danger" role="alert">

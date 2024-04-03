@@ -33,7 +33,7 @@ protected $comments;
             ->line('Your audition has been reviewd by one of our Gurus and you have received following comment:')
             // ->markdown('emails.gurusComment', ['payment' => $this->payment])
 
-            ->line($this->comments)
+            ->line($this->comments);
 
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class VideoRating extends Model
 {
     use HasFactory;
-    protected $fillable = ['guru_id', 'video_id', 'rating'];
+    protected $fillable = ['guru_id', 'video_id', 'rating', 'comments'];
 
     public function video()
     {

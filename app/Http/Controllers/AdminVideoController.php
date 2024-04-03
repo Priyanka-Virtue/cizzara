@@ -30,7 +30,7 @@ class AdminVideoController extends Controller
                 });
             }
         }
-
+        $query->orderByRatings('asc');
         $videos = $query->paginate(2);
 
         return view('admin.videos', compact('videos'));

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Video;
 use App\Notifications\GurusCommentNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class VideoRatingController extends Controller
@@ -34,7 +35,7 @@ class VideoRatingController extends Controller
 
         // Validate request data
         $validator = Validator::make($request->all(), [
-            'rating' => 'required|integer|between:1,10',
+            'rating' => 'required|integer|between:1,10'
         ]);
 
         if ($validator->fails()) {
@@ -52,10 +53,10 @@ class VideoRatingController extends Controller
         ]);
 
         if($request->comments != "" && ( $request->send_to_contestant != "")) {
-
             $contestant = User::find($video->user_id);
             $contestant->notify(new GurusCommentNotification($request->comments));
         }
+
 
         return redirect()->route('admin.videos.index')->with('success', 'Video rated successfully.');
     }

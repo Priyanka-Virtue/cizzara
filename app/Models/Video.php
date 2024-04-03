@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Video extends Model
 {
@@ -44,6 +45,19 @@ class Video extends Model
     public function guruRatings()
     {
         return $this->hasOne(VideoRating::class)->where('guru_id','=', Auth::id());
+    }
+
+    public function scopeOrderByRatings($query, $direction = 'asc')
+    {
+        // Join with ratings table and count the ratings
+        $query->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
+            ->select('videos.*', DB::raw('COUNT(video_ratings.id) as rating_count'))
+            ->groupBy('videos.id');
+
+        // Sort by the number of ratings
+        $query->orderBy('rating_count', $direction);
+
+        return $query;
     }
 
 
