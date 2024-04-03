@@ -43,6 +43,9 @@
             </thead>
             <tbody class="table-border-bottom-0">
                 @forelse ($topUsers as $user)
+                @php
+                    $user = App\Models\User::find($user['id']);
+                @endphp
                 <tr>
                     <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
                     <td>
@@ -89,7 +92,7 @@
     <div class="justify-content-center">
         <div class="col-md-6 mx-auto">
             <hr />
-            {{ $users->appends(request()->input())->links() }}
+            {{ $paginatedTopUsers->appends(request()->input())->links() }}
         </div>
     </div>
 

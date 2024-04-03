@@ -159,7 +159,7 @@ public function topList(Request $request)
 //     foreach ($topUsers as $i => $user)
 //     {
 //         echo "<br>------------------<br/>";
-//         print_r($user);
+//         print_r($user['id']);
 //     }
 // dd($items[0]);
     return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers'));
