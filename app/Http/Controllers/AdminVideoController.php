@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Video;
 use App\Models\VideoRating;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -91,36 +92,81 @@ class AdminVideoController extends Controller
 
 
 
-    public function topList(Request $request)
+    public function topListxx(Request $request)
     {
         $plan = Plan::where('name', 'SingTUV2024')->first();
-        $topUsers = User::withVideosByAudition($plan->id)
-    ->get() // Retrieve the results first
-    ->map(function ($user) {
-        $videoRatings = [];
-        foreach ($user->videos as $video) {
-            $averageRating = $video->ratings->avg('rating');
-            $videoRatings[] = $averageRating;
-        }
+        $paginatedUsers = User::withVideosByAudition($plan->id)->paginate(2);
+        $topUsers = $paginatedUsers->getCollection()->map(function ($user) {
+            $videoRatings = [];
+            foreach ($user->videos as $video) {
+                $averageRating = $video->ratings->avg('rating');
+                $videoRatings[] = $averageRating;
+            }
 
-        // If the user has two videos, combine their average ratings into one
-        if (count($videoRatings) === 2) {
-            $userAverageRating = array_sum($videoRatings) / count($videoRatings);
-        } else {
-            $userAverageRating = $videoRatings[0] ?? 0; // If only one video, take its average
-        }
+            // If the user has two videos, combine their average ratings into one
+            if (count($videoRatings) === 2) {
+                $userAverageRating = array_sum($videoRatings) / count($videoRatings);
+            } else {
+                $userAverageRating = $videoRatings[0] ?? 0; // If only one video, take its average
+            }
 
-        return [
-            'user' => $user,
-            'average_rating' => $userAverageRating,
-        ];
-    })
-    ->sortByDesc('average_rating')
-    ->take($request->top ?? 10);
-// dd($topUsers);
-    return view('admin.auditions.top', compact('topUsers'));
+            $user->average_rating = $userAverageRating;
+            return $user;
+        });
+
+        $topUsers = $topUsers->sortByDesc('average_rating')->take(3);
+        return view('admin.auditions.top', compact('topUsers', 'paginatedUsers'));
 
     }
+
+
+
+
+
+public function topList(Request $request)
+{
+    $plan = Plan::where('name', 'SingTUV2024')->first();
+
+
+    // Retrieve the top 3 users with their average ratings
+    $topUsers = User::select('users.*', DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
+        ->leftJoin('videos', 'users.id', '=', 'videos.user_id')
+        ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
+        ->where('videos.plan_id', $plan->id)
+        ->groupBy('users.id')
+        ->orderByDesc('average_rating')
+        ->take(3)
+        ->get();
+
+    // Manually create a LengthAwarePaginator instance for the top users
+    $perPage = 2; // Set per page to 2 for the first page
+    $currentPage = $request->query('page', 1);
+
+    // Calculate the offset based on the current page
+    $offset = ($currentPage - 1) * $perPage;
+
+    // Get the items for the current page
+    $items = collect(array_slice($topUsers->toArray(), $offset, $perPage));
+
+    // Create a LengthAwarePaginator instance
+    $paginatedTopUsers = new LengthAwarePaginator(
+        $items,
+        count($topUsers), // Total count of items
+        $perPage, // Per page
+        $currentPage // Current page
+    );
+    $topUsers = $items;
+//     foreach ($topUsers as $i => $user)
+//     {
+//         echo "<br>------------------<br/>";
+//         print_r($user);
+//     }
+// dd($items[0]);
+    return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers'));
+
+    // return view('admin.auditions.top', compact('topUsers'));
+}
+
 
 
 

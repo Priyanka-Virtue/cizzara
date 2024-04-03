@@ -60,13 +60,29 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Video::class);
     }
-    public function scopeWithVideosByAudition($query, $plan)
+    // public function scopeWithVideosByAudition($query, $plan)
+    // {
+    //     return $query->whereHas('videos', function ($query) use ($plan) {
+    //         $query->where('plan_id', $plan);
+    //     })->with('videos.ratings');
+    // }
+
+    public function scopeWithVideosByAudition($query, $plan, $sortByRating = false, $direction = 'asc')
     {
-        return $query->whereHas('videos', function ($query) use ($plan) {
+        $query = $query->whereHas('videos', function ($query) use ($plan) {
             $query->where('plan_id', $plan);
-        })->with('videos.ratings');
+        })->with(['videos.ratings']);
+
+        if ($sortByRating) {
+            $query->leftJoin('videos', 'users.id', '=', 'videos.user_id')
+                ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
+                ->select('users.*')
+                ->selectRaw('COUNT(video_ratings.id) as rating_count')
+                ->groupBy('users.id')
+                ->orderBy('rating_count', $direction);
+        }
+
+        return $query;
     }
-
-
 
 }

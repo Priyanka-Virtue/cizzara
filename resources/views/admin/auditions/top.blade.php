@@ -38,15 +38,18 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @forelse ($topUsers as $i => $user)
+                @foreach($topUsers as $i => $userx)
+
+@endforeach
+@dd("end");
                 <tr>
-                    <td><a href="{{ route('admin.users.show', $user['user']) }}">{{ $user['user']->name }}</a></td>
+                    <td><a href="{{ route('admin.users.show', $user->id) }}">{{ $user->name }}</a></td>
                     <td>
                         @php
 
 
            $videoRatings = [];
-    foreach ($user['user']->videos as $video) {
+    foreach ($user->videos as $video) {
         echo "<br>- Video: {$video->id} ";
                 foreach ($video->ratings as $rating) {
                     echo "<br>";
@@ -65,12 +68,13 @@
     }
            @endphp
                     </td>
-                    <td>{{ $user['user']->email }}</td>
+                    <td>{{ $user->email }}</td>
 
                     <td>
-                        <a href="{{ route('admin.users.show', $user['user']) }}" class="btn btn-primary">View</a>
+                        <a href="{{ route('admin.users.show', $user) }}" class="btn btn-primary">View</a>
                     </td>
                 </tr>
+
                 @empty
                 <tr>
                     <td colspan="4">No records found.</td>
@@ -82,7 +86,7 @@
     <div class="justify-content-center">
         <div class="col-md-6 mx-auto">
             <hr />
-
+            {{ $paginatedTopUsers->links() }}
         </div>
     </div>
 
