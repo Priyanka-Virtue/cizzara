@@ -6,26 +6,21 @@
 
 <div class="card">
     <h5 class="card-header">Show Users</h5>
-    <form action="{{ route('admin.users.index') }}" method="GET">
-        <div class="p-3">
-            <div class="row">
-
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="contestant">Search by Contestant Name:</label>
-                        <input type="text" class="form-control" id="contestant" name="contestant" placeholder="Enter User Name">
+    <div class="p-3">
+        <div class="row">
+            <div class="col-md-7">
+                @include('partials.export-btns')
+            </div>
+            <div class="col-md-5">
+                <form action="{{ route('admin.users.index') }}" method="GET">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="contestant" name="contestant" placeholder="Search by Contestant Name" aria-label="Search by Contestant Name" aria-describedby="button-addon2">
+                        <button type="submit" name="submit" value="submit" class="btn btn-primary waves-effect" id="button-addon2">Search</button>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-
-                        <button type="submit" name="submit" value="submit" class="btn btn-primary btn-block mt-4">Search</button>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
 
     <div class="table-responsive text-nowrap">
         <table class="table">
@@ -36,7 +31,7 @@
 
                     <th>Rating</th>
                     <th>Email</th>
-                    
+
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -93,4 +88,7 @@
 
 </div>
 
+@endsection
+@section('bottom')
+<script src="{{ asset('assets/js/export.js') }}"></script>
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UsersExport;
 use App\Models\Plan;
 use App\Models\User;
 use App\Models\Video;
@@ -11,6 +12,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminVideoController extends Controller
 {
@@ -95,8 +97,6 @@ class AdminVideoController extends Controller
     public function topList(Request $request)
     {
         $plan = Plan::where('name', 'SingTUV2024')->first();
-
-
         // Retrieve the top 3 users with their average ratings
         $topUsers = User::select('users.*', DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
             ->leftJoin('videos', 'users.id', '=', 'videos.user_id')
@@ -141,5 +141,29 @@ class AdminVideoController extends Controller
 
         $users = $query->paginate(2);
         return view('admin.auditions.index', compact('users'));
+    }
+
+
+    public function export(Request $request)
+    {
+        $selectedRecordIds = $request->input('selectedRecords');
+
+        $plan = Plan::where('name', 'SingTUV2024')->first();
+
+        // Retrieve the top 3 users with their average ratings
+        $qry = User::select('users.*', DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
+            ->leftJoin('videos', 'users.id', '=', 'videos.user_id')
+            ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
+            ->where('videos.plan_id', $plan->id)
+            ->groupBy('users.id')
+            ->orderByDesc('average_rating');
+        // ->get();
+
+        if ($selectedRecordIds)
+            $selectedRecords = $qry->whereIn('users.id', $selectedRecordIds)->get();
+        else
+            $selectedRecords = $qry->get();
+
+        return Excel::download(new UsersExport($selectedRecords), 'toppers.xlsx');
     }
 }

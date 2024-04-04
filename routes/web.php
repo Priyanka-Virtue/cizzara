@@ -68,5 +68,9 @@ Route::middleware(['role:guru|admin'])->group(function () {
         Route::get('/admin/auditions/top/{top?}', [AdminVideoController::class, 'topList'])->name('admin.auditions.top');
         Route::get('/admin/auditions/{audition}', [AdminVideoController::class, 'audition'])->name('admin.auditions.show');
 
+
+        Route::post('/export-records', [AdminVideoController::class, 'export'])->name('export.records');
+
+
     });
 });

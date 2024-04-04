@@ -52,6 +52,9 @@
         nav svg{
             max-width: 25px !important;
         }
+        ul.pagination {
+            justify-content: center;
+        }
     </style>
     @yield('head')
   </head>
