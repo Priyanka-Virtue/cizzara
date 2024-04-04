@@ -29,6 +29,14 @@
                 <td><input class="form-check-input" type="checkbox" name="selectAll" id="selectAll" value="selectAll"></td>
                     <th>Contestant</th>
                     <th>Email</th>
+                    <th>Phone</th>
+                    <th>Birthdate</th>
+                    <th>Education</th>
+                    <th>Occupation</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip</th>
+                    <th>Address</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -37,8 +45,16 @@
                 <tr>
                 <td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $user->id }}"></td>
 
-                    <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
+                    <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->details->last_name .' '.$user->details->first_name }}</a></td>
                     <td>{{ $user->email }}</td>
+                    <td>{{ $user->details->phone }}</td>
+                    <td>{{ $user->details->date_of_birth }}</td>
+                    <td>{{ $user->details->education }}</td>
+                    <td>{{ $user->details->occupation }}</td>
+                    <td>{{ $user->details->city }}</td>
+                    <td>{{ $user->details->state }}</td>
+                    <td>{{ $user->details->pin_code }}</td>
+                    <td>{{ $user->details->address }}</td>
 
                     <td>
                         <a href="{{ route('admin.users.show', $user) }}" class="btn btn-primary">View</a>

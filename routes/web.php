@@ -72,7 +72,5 @@ Route::middleware(['role:guru|admin'])->group(function () {
         Route::post('/export-toppers', [AdminVideoController::class, 'exportToppers'])->name('export.toppers');
         Route::post('/export-exportUserList', [AdminVideoController::class, 'exportUserList'])->name('export.userList');
         Route::post('/export-audition', [AdminVideoController::class, 'exportaudition'])->name('export.audition');
-
-
     });
 });

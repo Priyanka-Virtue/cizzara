@@ -126,7 +126,7 @@ class AdminVideoController extends Controller
             ->where('videos.plan_id', $plan->id)
             ->groupBy('users.id')
             ->orderByDesc('average_rating')
-            ->take(3)
+            ->take($request->top ?? 3)
             ->get();
 
         // Manually create a LengthAwarePaginator instance for the top users
@@ -172,10 +172,15 @@ class AdminVideoController extends Controller
 
         $plan = Plan::where('name', 'SingTUV2024')->first();
 
-        // Retrieve the top 3 users with their average ratings
-        $qry = User::select('users.*', DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
+     
+        $qry = User::select(
+            'users.*',
+            'user_details.city','user_details.state','user_details.pin_code', 'user_details.address', 'user_details.phone', 'user_details.gender',
+            'user_details.date_of_birth', 'user_details.education', 'user_details.occupation',
+        DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
             ->leftJoin('videos', 'users.id', '=', 'videos.user_id')
             ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
+            ->leftJoin('user_details', 'users.id', '=', 'user_details.user_id')
             ->where('videos.plan_id', $plan->id)
             ->groupBy('users.id')
             ->orderByDesc('average_rating');
