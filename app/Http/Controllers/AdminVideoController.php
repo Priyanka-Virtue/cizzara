@@ -79,6 +79,28 @@ class AdminVideoController extends Controller
         $users = $query->paginate(2);
         return view('admin.users.index', compact('users'));
     }
+    public function exportUserList(Request $request)
+    {
+        $selectedRecordIds = $request->input('selectedRecords');
+
+        $query = User::where('id', '!=', auth()->user()->id);
+
+        // if ($request->has('contestant') && !empty($request->contestant)) {
+        //     $query->whereHas('details', function ($userQuery) use ($request) {
+        //         $userQuery->where('first_name', 'like', '%' . $request->contestant . '%')
+        //             ->orWhere('last_name', 'like', '%' . $request->contestant . '%');
+        //     });
+        // } else {
+            $query->whereHas('details');
+        // }
+
+        if ($selectedRecordIds)
+            $selectedRecords = $query->whereIn('id', $selectedRecordIds)->get();
+        else
+            $selectedRecords = $query->get();
+
+        return Excel::download(new UsersExport($selectedRecords), 'users-list.xlsx');
+    }
 
 
 
