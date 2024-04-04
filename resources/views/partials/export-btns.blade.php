@@ -1,6 +1,6 @@
 <div class="d-flex">
                     <div class="form-group">
-                        <form id="exportForm" method="POST" action="{{ route('export.records') }}">
+                        <form id="exportForm" method="POST" action="{{ $exportAction ?? route('export.toppers') }}">
                             @csrf
                             <button id="exportButton" class="btn btn-primary waves-effect" type="button">Export selected</button>
                         </form>

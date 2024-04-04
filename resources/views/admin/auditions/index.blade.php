@@ -1,15 +1,15 @@
 @extends('layouts.app-new')
 
 @section('content')
-<h4 class="py-3 mb-4"><span class="text-muted fw-light">Users /</span><?php echo date('Y') ?></h4>
+<h4 class="py-3 mb-4"><span class="text-muted fw-light">Autitions /</span><?php echo date('Y') ?></h4>
 <hr class="my-5" />
 
 <div class="card">
-    <h5 class="card-header">Show Users</h5>
+    <h5 class="card-header">All Entries</h5>
     <div class="p-3">
         <div class="row">
             <div class="col-md-7">
-                @include('partials.export-btns')
+                @include('partials.export-btns', ['exportAction' => route('export.audition')])
             </div>
             <div class="col-md-5">
                 <form action="{{ route('admin.users.index') }}" method="GET">
@@ -26,6 +26,7 @@
         <table class="table">
             <thead class="table-light">
                 <tr>
+                <td><input class="form-check-input" type="checkbox" name="selectAll" id="selectAll" value="selectAll"></td>
                     <th>Contestant</th>
                     <th>Videos</th>
 
@@ -37,6 +38,7 @@
             <tbody class="table-border-bottom-0">
                 @forelse ($users as $user)
                 <tr>
+                <td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $user->id }}"></td>
                     <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
                     <td>
                         @php

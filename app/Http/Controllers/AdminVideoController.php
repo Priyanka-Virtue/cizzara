@@ -144,7 +144,7 @@ class AdminVideoController extends Controller
     }
 
 
-    public function export(Request $request)
+    public function exportToppers(Request $request)
     {
         $selectedRecordIds = $request->input('selectedRecords');
 
@@ -165,5 +165,21 @@ class AdminVideoController extends Controller
             $selectedRecords = $qry->get();
 
         return Excel::download(new UsersExport($selectedRecords), 'toppers.xlsx');
+    }
+
+    public function exportAudition(Request $request)
+    {
+        $selectedRecordIds = $request->input('selectedRecords');
+
+        $plan = Plan::where('name', 'SingTUV2024')->first();
+
+        $qry = User::withVideosByAudition($plan->id); //->get();
+
+        if ($selectedRecordIds)
+            $selectedRecords = $qry->whereIn('users.id', $selectedRecordIds)->get();
+        else
+            $selectedRecords = $qry->get();
+
+        return Excel::download(new UsersExport($selectedRecords), 'audition-list.xlsx');
     }
 }
