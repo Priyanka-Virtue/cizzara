@@ -12,8 +12,6 @@ function toggleSelectAll() {
 // Event listener for main checkbox
 selectAllCheckbox.addEventListener("change", toggleSelectAll);
 
-
-
 const exportForm = document.getElementById("exportForm");
 const exportButton = document.getElementById("exportButton");
 

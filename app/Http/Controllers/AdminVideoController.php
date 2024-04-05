@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ContestantsExport;
 use App\Exports\UsersExport;
 use App\Models\Plan;
 use App\Models\User;
@@ -83,16 +84,7 @@ class AdminVideoController extends Controller
     {
         $selectedRecordIds = $request->input('selectedRecords');
 
-        $query = User::where('id', '!=', auth()->user()->id);
-
-        // if ($request->has('contestant') && !empty($request->contestant)) {
-        //     $query->whereHas('details', function ($userQuery) use ($request) {
-        //         $userQuery->where('first_name', 'like', '%' . $request->contestant . '%')
-        //             ->orWhere('last_name', 'like', '%' . $request->contestant . '%');
-        //     });
-        // } else {
-            $query->whereHas('details');
-        // }
+        $query = User::where('id', '!=', auth()->user()->id)->whereHas('details');
 
         if ($selectedRecordIds)
             $selectedRecords = $query->whereIn('id', $selectedRecordIds)->get();
@@ -221,7 +213,7 @@ class AdminVideoController extends Controller
         else
             $selectedRecords = $qry->get();
 
-        return Excel::download(new UsersExport($selectedRecords, $plan->id), 'toppers.xlsx');
+        return Excel::download(new ContestantsExport($selectedRecords), 'toppers.xlsx');
     }
 
     public function exportAudition(Request $request)
@@ -237,7 +229,7 @@ class AdminVideoController extends Controller
         else
             $selectedRecords = $qry->get();
 
-        return Excel::download(new UsersExport($selectedRecords), 'audition-list.xlsx');
+        return Excel::download(new ContestantsExport($selectedRecords), 'audition-list.xlsx');
     }
 
 
@@ -245,22 +237,5 @@ class AdminVideoController extends Controller
 
 
 
-    public function exportToppersxxx(Request $request)
-    {
-        $plan = 1;
-        $selectedRecords = User::select(
-            'users.email',
-            // 'user_details.first_name',
-            // 'user_details.last_name',
-        DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
 
-            ->leftJoin('videos', 'users.id', '=', 'videos.user_id')
-            ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
-            // ->leftJoin('user_details', 'users.id', '=', 'user_details.user_id')
-            ->where('videos.plan_id', $plan)
-            ->groupBy('users.id')
-            ->orderByDesc('average_rating')->with('details')->get();
-
-        return Excel::download(new UsersExport($selectedRecords), 'toppers.xlsx');
-    }
 }

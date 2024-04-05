@@ -30,43 +30,17 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings
     }
     public function map($user): array
     {
-        $userd = User::where('id', $user->id)->with('details')->first();
-
-        $videos = '';
-        $links = '';
-        $types = '';
-        foreach ($userd->videos as $i => $video) {
-
-            $videos .= ($i+1).'.) ' .  $video->original_name . ' ';
-            $links .= ($i+1).'.) ' .  route('admin.videos.show', $video) . ' ';
-            $types .= ($i+1).'.) ' .  $video->style . ' ';
-
-            $averageRating = $video->ratings->avg('rating');
-            $videoRatings[] = $averageRating;
-        }
-
-
-        if (count($videoRatings) > 1) {
-            $userAverageRating = array_sum($videoRatings) / count($videoRatings);
-        } else {
-            $userAverageRating = $videoRatings[0] ?? 0;
-        }
-
         return [
-            $userd->details->first_name . ' ' . $userd->details->last_name,
-            $videos,
-            $links,
-            $types,
-            $userAverageRating,
-            $userd->email,
-            $userd->details->phone,
-            $userd->details->date_of_birth,
-            $userd->details->education,
-            $userd->details->occupation,
-            $userd->details->city,
-            $userd->details->state,
-            $userd->details->pin_code,
-            $userd->details->address
+            $user->details->first_name . ' ' . $user->details->last_name,
+            $user->email,
+            $user->details->phone,
+            $user->details->date_of_birth,
+            $user->details->education,
+            $user->details->occupation,
+            $user->details->city,
+            $user->details->state,
+            $user->details->pin_code,
+            $user->details->address
 
         ];
     }
@@ -75,10 +49,7 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings
     {
         $headings = [
             'name',
-            'videos',
-            'links',
-            'types',
-            'Average Rating',
+           
             'email',
             'phone',
             'date_of_birth',

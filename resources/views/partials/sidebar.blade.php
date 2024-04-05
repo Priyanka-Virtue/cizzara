@@ -16,19 +16,21 @@
           <ul class="menu-inner py-1">
 
             <!-- Tables -->
-            <li class="menu-item active">
+            <!-- <li class="menu-item active">
               <a href="{{route('admin.videos.index')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-table"></i>
                 <div data-i18n="Videos">Videos</div>
               </a>
-            </li>
-            @role('admin')
+            </li> -->
+
             <li class="menu-item active">
               <a href="{{route('admin.auditions.index')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-human-female-dance"></i>
                 <div data-i18n="Contestants">All Entries</div>
               </a>
             </li>
+            @role('admin')
+
 
             <li class="menu-item active">
               <a href="{{route('admin.auditions.top', 500)}}" class="menu-link">
