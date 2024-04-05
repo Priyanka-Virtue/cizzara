@@ -8,9 +8,11 @@
     <h5 class="card-header">All Entries</h5>
     <div class="p-3">
         <div class="row">
+            @role('admin')
             <div class="col-md-7">
                 @include('partials.export-btns', ['exportAction' => route('export.audition')])
             </div>
+            @endrole
             <div class="col-md-5">
                 <form action="{{ route('admin.users.index') }}" method="GET">
                     <div class="input-group">
@@ -26,11 +28,13 @@
         <table class="table">
             <thead class="table-light">
                 <tr>
-                <td><input class="form-check-input" type="checkbox" name="selectAll" id="selectAll" value="selectAll"></td>
+                @role('admin') <td><input class="form-check-input" type="checkbox" name="selectAll" id="selectAll" value="selectAll"></td> @endrole
                     <th>Contestant</th>
                     <th>Videos</th>
 
-                    <th>Rating</th>
+                    @role('guru')<th>Rating</th>@endrole
+                    @role('admin')<th>Guru's Avg. Rating</th>@endrole
+
                     <th>Email</th>
 
                 </tr>
@@ -38,29 +42,23 @@
             <tbody class="table-border-bottom-0">
                 @forelse ($users as $user)
                 <tr>
-                <td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $user->id }}"></td>
+                @role('admin')<td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $user->id }}"></td>@endrole
                     <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
                     <td>
                         @php
-
-
+                        $guruRatings = [];
                         $videoRatings = [];
                         foreach ($user->videos as $video) {
-                        //echo "<br>- Video: {$video->id} ";
+
+                            $guruRatings[] = $video->guruRatings->rating ?? 'N/A'.' / 10 ';
+
                         echo '<a href="'. route('admin.videos.show', $video) .'">' .$video->original_name.' </a>
                         <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>
                         <br/>';
-                        foreach ($video->ratings as $rating) {
-                        //echo "<br>";
 
-                        // echo "-- Rating: {$rating->rating}\n";
-                        //echo "-- Guru: {$rating->guru_id}\n";
-                        }
                         $averageRating = $video->ratings->avg('rating');
                         $videoRatings[] = $averageRating;
                         }
-
-                        // If the user has two videos, combine their average ratings into one
                         if (count($videoRatings) > 1) {
                         $userAverageRating = array_sum($videoRatings) / count($videoRatings);
                         } else {
@@ -68,7 +66,16 @@
                         }
                         @endphp
                     </td>
+
+                    @role('guru')
+                    <td>@foreach($guruRatings as $rating)
+                        {{ $rating }} <br/>
+                        @endforeach
+                    </td>
+                    @endrole
+                    @role('admin')
                     <td>{{ $userAverageRating }}</td>
+                    @endrole
                     <td>{{ $user->email }}</td>
 
 
