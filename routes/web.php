@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminVideoController;
+use App\Http\Controllers\GuruController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SingingController;
 use App\Http\Controllers\UserDetailController;
@@ -63,6 +64,11 @@ Route::middleware(['role:guru|admin'])->group(function () {
     Route::get('/admin/auditions', [AdminVideoController::class, 'auditionList'])->name('admin.auditions.index');
 
     Route::middleware(['role:admin'])->group(function () {
+        Route::get('/admin/gurus', [GuruController::class, 'index'])->name('admin.gurus.index');
+        Route::get('/admin/gurus/show', [GuruController::class, 'show'])->name('admin.gurus.show');
+        Route::post('/admin/gurus/updateStatus', [GuruController::class, 'updateStatus'])->name('admin.gurus.update-status');
+
+
         Route::get('/admin/users', [AdminVideoController::class, 'userList'])->name('admin.users.index');
         Route::get('/admin/users/{user}', [AdminVideoController::class, 'user'])->name('admin.users.show');
 

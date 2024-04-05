@@ -165,7 +165,7 @@
         <a href="https://themeselection.com/item/materio-bootstrap-html-admin-template/" rel="no-follow">Upgrade to Pro</a>
     </div>
     <div class="floating_btn">
-        <a target="_blank" href="https://wa.me/8866202134?text=Hi">
+        <a target="_blank" href="https://wa.me/+916357995799?text=Hi">
             <div class="contact_icon">
                 <i class="mdi mdi-36px mdi-whatsapp my-float"></i>
             </div>

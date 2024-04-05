@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Guru;
 use App\Http\Requests\StoreGuruRequest;
 use App\Http\Requests\UpdateGuruRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class GuruController extends Controller
 {
@@ -15,7 +17,14 @@ class GuruController extends Controller
      */
     public function index()
     {
-        //
+        $gurus = User::role('guru')->paginate(env('RECORDS_PER_PAGE', 10));
+        return view('admin.gurus.index', compact('gurus'));
+    }
+    public function updateStatus(Request $request)
+    {
+        $updated = User::where('id', $request->input('user_id'))->update(['is_active' => $request->input('is_active')]);
+
+        return response()->json(['success' => true]);
     }
 
     /**

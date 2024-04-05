@@ -41,6 +41,20 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    // protected function attemptLogin(Request $request)
+    // {
+    //     $attempt = $this->guard()->attempt(
+    //         $this->credentials($request), $request->filled('remember')
+    //     );
+
+    //     if ($attempt && !$this->guard()->user()->is_active) {
+    //         $this->guard()->logout();
+    //         return false;
+    //     }
+
+    //     return $attempt;
+    // }
+
     protected function sendLoginResponse(Request $request)
     {
         $request->session()->regenerate();
@@ -51,10 +65,9 @@ class LoginController extends Controller
             return $response;
         }
 
-        if($request->wantsJson()) {
+        if ($request->wantsJson()) {
             return new JsonResponse([], 204);
-        }
-        else{
+        } else {
             $user = Auth::user();
             $payment = Payment::where('user_id', $user->id)->first();
 
@@ -70,9 +83,13 @@ class LoginController extends Controller
         //             : redirect()->intended($this->redirectPath());
     }
 
-    protected function authenticated($request, $user){
-        // dd( $user->getRoleNames()->first() );
-        if($user->hasRole(['admin','guru'])){
+    protected function authenticated($request, $user)
+    {
+        if (!$this->guard()->user()->is_active) {
+            $this->guard()->logout();
+            return redirect()->route('login')->with('error', 'Your account is not active. Please contact admin.');
+        }
+        if ($user->hasRole(['admin', 'guru'])) {
             return redirect('/admin/videos');
         } else {
 
