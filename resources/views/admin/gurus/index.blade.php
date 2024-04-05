@@ -20,6 +20,7 @@
                         </select>
                         <button type="submit" name="submit" value="submit" class="btn btn-primary waves-effect" id="button-addon2">Add Guru</button>
                     </div>
+                    @csrf
                 </form>
             </div>
             <div class="col-md-2">

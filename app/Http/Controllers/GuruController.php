@@ -27,69 +27,89 @@ class GuruController extends Controller
         return response()->json(['success' => true]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'unique:users,phone',
+            'is_active' => 'required|in:0,1',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreGuruRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreGuruRequest $request)
-    {
-        //
+        $user = new User();
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->phone = $request->input('phone');
+        $user->is_active = $request->input('is_active');
+        $user->password = bcrypt('password!!!');
+        $user->save();
+
+        $user->assignRole('guru');
+
+        return redirect()->route('gurus.index')->with('success', 'Guru has been added successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Guru  $guru
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Guru $guru)
+    public function show($id)
     {
-        //
+        $guru = User::findOrFail($id);
+        return view('gurus.show', compact('guru'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Guru  $guru
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Guru $guru)
+    public function edit($id)
     {
-        //
+        $guru = User::findOrFail($id);
+        return view('gurus.edit', compact('guru'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateGuruRequest  $request
-     * @param  \App\Models\Guru  $guru
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateGuruRequest $request, Guru $guru)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.$id,
+            'password' => 'nullable|string|min:8',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        if ($request->has('password')) {
+            $user->password = bcrypt($request->input('password'));
+        }
+        $user->save();
+
+        return redirect()->route('gurus.index')->with('success', 'Guru updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Guru  $guru
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Guru $guru)
+    public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('gurus.index')->with('success', 'Guru deleted successfully.');
     }
 }
