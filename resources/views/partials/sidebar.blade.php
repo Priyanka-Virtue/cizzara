@@ -71,7 +71,7 @@
               <hr/>
             </li>
             <li class="menu-item active">
-              <a href="{{route('admin.gurus.index')}}" class="menu-link">
+              <a href="{{route('gurus.index')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-account-group"></i>
                 <div data-i18n="Contestants">Gurus</div>
               </a>

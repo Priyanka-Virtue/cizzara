@@ -8,22 +8,22 @@
     <h5 class="card-header">Show Gurus</h5>
     <div class="p-3">
         <div class="row">
-            <div class="col-md-7">
-            <form action="{{ route('admin.gurus.create') }}" method="POST">
+            <div class="col-md-10">
+                <form method="POST" action="{{ isset($userDetail) ? route('gurus.update', $userDetail->id) : route('gurus.store') }}" enctype="multipart/form-data">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="contestant" name="contestant" placeholder="Search by Name" aria-label="Search by Contestant Name" aria-describedby="button-addon2">
-                        <input type="text" class="form-control" id="e" name="e" placeholder="Search by Name" >
-                        <button type="submit" name="submit" value="submit" class="btn btn-primary waves-effect" id="button-addon2">Search</button>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Guru">
+                        <input type="text" class="form-control" id="email" name="email" placeholder="guru@cizzara.in">
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="999999999">
+                        <select name="is_active" id="is_active" class="form-select">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                        <button type="submit" name="submit" value="submit" class="btn btn-primary waves-effect" id="button-addon2">Add Guru</button>
                     </div>
                 </form>
             </div>
-            <div class="col-md-5">
-                <!-- <form action="{{ route('admin.gurus.index') }}" method="GET">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="contestant" name="contestant" placeholder="Search by Name" aria-label="Search by Contestant Name" aria-describedby="button-addon2">
-                        <button type="submit" name="submit" value="submit" class="btn btn-primary waves-effect" id="button-addon2">Search</button>
-                    </div>
-                </form> -->
+            <div class="col-md-2">
+
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
             <tbody class="table-border-bottom-0">
                 @forelse ($gurus as $user)
                 <tr>
-                    {{-- <td><a href="{{ route('admin.gurus.show', $user) }}">{{ $user->name  }}</a></td> --}}
+                    {{-- <td><a href="{{ route('gurus.show', $user) }}">{{ $user->name  }}</a></td> --}}
                     <td>{{ $user->name  }}</td>
                     <td>{{ $user->email }}</td>
 
