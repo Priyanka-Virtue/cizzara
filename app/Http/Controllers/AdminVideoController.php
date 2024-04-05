@@ -34,7 +34,7 @@ class AdminVideoController extends Controller
             }
         }
         $query->orderByRatings('asc');
-        $videos = $query->paginate(2);
+        $videos = $query->paginate(env('RECORDS_PER_PAGE', 10));
 
         return view('admin.videos', compact('videos'));
     }
@@ -76,7 +76,7 @@ class AdminVideoController extends Controller
         } else {
             $query->whereHas('details');
         }
-        $users = $query->paginate(2);
+        $users = $query->paginate(env('RECORDS_PER_PAGE', 10));
         return view('admin.users.index', compact('users'));
     }
     public function exportUserList(Request $request)
@@ -161,7 +161,7 @@ class AdminVideoController extends Controller
 
         $query = User::withVideosByAudition($plan->id); //->get();
 
-        $users = $query->paginate(2);
+        $users = $query->paginate(env('RECORDS_PER_PAGE', 10));
         return view('admin.auditions.index', compact('users'));
     }
 
@@ -172,11 +172,41 @@ class AdminVideoController extends Controller
 
         $plan = Plan::where('name', 'SingTUV2024')->first();
 
-     
+
         $qry = User::select(
-            'users.*',
-            'user_details.city','user_details.state','user_details.pin_code', 'user_details.address', 'user_details.phone', 'user_details.gender',
-            'user_details.date_of_birth', 'user_details.education', 'user_details.occupation',
+            'users.id',
+            'users.email',
+
+            'user_details.first_name',
+            'user_details.last_name',
+            // 'stagename' => 'nullable|string|max:255',
+            'user_details.gender',
+            'user_details.relationship_status',
+            'user_details.date_of_birth',
+            'user_details.address',
+            'user_details.city',
+            'user_details.state',
+            'user_details.pin_code',
+            'user_details.phone',
+            'user_details.education',
+            'user_details.occupation',
+            'user_details.work_experience',
+
+            'user_details.hobbies',
+            'user_details.describe_yourself',
+            'user_details.instagram',
+            'user_details.youtube',
+            'user_details.facebook',
+
+            'user_details.g_first_name',
+            'user_details.g_last_name',
+            'user_details.g_address',
+            'user_details.g_city',
+            'user_details.g_state',
+            'user_details.g_pin_code',
+            'user_details.g_phone',
+            'user_details.g_email',
+
         DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
             ->leftJoin('videos', 'users.id', '=', 'videos.user_id')
             ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
@@ -184,14 +214,14 @@ class AdminVideoController extends Controller
             ->where('videos.plan_id', $plan->id)
             ->groupBy('users.id')
             ->orderByDesc('average_rating');
-        // ->get();
+
 
         if ($selectedRecordIds)
             $selectedRecords = $qry->whereIn('users.id', $selectedRecordIds)->get();
         else
             $selectedRecords = $qry->get();
 
-        return Excel::download(new UsersExport($selectedRecords), 'toppers.xlsx');
+        return Excel::download(new UsersExport($selectedRecords, $plan->id), 'toppers.xlsx');
     }
 
     public function exportAudition(Request $request)
@@ -208,5 +238,29 @@ class AdminVideoController extends Controller
             $selectedRecords = $qry->get();
 
         return Excel::download(new UsersExport($selectedRecords), 'audition-list.xlsx');
+    }
+
+
+
+
+
+
+    public function exportToppersxxx(Request $request)
+    {
+        $plan = 1;
+        $selectedRecords = User::select(
+            'users.email',
+            // 'user_details.first_name',
+            // 'user_details.last_name',
+        DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
+
+            ->leftJoin('videos', 'users.id', '=', 'videos.user_id')
+            ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
+            // ->leftJoin('user_details', 'users.id', '=', 'user_details.user_id')
+            ->where('videos.plan_id', $plan)
+            ->groupBy('users.id')
+            ->orderByDesc('average_rating')->with('details')->get();
+
+        return Excel::download(new UsersExport($selectedRecords), 'toppers.xlsx');
     }
 }

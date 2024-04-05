@@ -51,7 +51,7 @@
                 @endphp
                 <tr>
                     <td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $user->id }}"></td>
-                    <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
+                    <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->details->first_name . ' ' . $user->details->last_name }}</a></td>
                     <td>
                         @php
 
