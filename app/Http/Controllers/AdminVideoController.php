@@ -113,7 +113,8 @@ class AdminVideoController extends Controller
         $plan = Plan::where('name', 'SingTUV2024')->first();
         // Retrieve the top 3 users with their average ratings
         $topUsers = User::select('users.*', DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
-            ->leftJoin('videos', 'users.id', '=', 'videos.user_id')
+        ->whereHas('details')
+            ->join('videos', 'users.id', '=', 'videos.user_id')
             ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
             ->where('videos.plan_id', $plan->id)
             ->groupBy('users.id')
@@ -164,7 +165,6 @@ class AdminVideoController extends Controller
 
         $plan = Plan::where('name', 'SingTUV2024')->first();
 
-
         $qry = User::select(
             'users.id',
             'users.email',
@@ -200,9 +200,9 @@ class AdminVideoController extends Controller
             'user_details.g_email',
 
         DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
-            ->leftJoin('videos', 'users.id', '=', 'videos.user_id')
+            ->join('videos', 'users.id', '=', 'videos.user_id')
             ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
-            ->leftJoin('user_details', 'users.id', '=', 'user_details.user_id')
+            ->join('user_details', 'users.id', '=', 'user_details.user_id')
             ->where('videos.plan_id', $plan->id)
             ->groupBy('users.id')
             ->orderByDesc('average_rating');
