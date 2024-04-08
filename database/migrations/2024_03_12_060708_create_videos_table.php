@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('title')->nullable();;
             $table->text('description')->nullable();
             $table->text('style')->nullable();
-            $table->enum('state', ['pending', 'top-500', 'top-10', 'rejected'])->default('pending');
+            // $table->enum('state', ['pending', 'top-500', 'top-10', 'rejected'])->default('pending');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
             $table->timestamps();
