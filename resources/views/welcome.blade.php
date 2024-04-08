@@ -96,7 +96,7 @@
                                 <span class="mdi mdi-microphone-settings mdi-24px"></span>
                                 </div>
 
-                                <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Singing Competition</h2>
+                                <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Audition Competition</h2>
 
                                 <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
                                     Upload Your Audition by clicking here, you will be redirected to the registration and payment page

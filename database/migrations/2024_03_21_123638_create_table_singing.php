@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('singings', function (Blueprint $table) {
+        Schema::create('auditions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('plan_id');
@@ -39,7 +39,7 @@ return new class extends Migration
             $table->text('music_qualification')->nullable();
 
 
-        
+
 
 
             $table->timestamps();
@@ -54,6 +54,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('singings');
+        Schema::dropIfExists('auditions');
     }
 };

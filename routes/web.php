@@ -3,12 +3,12 @@
 use App\Http\Controllers\AdminVideoController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\SingingController;
+use App\Http\Controllers\AuditionController;
 use App\Http\Controllers\UserDetailController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\VideoRatingController;
 use App\Models\Payment;
-use App\Models\Singing;
+use App\Models\Audition;
 use App\Models\UserDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -43,7 +43,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::middleware('isPaid')->group(function () {
         Route::resource('user-details', UserDetailController::class);
-        Route::resource('singing', SingingController::class);
+        Route::resource('audition', AuditionController::class);
         Route::get('/upload-video/{plan?}', [VideoController::class, 'index'])->name('upload-video');
         Route::post('/upload-video', [VideoController::class, 'upload'])->name('video.upload');
         Route::get('/thank-you', function () {

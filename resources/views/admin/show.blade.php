@@ -63,7 +63,7 @@
                             <span>{{$video->auditionDetails->auditioncity}}</span>
                         </li>
                         <li class="mb-3">
-                            <span class="h6">Genre of Singing:</span>
+                            <span class="h6">Genre of Audition:</span>
                             <span>{{$video->auditionDetails->genre_of_singing}}</span>
                         </li>
 
@@ -205,7 +205,7 @@
                     <button type="submit">Submit Rating</button>
                 </form> -->
                 <hr />
-                <form method="POST" action="{{ isset($video->auditionDetails) ? route('singing.update', [$video->auditionDetails->id, 'plan' => request()->plan]) : route('singing.store',['plan' => request()->plan]) }}">
+                <form method="POST" action="{{ isset($video->auditionDetails) ? route('audition.update', [$video->auditionDetails->id, 'plan' => request()->plan]) : route('audition.store',['plan' => request()->plan]) }}">
 
 
 

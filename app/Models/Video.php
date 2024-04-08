@@ -34,6 +34,10 @@ class Video extends Model
     {
         return $this->belongsTo(Plan::class);
     }
+    // public function audition(){
+
+    //     return $this->hasOne(Audition::class);
+    // }
 
 
 
@@ -63,7 +67,7 @@ class Video extends Model
 
     public function auditionDetails()
     {
-        return Singing::where('plan_id', $this->plan_id)->where('user_id', $this->user_id)->first();
+        return Audition::where('plan_id', $this->plan_id)->where('user_id', $this->user_id)->first();
 
     }
 }

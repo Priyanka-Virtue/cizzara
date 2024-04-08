@@ -9,8 +9,18 @@
 
     <div class="p-3">
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-4">
                 @include('partials.export-btns')
+            </div>
+            <div class="col-md-3">
+                <div class="input-group">
+                    <select class="form-select status-dropdown" data-user-id="">
+                        <option value="top-500" {{ $user->status == 'top-500' ? 'selected' : '' }}>Top 500</option>
+                        <option value="top-10" {{ $user->status == 'top-10' ? 'selected' : '' }}>Top 10</option>
+                        <option value="rejected" {{ $user->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                    </select>
+                    <button class="btn btn-primary waves-effect" type="button">Move selected to</button>
+                </div>
             </div>
             <div class="col-md-5">
                 <form action="{{ route('admin.users.index') }}" method="GET">
@@ -31,7 +41,7 @@
                     <td><input class="form-check-input" type="checkbox" name="selectAll" id="selectAll" value="selectAll"></td>
                     <th>Contestant</th>
                     <th>Videos</th>
-
+                    <th>Action</th>
                     <th>Rating</th>
                     <th>Email</th>
                     <th>Phone</th>
@@ -45,20 +55,16 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                {{-- @dd($topUsers); --}}
+
                 @forelse ($topUsers as $user)
                 @php
                 $user = App\Models\User::where('id',$user['id'])->with('details')->first();
-                // print_r($user->details);
-                // die();
                 @endphp
                 <tr>
                     <td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $user->id }}"></td>
                     <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->details->first_name . ' ' . $user->details->last_name }}</a></td>
                     <td>
                         @php
-
-
                         $videoRatings = [];
                         foreach ($user->videos as $video) {
 
@@ -77,6 +83,14 @@
                         $userAverageRating = $videoRatings[0] ?? 0;
                         }
                         @endphp
+                    </td>
+                    <td> <!-- Action column -->
+                        <!-- Dropdown for individual status change -->
+                        <select class="form-control status-dropdown" data-user-id="">
+                            <option value="top-500" {{ $user->status == 'top-500' ? 'selected' : '' }}>Top 500</option>
+                            <option value="top-10" {{ $user->status == 'top-10' ? 'selected' : '' }}>Top 10</option>
+                            <option value="rejected" {{ $user->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        </select>
                     </td>
                     <td>{{ $userAverageRating }}</td>
                     <td>{{ $user->email }}</td>

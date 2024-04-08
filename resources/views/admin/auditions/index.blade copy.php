@@ -40,16 +40,15 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-                @forelse ($auditions as $audition)
+                @forelse ($users as $user)
                 <tr>
-                @role('admin')<td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->user->id }}"></td>@endrole
-                    <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->name }}</a></td>
+                @role('admin')<td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $user->id }}"></td>@endrole
+                    <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
                     <td>
-                    @php
+                        @php
                         $guruRatings = [];
                         $videoRatings = [];
-
-                        foreach ($audition->user->videos as $video) {
+                        foreach ($user->videos as $video) {
 
                             $guruRatings[] = $video->guruRatings->rating ?? 'N/A'.' / 10 ';
 
@@ -65,11 +64,8 @@
                         } else {
                         $userAverageRating = $videoRatings[0] ?? 0;
                         }
-
-                        
                         @endphp
                     </td>
-
 
                     @role('guru')
                     <td>@foreach($guruRatings as $rating)
@@ -80,8 +76,7 @@
                     @role('admin')
                     <td>{{ $userAverageRating }}</td>
                     @endrole
-                    <td>{{ $audition->user->email }}</td>
-
+                    <td>{{ $user->email }}</td>
 
 
                 </tr>
@@ -96,7 +91,7 @@
     <div class="justify-content-center">
         <div class="col-md-6 mx-auto">
             <hr />
-            {{ $auditions->appends(request()->input())->links() }}
+            {{ $users->appends(request()->input())->links() }}
         </div>
     </div>
 

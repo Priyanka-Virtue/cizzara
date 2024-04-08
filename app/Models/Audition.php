@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Singing extends Model
+class Audition extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -41,5 +41,15 @@ class Singing extends Model
     public function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    // public function videos()
+    // {
+    //     return $this->hasMany(Video::class);
+    // }
+
+    public function videos()
+    {
+        return $this->hasMany(Video::class, 'plan_id', 'plan_id');
     }
 }

@@ -4,25 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use App\Models\Plan;
-use App\Models\Singing;
+use App\Models\Audition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class SingingController extends Controller
+class AuditionController extends Controller
 {
     public function index()
     {
         // Retrieve all user details
-        $userDetail = Singing::all();
+        $userDetail = Audition::all();
 
         // Pass user details to the view
-        return view('singing', compact('userDetail'));
+        return view('audition', compact('userDetail'));
     }
 
     public function create()
     {
         // Return the view for creating a new user detail
-        return view('singing');
+        return view('audition');
     }
     function plan_id($plan)
     {
@@ -66,7 +66,7 @@ class SingingController extends Controller
         $validatedData['plan_id'] = $plan_id;
         $validatedData['user_id'] = auth()->user()->id;
         // Create or update user details
-        Singing::updateOrCreate(
+        Audition::updateOrCreate(
             ['user_id' => auth()->id(), 'plan_id' => $plan_id], // Assuming user_id is associated with the user details
             $validatedData
         );
@@ -74,19 +74,19 @@ class SingingController extends Controller
         return redirect()->route('upload-video', ['plan' => $plan])->with('success', 'Audition details created successfully, Now you can upload your video.');
     }
 
-    public function show(Singing $userDetail)
+    public function show(Audition $userDetail)
     {
         // Return the view to show a specific user detail
-        return view('singing.show', compact('userDetail'));
+        return view('audition.show', compact('userDetail'));
     }
 
-    public function edit(Singing $userDetail)
+    public function edit(Audition $userDetail)
     {
         // Return the view for editing a user detail
-        return view('singing.edit', compact('userDetail'));
+        return view('audition.edit', compact('userDetail'));
     }
 
-    public function update(Request $request, Singing $userDetail)
+    public function update(Request $request, Audition $userDetail)
     {
         $validatedData = $request->validate([
             'auditioncity' => 'required',
@@ -127,7 +127,7 @@ class SingingController extends Controller
         }
 
         // Create or update user details
-        Singing::updateOrCreate(
+        Audition::updateOrCreate(
             ['user_id' => $user_id, 'plan_id' => $plan_id], // Assuming user_id is associated with the user details
             $validatedData
         );
@@ -136,12 +136,12 @@ class SingingController extends Controller
         return redirect()->route('upload-video', ['plan' => $plan])->with('success', 'Audition details updated successfully, Now you can upload your video.');
     }
 
-    public function destroy(Singing $userDetail)
+    public function destroy(Audition $userDetail)
     {
         // Delete the user detail
         $userDetail->delete();
 
         // Redirect to the index page with success message
-        return redirect()->route('singing')->with('success', 'Audition details updated successfully, Now you can upload your video.');
+        return redirect()->route('audition')->with('success', 'Audition details updated successfully, Now you can upload your video.');
     }
 }

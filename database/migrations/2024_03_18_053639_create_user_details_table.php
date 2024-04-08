@@ -42,7 +42,7 @@ return new class extends Migration
             $table->string('education')->nullable();
             $table->string('occupation')->nullable();
             $table->string('work_experience')->nullable();
-            // $table->string('genre_of_singing')->nullable();
+            // $table->string('genre_of_audition')->nullable();
             // $table->string('previous_performance')->nullable();
             // $table->string('music_experience')->nullable();
             // $table->string('music_qualification')->nullable();

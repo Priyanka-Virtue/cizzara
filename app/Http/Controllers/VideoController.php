@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use App\Models\Plan;
-use App\Models\Singing;
+use App\Models\Audition;
 use App\Models\UserDetail;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -40,19 +40,19 @@ class VideoController extends Controller
             if ($plan_id) {
 
 
-                $userDetail = Singing::where('user_id', Auth::id())->where('plan_id', '=', $plan_id)->first();
+                $userDetail = Audition::where('user_id', Auth::id())->where('plan_id', '=', $plan_id)->first();
             } else {
                 $plan = Payment::where('user_id', $user_id)->where('stripe_payment_id', '!=', '')->first()->plan_id ?? '';
 
-                $userDetail = Singing::where('user_id', Auth::id())->where('plan_id', '=', $plan)->first();
+                $userDetail = Audition::where('user_id', Auth::id())->where('plan_id', '=', $plan)->first();
             }
-            return view('singing', compact('userDetail'));
+            return view('audition', compact('userDetail'));
         } else {
 
             $plan = Payment::where('user_id', $user_id)->where('stripe_payment_id', '!=', '')->first()->plan_id ?? '';
 
             $hasUserDetails = UserDetail::where('user_id', $user_id)->exists();
-            $hasSinging = Singing::where('user_id', $user_id)->where('plan_id', $plan)->exists();
+            $hasAudition = Audition::where('user_id', $user_id)->where('plan_id', $plan)->exists();
 
             $uploaded_videos_count = Payment::where('payments.user_id', $user_id)
                 ->where('payments.stripe_payment_id', '!=', '')
@@ -63,11 +63,11 @@ class VideoController extends Controller
             if ($uploaded_videos_count >= 2) {
 
                 return view('thanks');
-            } else if ($hasUserDetails && $hasSinging)
+            } else if ($hasUserDetails && $hasAudition)
                 return view('upload-video');
             else if ($hasUserDetails) {
-                $userDetail = Singing::where('user_id', Auth::id())->where('plan_id', '=', $plan)->first();
-                return view('singing', compact('userDetail'));
+                $userDetail = Audition::where('user_id', Auth::id())->where('plan_id', '=', $plan)->first();
+                return view('audition', compact('userDetail'));
             }
         }
 

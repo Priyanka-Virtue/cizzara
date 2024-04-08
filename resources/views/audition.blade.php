@@ -18,7 +18,7 @@
     </ul>
 </div>
 @endif
-<form method="POST" action="{{ isset($userDetail) ? route('singing.update', [$userDetail->id, 'plan' => request()->plan]) : route('singing.store',['plan' => request()->plan]) }}">
+<form method="POST" action="{{ isset($userDetail) ? route('audition.update', [$userDetail->id, 'plan' => request()->plan]) : route('audition.store',['plan' => request()->plan]) }}">
     @csrf
     @if(isset($userDetail))
     @method('PUT')
@@ -60,7 +60,7 @@
 
     <div class="form-floating form-floating-outline mb-3">
         <textarea class="form-control" id="genre_of_singing" name="genre_of_singing" rows="3">{{ old('genre_of_singing', isset($userDetail) ? $userDetail->genre_of_singing : '') }}</textarea>
-        <label for="genre_of_singing">Genre of Singing</label>
+        <label for="genre_of_singing">Genre of Audition</label>
     </div>
 
     <div class="form-floating form-floating-outline mb-3">

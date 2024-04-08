@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\ContestantsExport;
 use App\Exports\UsersExport;
+use App\Models\Audition;
 use App\Models\Plan;
 use App\Models\User;
 use App\Models\Video;
@@ -148,15 +149,44 @@ class AdminVideoController extends Controller
 
 
 
+    // public function auditionList(Request $request)
+    // {
+    //     $plan = Plan::where('name', 'SingTUV2024')->first();
+
+    //     $query = User::withVideosByAudition($plan->id); //->get();
+
+    //     $users = $query->paginate(env('RECORDS_PER_PAGE', 10));
+    //     return view('admin.auditions.index', compact('users'));
+    // }
+
     public function auditionList(Request $request)
     {
         $plan = Plan::where('name', 'SingTUV2024')->first();
 
-        $query = User::withVideosByAudition($plan->id); //->get();
-
-        $users = $query->paginate(env('RECORDS_PER_PAGE', 10));
-        return view('admin.auditions.index', compact('users'));
+        $query = Audition::with('user')
+        ->where('auditions.plan_id', $plan->id);
+// ->groupBy('auditions.plan_id')
+        $auditions = $query->paginate(env('RECORDS_PER_PAGE', 10));
+        return view('admin.auditions.index', compact('auditions'));
     }
+
+    // public function scopeWithVideosByAudition($query, $plan, $sortByRating = false, $direction = 'asc')
+    // {
+    //     $query = $query->whereHas('videos', function ($query) use ($plan) {
+    //         $query->where('plan_id', $plan);
+    //     })->with(['videos.ratings']);
+
+    //     if ($sortByRating) {
+    //         $query->leftJoin('videos', 'users.id', '=', 'videos.user_id')
+    //             ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
+    //             ->select('users.*')
+    //             ->selectRaw('COUNT(video_ratings.id) as rating_count')
+    //             ->groupBy('users.id')
+    //             ->orderBy('rating_count', $direction);
+    //     }
+
+    //     return $query;
+    // }
 
 
     public function exportToppers(Request $request)
