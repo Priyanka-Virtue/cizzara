@@ -107,8 +107,6 @@ class AdminVideoController extends Controller
     }
 
 
-
-
     public function topList(Request $request)
     {
         $plan = Plan::where('name', 'SingTUV2024')->first();
@@ -146,6 +144,43 @@ class AdminVideoController extends Controller
         return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers'));
     }
 
+    // public function topList(Request $request)
+    // {
+    //     $plan = Plan::where('name', 'SingTUV2024')->first();
+    //     // Retrieve the top 3 users with their average ratings
+    //     $topUsers = User::select('users.*', DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
+    //     ->whereHas('details')
+    //         ->join('videos', 'users.id', '=', 'videos.user_id')
+    //         ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
+    //         ->where('videos.plan_id', $plan->id)
+    //         ->groupBy('users.id')
+    //         ->orderByDesc('average_rating')
+    //         ->take($request->top ?? 3)
+    //         ->get();
+
+    //     // Manually create a LengthAwarePaginator instance for the top users
+    //     $perPage = env('RECORDS_PER_PAGE', 10); // Set per page to 2 for the first page
+    //     $currentPage = $request->query('page', 1);
+
+    //     // Calculate the offset based on the current page
+    //     $offset = ($currentPage - 1) * $perPage;
+
+    //     // Get the items for the current page
+    //     $items = collect(array_slice($topUsers->toArray(), $offset, $perPage));
+
+    //     // Create a LengthAwarePaginator instance
+    //     $paginatedTopUsers = new LengthAwarePaginator(
+    //         $items,
+    //         count($topUsers), // Total count of items
+    //         $perPage, // Per page
+    //         $currentPage // Current page
+    //     );
+    //     $topUsers = $items;
+
+    //     $paginatedTopUsers->setPath($request->url());
+    //     return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers'));
+    // }
+
 
 
 
@@ -165,28 +200,10 @@ class AdminVideoController extends Controller
 
         $query = Audition::with('user')
         ->where('auditions.plan_id', $plan->id);
-// ->groupBy('auditions.plan_id')
+
         $auditions = $query->paginate(env('RECORDS_PER_PAGE', 10));
         return view('admin.auditions.index', compact('auditions'));
     }
-
-    // public function scopeWithVideosByAudition($query, $plan, $sortByRating = false, $direction = 'asc')
-    // {
-    //     $query = $query->whereHas('videos', function ($query) use ($plan) {
-    //         $query->where('plan_id', $plan);
-    //     })->with(['videos.ratings']);
-
-    //     if ($sortByRating) {
-    //         $query->leftJoin('videos', 'users.id', '=', 'videos.user_id')
-    //             ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
-    //             ->select('users.*')
-    //             ->selectRaw('COUNT(video_ratings.id) as rating_count')
-    //             ->groupBy('users.id')
-    //             ->orderBy('rating_count', $direction);
-    //     }
-
-    //     return $query;
-    // }
 
 
     public function exportToppers(Request $request)

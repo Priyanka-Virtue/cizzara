@@ -15,9 +15,9 @@
             <div class="col-md-3">
                 <div class="input-group">
                     <select class="form-select status-dropdown" data-user-id="">
-                        <option value="top-500" {{ $user->status == 'top-500' ? 'selected' : '' }}>Top 500</option>
-                        <option value="top-10" {{ $user->status == 'top-10' ? 'selected' : '' }}>Top 10</option>
-                        <option value="rejected" {{ $user->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        <option value="top-500">Top 500</option>
+                        <option value="top-10">Top 10</option>
+                        <option value="rejected">Rejected</option>
                     </select>
                     <button class="btn btn-primary waves-effect" type="button">Move selected to</button>
                 </div>
@@ -69,7 +69,7 @@
                         foreach ($user->videos as $video) {
 
                         echo '<a href="'. route('admin.videos.show', $video) .'">' .$video->original_name.' </a>
-                        <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>
+                        <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>'.$video->plan_id.'
                         <br />';
 
                         $averageRating = $video->ratings->avg('rating');
@@ -82,15 +82,17 @@
                         } else {
                         $userAverageRating = $videoRatings[0] ?? 0;
                         }
+
+                        $status = $video->audition;
                         @endphp
                     </td>
                     <td> <!-- Action column -->
                         <!-- Dropdown for individual status change -->
-                        <select class="form-control status-dropdown" data-user-id="">
+                       {{-- <select class="form-control status-dropdown" data-user-id="">
                             <option value="top-500" {{ $user->status == 'top-500' ? 'selected' : '' }}>Top 500</option>
                             <option value="top-10" {{ $user->status == 'top-10' ? 'selected' : '' }}>Top 10</option>
                             <option value="rejected" {{ $user->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                        </select>
+                        </select> --}}
                     </td>
                     <td>{{ $userAverageRating }}</td>
                     <td>{{ $user->email }}</td>
