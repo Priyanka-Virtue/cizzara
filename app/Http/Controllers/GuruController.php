@@ -69,8 +69,8 @@ class GuruController extends Controller
      */
     public function edit($id)
     {
-        $guru = User::findOrFail($id);
-        return view('gurus.edit', compact('guru'));
+        $user = User::findOrFail($id);
+        return view('admin.gurus.index', compact('user'));
     }
 
     /**
@@ -82,21 +82,20 @@ class GuruController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $user = User::findOrFail($id);
+
+        // Validate input
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$id,
-            'password' => 'nullable|string|min:8',
+            'phone' => 'required|string|max:20',
+            'is_active' => 'required|boolean',
         ]);
 
-        $user = User::findOrFail($id);
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        if ($request->has('password')) {
-            $user->password = bcrypt($request->input('password'));
-        }
-        $user->save();
+        // Update user
+        $user->update($validatedData);
 
-        return redirect()->route('gurus.index')->with('success', 'Guru updated successfully.');
+        return redirect()->route('admin.gurus.index')->with('success', 'Guru updated successfully.');
     }
 
     /**
@@ -110,6 +109,6 @@ class GuruController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->route('gurus.index')->with('success', 'Guru deleted successfully.');
+        return redirect()->route('admin.gurus.index')->with('success', 'Guru deleted successfully.');
     }
 }

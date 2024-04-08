@@ -45,9 +45,12 @@
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
+                {{-- @dd($topUsers); --}}
                 @forelse ($topUsers as $user)
                 @php
                 $user = App\Models\User::where('id',$user['id'])->with('details')->first();
+                // print_r($user->details);
+                // die();
                 @endphp
                 <tr>
                     <td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $user->id }}"></td>
