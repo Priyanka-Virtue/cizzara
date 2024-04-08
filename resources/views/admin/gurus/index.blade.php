@@ -6,42 +6,51 @@
 
 <div class="card">
 
-        <h5 class="card-header">{{ isset($userDetail) ? 'Edit Guru' : 'Add Guru' }}</h5>
-        <div class="p-3">
-            <div class="row">
-                <div class="col-md-10">
-                    <form method="POST" action="{{ isset($userDetail) ? route('gurus.update', $userDetail->id) : route('gurus.store') }}" enctype="multipart/form-data">
-                        @csrf
-                        @if(isset($userDetail))
-                            @method('PUT')
-                        @endif
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Guru" value="{{ isset($userDetail) ? $userDetail->name : old('name') }}">
-                            <input type="text" class="form-control" id="email" name="email" placeholder="guru@cizzara.in" value="{{ isset($userDetail) ? $userDetail->email : old('email') }}">
-                            <input type="text" class="form-control" id="phone" name="phone" placeholder="999999999" value="{{ isset($userDetail) ? $userDetail->phone : old('phone') }}">
-                            <select name="is_active" id="is_active" class="form-select">
-                                <option value="1" {{ (isset($userDetail) && $userDetail->is_active == 1) ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ (isset($userDetail) && $userDetail->is_active == 0) ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                            <button type="submit" name="submit" value="submit" class="btn btn-primary waves-effect" id="button-addon2">{{ isset($userDetail) ? 'Update Guru' : 'Add Guru' }}</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-md-2">
+    <h5 class="card-header">{{ isset($userDetail) ? 'Edit Guru' : 'Add Guru' }}</h5>
+    <div class="p-3">
+        <div class="row">
+            <div class="col-md-10">
+                <form method="POST" action="{{ isset($userDetail) ? route('gurus.update', $userDetail->id) : route('gurus.store') }}" enctype="multipart/form-data">
+                    @csrf
+                    @if(isset($userDetail))
+                    @method('PUT')
+                    @endif
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Guru" value="{{ isset($userDetail) ? $userDetail->name : old('name') }}">
+                        <input type="text" class="form-control" id="email" name="email" placeholder="guru@cizzara.in" value="{{ isset($userDetail) ? $userDetail->email : old('email') }}">
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="999999999" value="{{ isset($userDetail) ? $userDetail->phone : old('phone') }}">
+                        <select name="is_active" id="is_active" class="form-select">
+                            <option value="1" {{ (isset($userDetail) && $userDetail->is_active == 1) ? 'selected' : '' }}>Active</option>
+                            <option value="0" {{ (isset($userDetail) && $userDetail->is_active == 0) ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                        <button type="submit" name="submit" value="submit" class="btn btn-primary waves-effect" id="button-addon2">{{ isset($userDetail) ? 'Update Guru' : 'Add Guru' }}</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2">
 
-                </div>
             </div>
         </div>
+    </div>
 
 
     <div class="table-responsive text-nowrap">
+        <div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2000">
+            <div class="toast-header">
+                <i class="mdi mdi-home me-2"></i>
+                <div class="me-auto fw-medium">Bootstrap</div>
+                <small class="text-muted">11 mins ago</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
         <table class="table">
             <thead class="table-light">
                 <tr>
                     <th>Guru</th>
                     <th>Email</th>
                     <th>Active</th>
-                    <th>Actions</th> <!-- New column for edit and delete actions -->
+                    <th>For Audition</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -55,6 +64,23 @@
                         </div>
                     </td>
                     <td>
+                        @php
+                        $plans = App\Models\Plan::where('is_active', 1)->get();
+                        @endphp
+                        @foreach($plans as $plan)
+                        @php
+                        $checked = App\Models\Plan::where('id', $plan->id)->whereJsonContains('gurus', $user->id)->exists();
+
+                        @endphp
+                        <div class="form-check form-switch mb-2">
+                            <input class="audition-switch form-check-input" type="checkbox" data-plan-id="{{ $plan->id }}" data-user-id="{{ $user->id }}" {{ $checked??'' == 1 ? 'checked' : '' }}>
+                            <label>{{$plan->name}}</label>
+                        </div>
+                        @endforeach
+
+
+                    </td>
+                    <td>
                         <!-- Edit Button -->
                         <a href="{{ route('gurus.edit', $user->id) }}" class="btn btn-primary">Edit</a>
 
@@ -64,6 +90,8 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
+
+
                     </td>
                 </tr>
                 @empty
@@ -112,4 +140,60 @@
         });
     });
 </script>
+<script>
+    $(document).ready(function() {
+        const toastPlacementExample = document.querySelector('.toast-placement-ex'),
+    toastPlacementBtn = document.querySelector('#showToastPlacement');
+  let selectedType, selectedPlacement, toastPlacement;
+        $('.audition-switch').change(function() {
+            var userId = $(this).data('user-id');
+            var planId = $(this).data('plan-id');
+            var newStatus = $(this).val();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route("admin.gurus.assign-audition") }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    status: newStatus,
+                    plan_id: planId,
+                    user_id: userId
+                },
+                success: function(response) {
+                    console.log(response);
+
+                    if (toastPlacement) {
+        toastDispose(toastPlacement);
+      }
+      selectedType = 'text-dark';// document.querySelector('#selectTypeOpt').value;
+      selectedPlacement = 'top-0 end-0';// document.querySelector('#selectPlacement').value.split(' ');
+
+      toastPlacementExample.querySelector('i.mdi').classList.add(selectedType);
+      DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+      toastPlacement = new bootstrap.Toast(toastPlacementExample);
+      toastPlacement.show();
+
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+
+                    if (toastPlacement) {
+        toastDispose(toastPlacement);
+      }
+      selectedType = 'text-dark';// document.querySelector('#selectTypeOpt').value;
+      selectedPlacement = 'top-0 end-0';// document.querySelector('#selectPlacement').value.split(' ');
+
+      toastPlacementExample.querySelector('i.mdi').classList.add(selectedType);
+      DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+      toastPlacement = new bootstrap.Toast(toastPlacementExample);
+      toastPlacement.show();
+
+                }
+
+
+            });
+        });
+    });
+</script>
+<script src="{{ asset('assets/js/ui-toasts.js') }}"></script>
 @endsection

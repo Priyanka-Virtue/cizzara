@@ -24,7 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password'
     ];
 
     /**
@@ -60,7 +60,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Video::class);
     }
-    
+
 
     public function scopeWithVideosByAudition($query, $plan, $sortByRating = false, $direction = 'asc')
     {

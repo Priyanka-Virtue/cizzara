@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Guru;
 use App\Http\Requests\StoreGuruRequest;
 use App\Http\Requests\UpdateGuruRequest;
+use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -25,6 +26,29 @@ class GuruController extends Controller
         $updated = User::where('id', $request->input('user_id'))->update(['is_active' => $request->input('is_active')]);
 
         return response()->json(['success' => true]);
+    }
+    public function updateAudition(Request $request)
+    {
+        $plan = Plan::where('id', $request->input('plan_id'))->first();
+
+        $gurus = $plan->gurus ?? [];
+
+       if($request->input('status') == 'on' || $request->input('status') == '1'){
+        $gurus[] = (int)$request->input('user_id');
+        $msg = 'Guru assigned to audition '.$plan->name;
+
+       }
+       else {
+        $gurus = array_diff($gurus, [$request->input('user_id')]);
+        $msg = 'Guru has been removed from audition '.$plan->name;
+
+       }
+
+ 
+
+       $pd = $plan->update(['gurus' => $gurus ]);
+        return response()->json(['success' => true, 'message'=>$msg]);
+
     }
 
     public function store(Request $request)

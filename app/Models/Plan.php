@@ -11,7 +11,8 @@ class Plan extends Model
     protected $fillable = [
         'name',
         'price',
-        'is_active'
+        'is_active',
+        'gurus'
     ];
     protected $casts = [
         'gurus' => 'json'

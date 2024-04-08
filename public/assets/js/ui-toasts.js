@@ -27,8 +27,8 @@
       if (toastPlacement) {
         toastDispose(toastPlacement);
       }
-      selectedType = document.querySelector('#selectTypeOpt').value;
-      selectedPlacement = document.querySelector('#selectPlacement').value.split(' ');
+      selectedType = 'text-dark';// document.querySelector('#selectTypeOpt').value;
+      selectedPlacement = 'top-0 end-0';// document.querySelector('#selectPlacement').value.split(' ');
 
       toastPlacementExample.querySelector('i.mdi').classList.add(selectedType);
       DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);

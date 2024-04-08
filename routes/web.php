@@ -67,7 +67,15 @@ Route::middleware(['role:guru|admin'])->group(function () {
         // Route::get('/admin/gurus', [GuruController::class, 'index'])->name('admin.gurus.index');
         // Route::get('/admin/gurus/show', [GuruController::class, 'show'])->name('admin.gurus.show');
         Route::resource('gurus', GuruController::class);
+//         Route::get('gurus',
+
+// function(){
+//     $f = App\Models\Plan::where('id', 1)->whereJsonContains('gurus', 3)->first();
+// dd($f->name);
+// });
+
         Route::post('/admin/gurus/updateStatus', [GuruController::class, 'updateStatus'])->name('admin.gurus.update-status');
+        Route::post('/admin/gurus/updateAudition', [GuruController::class, 'updateAudition'])->name('admin.gurus.assign-audition');
 
 
         Route::get('/admin/users', [AdminVideoController::class, 'userList'])->name('admin.users.index');
