@@ -23,10 +23,10 @@ class AdminVideoController extends Controller
         $query = Video::with('user');
 
         if (empty($request->submit)) {
-            $query->where('state', '!=', 'rejected');
+            $query->where('status', '!=', 'rejected');
         } else {
             if ($request->has('status') && !empty($request->status)) {
-                $query->where('state', $request->status);
+                $query->where('status', $request->status);
             }
 
             if ($request->has('contestant') && !empty($request->contestant)) {
@@ -53,15 +53,14 @@ class AdminVideoController extends Controller
         return view('admin.users.show', compact('user'));
     }
 
-    public function updateStatus(Request $request, Video $video)
+    public function updateStatus(Request $request)
     {
         $request->validate([
             'status' => 'required|in:pending,top-500,top-10,rejected',
         ]);
-        $video->state = $request->status;
-        $video->save();
 
-        return redirect()->route('admin.videos.index')->with('success', 'Video status updated successfully.');
+$updated = Audition::where('plan_id', $request->audition)->where('user_id', $request->user)->update(['status' => $request->status]);
+        return response()->json(['success' => $updated, $request->all()]);
     }
 
 
@@ -107,9 +106,18 @@ class AdminVideoController extends Controller
     }
 
 
-    public function topList(Request $request)
+    public function topList(Request $request, $top = null, $audition = null)
     {
-        $plan = Plan::where('name', 'SingTUV2024')->first();
+        if($request->audition != "") {
+            $plan = Plan::where('name', $request->audition)->first();
+        }
+        else {
+            $plan = Plan::latest()->first();
+        }
+
+        if(empty($plan))
+            return redirect()->route('admin.videos.index')->with('error', 'Select an audition first. #65d');
+
         // Retrieve the top 3 users with their average ratings
         $topUsers = User::select('users.*', DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
         ->whereHas('details')
@@ -141,8 +149,11 @@ class AdminVideoController extends Controller
         $topUsers = $items;
 
         $paginatedTopUsers->setPath($request->url());
-        return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers'));
+        $audition = $plan->id;
+        return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers', 'audition'));
     }
+
+
 
     // public function topList(Request $request)
     // {

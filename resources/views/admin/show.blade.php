@@ -82,7 +82,7 @@
                         </li>
                         <li class="mb-3">
                             <span class="h6">Status:</span>
-                            <span class="badge bg-label-success rounded-pill text-uppercase">{{$video->state}}</span>
+                            <span class="badge bg-label-success rounded-pill text-uppercase">{{$video->status}}</span>
                         </li>
 
 

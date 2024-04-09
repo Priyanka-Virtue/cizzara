@@ -14,10 +14,10 @@
             </div>
             <div class="col-md-3">
                 <div class="input-group">
-                    <select class="form-select status-dropdown" data-user-id="">
-                        <option value="top-500">Top 500</option>
-                        <option value="top-10">Top 10</option>
-                        <option value="rejected">Rejected</option>
+                    <select class="form-select status-dropdown-all" data-user-id="">
+                    @foreach(config('app.audition_status') as $key => $value)
+                            <option value="{{$value}}">{{$value}}</option>
+                            @endforeach
                     </select>
                     <button class="btn btn-primary waves-effect" type="button">Move selected to</button>
                 </div>
@@ -66,6 +66,7 @@
                     <td>
                         @php
                         $videoRatings = [];
+
                         foreach ($user->videos as $video) {
 
                         echo '<a href="'. route('admin.videos.show', $video) .'">' .$video->original_name.' </a>
@@ -83,16 +84,21 @@
                         $userAverageRating = $videoRatings[0] ?? 0;
                         }
 
-                        $status = $video->audition;
+                        //$status = $video->audition;
+
+
                         @endphp
                     </td>
-                    <td> <!-- Action column -->
-                        <!-- Dropdown for individual status change -->
-                       {{-- <select class="form-control status-dropdown" data-user-id="">
-                            <option value="top-500" {{ $user->status == 'top-500' ? 'selected' : '' }}>Top 500</option>
-                            <option value="top-10" {{ $user->status == 'top-10' ? 'selected' : '' }}>Top 10</option>
-                            <option value="rejected" {{ $user->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                        </select> --}}
+                    <td>
+
+
+                        <select style="min-width: 110px;" class="form-select status-dropdown" data-plan="{{ $audition }}" data-user="{{ $user->id }}">
+                            @foreach(config('app.audition_status') as $key => $value)
+                            <option value="{{$value}}">{{$value}}</option>
+                            @endforeach
+                        </select>
+
+
                     </td>
                     <td>{{ $userAverageRating }}</td>
                     <td>{{ $user->email }}</td>
@@ -129,4 +135,32 @@
 
 @section('bottom')
 <script src="{{ asset('assets/js/export.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('.status-dropdown').change(function() {
+            var userId = $(this).data('user');
+            var auditionId = $(this).data('plan');
+            var newStatus = $(this).val();
+            console.log(newStatus, auditionId, userId);
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('admin.auditions.updateStatus') }}",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    status: newStatus,
+                    audition: auditionId,
+                    user: userId,
+                },
+                success: function(response) {
+                    // Handle success, if needed
+                    console.log(response);
+                },
+                error: function(xhr, status, error) {
+                    // Handle error, if needed
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
 @endsection

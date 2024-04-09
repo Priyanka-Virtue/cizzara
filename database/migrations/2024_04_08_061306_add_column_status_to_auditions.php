@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('auditions', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'top-500', 'top-100', 'top-25', 'top-10', 'top-3', 'winner', 'rejected'])->default('pending')->after('plan_id');
+            $table->enum('status', config('app.audition_status'))->default('pending')->after('plan_id');
         });
     }
 

@@ -15,15 +15,17 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('plan_id')->nullable();
+            $table->unsignedBigInteger('audution_id')->nullable();
             $table->string('stripe_payment_id')->nullable();
             $table->string('file_path');
             $table->string('original_name')->nullable();
             $table->string('title')->nullable();;
             $table->text('description')->nullable();
             $table->text('style')->nullable();
-            $table->enum('state', ['pending', 'top-500', 'top-10', 'rejected'])->default('pending');
+            $table->enum('status', config('app.audition_status'))->default('pending');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
+            $table->foreign('audution_id')->references('id')->on('auditions')->onDelete('cascade');
             $table->timestamps();
         });
     }

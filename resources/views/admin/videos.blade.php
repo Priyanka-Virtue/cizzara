@@ -55,7 +55,7 @@
                 @forelse ($videos as $video)
                 <tr>
                     <td><a href="{{ route('admin.videos.show', $video) }}">{{ $video->original_name }}</a></td>
-                    <td>{{ $video->state }}</td>
+                    <td>{{ $video->status }}</td>
                     @role('guru')
                     <td>{{ $video->guruRatings->rating ?? 'N/A' }} / 10</td>
                     @endrole

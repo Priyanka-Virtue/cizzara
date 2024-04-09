@@ -21,7 +21,7 @@ class Video extends Model
         'original_name',
         'title',
         'description',
-        'state',
+        'status',
         'rating'
     ];
 
@@ -34,10 +34,9 @@ class Video extends Model
     {
         return $this->belongsTo(Plan::class);
     }
-    // public function audition(){
-
-    //     return $this->hasOne(Audition::class);
-    // }
+    public function audition(){
+        return $this->hasOne(Audition::class);
+    }
 
 
 

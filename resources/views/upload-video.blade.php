@@ -118,13 +118,8 @@
 
 
 @php
-$plan_id = App\Models\Plan::where('name', request()->plan)->first()->id ?? null;
-$uploaded_videos = App\Models\Payment::where('payments.user_id', auth()->user()->id)
-->where('payments.stripe_payment_id', '!=', '')
-->where('payments.plan_id', '=', $plan_id)
-->join('videos', 'payments.stripe_payment_id', '=', 'videos.stripe_payment_id');
-$uploaded_videos_types = $uploaded_videos->pluck('videos.style')->toArray();
 
+$uploaded_videos_types = [];
 $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-concept_1284-13034.jpg?size=626&ext=jpg'],
 'Classical' => ['img'=>'https://img.freepik.com/free-vector/hand-drawn-flat-design-poetry-illustration_23-2149279810.jpg?size=626&ext=jpg'],
 'Pop' => ['img'=>'https://img.freepik.com/free-vector/hand-drawn-twerk-illustration_23-2149447957.jpg?size=626&ext=jpg']];

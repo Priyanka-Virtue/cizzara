@@ -30,6 +30,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'audition_status' => ['pending', 'top-500', 'top-100', 'top-25', 'top-10', 'top-3', 'winner', 'rejected'],
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
