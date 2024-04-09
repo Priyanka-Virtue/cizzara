@@ -29,6 +29,7 @@ class VideoRatingController extends Controller
 
         // Check if the guru is associated with the plan
         // if (!$plan->gurus()->where('guru_id', $user->id)->exists()) {
+
         if (!Plan::where('id', $plan->id)->whereJsonContains('gurus', $user->id)->exists()) {
             return redirect()->back()->with('error', 'You are not authorized to rate videos for this audition.');
         }
@@ -58,6 +59,6 @@ class VideoRatingController extends Controller
         }
 
 
-        return redirect()->route('admin.videos.index')->with('success', 'Video rated successfully.');
+        return redirect()->route('admin.auditions.index')->with('success', 'Video rated successfully.');
     }
 }
