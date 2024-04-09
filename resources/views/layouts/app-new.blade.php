@@ -138,8 +138,22 @@
     <!-- Vendors JS -->
 
     <!-- Main JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
+<script>
+    const Toast = Swal.mixin({
+  toast: true,
+  position: 'bottom-end',
+  iconColor: '#ffcc99',
+  customClass: {
+    popup: 'colored-toast',
+  },
+  showConfirmButton: false,
+  timer: 1500,
+  timerProgressBar: true,
+});
 
+</script>
     <!-- Page JS -->
 
     @yield('bottom')

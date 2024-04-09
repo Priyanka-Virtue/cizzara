@@ -17,21 +17,19 @@ class ContestantsExport implements FromCollection, WithMapping, WithHeadings
     public function __construct($users)
     {
         $this->users = $users;
-
     }
     public function collection()
     {
         return $this->users;
     }
-    public function map($user): array
+    public function map($audition): array
     {
-        $userd = User::where('id', $user->id)->with('details')->first();
+        // $userd = User::where('id', $user->id)->with('details')->first();
 
         $videos = '';
         $links = '';
         $types = '';
-        foreach ($userd->videos as $i => $video) {
-
+        foreach ($audition->user->videos as $i => $video) {
             $videos .= ($i+1).'.) ' .  $video->original_name . ' ';
             $links .= ($i+1).'.) ' .  route('admin.videos.show', $video) . ' ';
             $types .= ($i+1).'.) ' .  $video->style . ' ';
@@ -48,20 +46,20 @@ class ContestantsExport implements FromCollection, WithMapping, WithHeadings
         }
 
         return [
-            $userd->details->first_name . ' ' . $userd->details->last_name,
+            $audition->user->details->first_name . ' ' . $audition->user->details->last_name,
             $videos,
             $links,
             $types,
             $userAverageRating,
-            $userd->email,
-            $userd->details->phone,
-            $userd->details->date_of_birth,
-            $userd->details->education,
-            $userd->details->occupation,
-            $userd->details->city,
-            $userd->details->state,
-            $userd->details->pin_code,
-            $userd->details->address
+            $audition->user->email,
+            $audition->user->details->phone,
+            $audition->user->details->date_of_birth,
+            $audition->user->details->education,
+            $audition->user->details->occupation,
+            $audition->user->details->city,
+            $audition->user->details->state,
+            $audition->user->details->pin_code,
+            $audition->user->details->address
 
         ];
     }

@@ -22,13 +22,14 @@
                 <div data-i18n="Videos">Videos</div>
               </a>
             </li> -->
-
+            @role('guru')
             <li class="menu-item active">
               <a href="{{route('admin.auditions.index')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-human-female-dance"></i>
                 <div data-i18n="Contestants">All Entries</div>
               </a>
             </li>
+            @endrole
             @role('admin')
 
 

@@ -56,10 +56,10 @@ class AdminVideoController extends Controller
     public function updateStatus(Request $request)
     {
         $request->validate([
-            'status' => 'required|in:pending,top-500,top-10,rejected',
+            'status' => 'required|in:' . implode(',', config('app.audition_status')) . ',rejected',
         ]);
 
-$updated = Audition::where('plan_id', $request->audition)->where('user_id', $request->user)->update(['status' => $request->status]);
+        $updated = Audition::where('plan_id', $request->audition)->where('user_id', $request->user)->update(['status' => $request->status]);
         return response()->json(['success' => $updated, $request->all()]);
     }
 
@@ -106,21 +106,20 @@ $updated = Audition::where('plan_id', $request->audition)->where('user_id', $req
     }
 
 
-    public function topList(Request $request, $top = null, $audition = null)
+    public function topListxxx(Request $request, $top = null, $audition = null)
     {
-        if($request->audition != "") {
+        if ($request->audition != "") {
             $plan = Plan::where('name', $request->audition)->first();
-        }
-        else {
+        } else {
             $plan = Plan::latest()->first();
         }
 
-        if(empty($plan))
+        if (empty($plan))
             return redirect()->route('admin.videos.index')->with('error', 'Select an audition first. #65d');
 
         // Retrieve the top 3 users with their average ratings
         $topUsers = User::select('users.*', DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
-        ->whereHas('details')
+            ->whereHas('details')
             ->join('videos', 'users.id', '=', 'videos.user_id')
             ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
             ->where('videos.plan_id', $plan->id)
@@ -155,44 +154,89 @@ $updated = Audition::where('plan_id', $request->audition)->where('user_id', $req
 
 
 
-    // public function topList(Request $request)
-    // {
-    //     $plan = Plan::where('name', 'SingTUV2024')->first();
-    //     // Retrieve the top 3 users with their average ratings
-    //     $topUsers = User::select('users.*', DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
-    //     ->whereHas('details')
-    //         ->join('videos', 'users.id', '=', 'videos.user_id')
-    //         ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
-    //         ->where('videos.plan_id', $plan->id)
-    //         ->groupBy('users.id')
-    //         ->orderByDesc('average_rating')
-    //         ->take($request->top ?? 3)
-    //         ->get();
+    public function topList(Request $request)
+    {
+        if ($request->audition != "") {
+            $plan = Plan::where('name', $request->audition)->first();
+        } else {
+            $plan = Plan::latest()->first();
+        }
 
-    //     // Manually create a LengthAwarePaginator instance for the top users
-    //     $perPage = env('RECORDS_PER_PAGE', 10); // Set per page to 2 for the first page
-    //     $currentPage = $request->query('page', 1);
+        if (empty($plan))
+            return redirect()->route('admin.auditions.top')->with('error', 'Select an audition first. #65d');
 
-    //     // Calculate the offset based on the current page
-    //     $offset = ($currentPage - 1) * $perPage;
+        $topUsers = Audition::where('plan_id', $plan->id)
+            ->with('user.details')
+            ->with('user.videos');
 
-    //     // Get the items for the current page
-    //     $items = collect(array_slice($topUsers->toArray(), $offset, $perPage));
+        if ($request->status && !empty($request->status)) {
+            $topUsers->where('status', $request->status);
+        }
+        $topUsers = $topUsers->get();
 
-    //     // Create a LengthAwarePaginator instance
-    //     $paginatedTopUsers = new LengthAwarePaginator(
-    //         $items,
-    //         count($topUsers), // Total count of items
-    //         $perPage, // Per page
-    //         $currentPage // Current page
-    //     );
-    //     $topUsers = $items;
+        $paginatedTopUsers = [];
 
-    //     $paginatedTopUsers->setPath($request->url());
-    //     return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers'));
-    // }
+        $plans = Plan::all();
+        return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers', 'plans'));
 
 
+        // Retrieve the top 3 users with their average ratings
+        // $topUsers = User::select('users.*', DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
+        // ->whereHas('details')
+        //     ->join('videos', 'users.id', '=', 'videos.user_id')
+        //     ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
+        //     ->where('videos.plan_id', $plan->id)
+        //     ->groupBy('users.id')
+        //     ->orderByDesc('average_rating')
+        //     ->take($request->top ?? 3)
+        //     ->get();
+
+        // // Manually create a LengthAwarePaginator instance for the top users
+        // $perPage = env('RECORDS_PER_PAGE', 10); // Set per page to 2 for the first page
+        // $currentPage = $request->query('page', 1);
+
+        // // Calculate the offset based on the current page
+        // $offset = ($currentPage - 1) * $perPage;
+
+        // // Get the items for the current page
+        // $items = collect(array_slice($topUsers->toArray(), $offset, $perPage));
+
+        // // Create a LengthAwarePaginator instance
+        // $paginatedTopUsers = new LengthAwarePaginator(
+        //     $items,
+        //     count($topUsers), // Total count of items
+        //     $perPage, // Per page
+        //     $currentPage // Current page
+        // );
+        // $topUsers = $items;
+
+        // $paginatedTopUsers->setPath($request->url());
+        // return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers'));
+    }
+
+    public function exportToppers(Request $request)
+    {
+        $selectedRecordIds = $request->input('selectedRecords');
+
+        $topUsers = Audition::
+        // where('plan_id', $plan->id)
+            with('user.details')
+            ->with('user.videos');
+
+        if ($selectedRecordIds)
+            $selectedRecords = $topUsers->whereIn('auditions.id', $selectedRecordIds)->get();
+        else {
+            if ($request->audition != "") {
+                $plan = Plan::where('name', $request->audition)->first();
+            } else {
+                $plan = Plan::latest()->first();
+            }
+            $selectedRecords = $topUsers->where('plan_id', $plan->id)->get();
+
+        }
+
+        return Excel::download(new ContestantsExport($selectedRecords), 'toppers.xlsx');
+    }
 
 
     // public function auditionList(Request $request)
@@ -210,69 +254,70 @@ $updated = Audition::where('plan_id', $request->audition)->where('user_id', $req
         $plan = Plan::where('name', 'SingTUV2024')->first();
 
         $query = Audition::with('user')
-        ->where('auditions.plan_id', $plan->id);
+            ->where('auditions.plan_id', $plan->id);
 
         $auditions = $query->paginate(env('RECORDS_PER_PAGE', 10));
         return view('admin.auditions.index', compact('auditions'));
     }
 
 
-    public function exportToppers(Request $request)
-    {
-        $selectedRecordIds = $request->input('selectedRecords');
+    // public function exportToppers(Request $request)
+    // {
+    //     $selectedRecordIds = $request->input('selectedRecords');
 
-        $plan = Plan::where('name', 'SingTUV2024')->first();
+    //     $plan = Plan::where('name', 'SingTUV2024')->first();
 
-        $qry = User::select(
-            'users.id',
-            'users.email',
+    //     $qry = User::select(
+    //         'users.id',
+    //         'users.email',
 
-            'user_details.first_name',
-            'user_details.last_name',
-            // 'stagename' => 'nullable|string|max:255',
-            'user_details.gender',
-            'user_details.relationship_status',
-            'user_details.date_of_birth',
-            'user_details.address',
-            'user_details.city',
-            'user_details.state',
-            'user_details.pin_code',
-            'user_details.phone',
-            'user_details.education',
-            'user_details.occupation',
-            'user_details.work_experience',
+    //         'user_details.first_name',
+    //         'user_details.last_name',
+    //         // 'stagename' => 'nullable|string|max:255',
+    //         'user_details.gender',
+    //         'user_details.relationship_status',
+    //         'user_details.date_of_birth',
+    //         'user_details.address',
+    //         'user_details.city',
+    //         'user_details.state',
+    //         'user_details.pin_code',
+    //         'user_details.phone',
+    //         'user_details.education',
+    //         'user_details.occupation',
+    //         'user_details.work_experience',
 
-            'user_details.hobbies',
-            'user_details.describe_yourself',
-            'user_details.instagram',
-            'user_details.youtube',
-            'user_details.facebook',
+    //         'user_details.hobbies',
+    //         'user_details.describe_yourself',
+    //         'user_details.instagram',
+    //         'user_details.youtube',
+    //         'user_details.facebook',
 
-            'user_details.g_first_name',
-            'user_details.g_last_name',
-            'user_details.g_address',
-            'user_details.g_city',
-            'user_details.g_state',
-            'user_details.g_pin_code',
-            'user_details.g_phone',
-            'user_details.g_email',
+    //         'user_details.g_first_name',
+    //         'user_details.g_last_name',
+    //         'user_details.g_address',
+    //         'user_details.g_city',
+    //         'user_details.g_state',
+    //         'user_details.g_pin_code',
+    //         'user_details.g_phone',
+    //         'user_details.g_email',
 
-        DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
-            ->join('videos', 'users.id', '=', 'videos.user_id')
-            ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
-            ->join('user_details', 'users.id', '=', 'user_details.user_id')
-            ->where('videos.plan_id', $plan->id)
-            ->groupBy('users.id')
-            ->orderByDesc('average_rating');
+    //         DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating')
+    //     )
+    //         ->join('videos', 'users.id', '=', 'videos.user_id')
+    //         ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
+    //         ->join('user_details', 'users.id', '=', 'user_details.user_id')
+    //         ->where('videos.plan_id', $plan->id)
+    //         ->groupBy('users.id')
+    //         ->orderByDesc('average_rating');
 
 
-        if ($selectedRecordIds)
-            $selectedRecords = $qry->whereIn('users.id', $selectedRecordIds)->get();
-        else
-            $selectedRecords = $qry->get();
+    //     if ($selectedRecordIds)
+    //         $selectedRecords = $qry->whereIn('users.id', $selectedRecordIds)->get();
+    //     else
+    //         $selectedRecords = $qry->get();
 
-        return Excel::download(new ContestantsExport($selectedRecords), 'toppers.xlsx');
-    }
+    //     return Excel::download(new ContestantsExport($selectedRecords), 'toppers.xlsx');
+    // }
 
     public function exportAudition(Request $request)
     {
@@ -289,11 +334,4 @@ $updated = Audition::where('plan_id', $request->audition)->where('user_id', $req
 
         return Excel::download(new ContestantsExport($selectedRecords), 'audition-list.xlsx');
     }
-
-
-
-
-
-
-
 }
