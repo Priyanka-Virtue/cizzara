@@ -43,7 +43,7 @@
                 @forelse ($auditions as $audition)
                 <tr>
                 @role('admin')<td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->user->id }}"></td>@endrole
-                    <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->name }}</a></td>
+                    <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->details->first_name.' '.$audition->user->details->last_name }}</a></td>
                     <td>
                     @php
                         $guruRatings = [];
@@ -66,7 +66,7 @@
                         $userAverageRating = $videoRatings[0] ?? 0;
                         }
 
-                        
+
                         @endphp
                     </td>
 

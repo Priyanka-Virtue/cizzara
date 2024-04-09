@@ -70,7 +70,7 @@
                         foreach ($user->videos as $video) {
 
                         echo '<a href="'. route('admin.videos.show', $video) .'">' .$video->original_name.' </a>
-                        <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>'.$video->plan_id.'
+                        <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>
                         <br />';
 
                         $averageRating = $video->ratings->avg('rating');

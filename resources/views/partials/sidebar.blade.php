@@ -33,14 +33,14 @@
 
 
             <li class="menu-item active">
-              <a href="{{route('admin.auditions.top', 500)}}" class="menu-link">
+              <a href="{{route('admin.auditions.top')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-star-check"></i>
                 <div data-i18n="Contestants">Top 500</div>
               </a>
             </li>
 
             <li class="menu-item active">
-              <a href="{{route('admin.auditions.top', 100)}}" class="menu-link">
+              <a href="{{route('admin.auditions.top')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-star-circle-outline"></i>
 
                 <div data-i18n="Contestants">Top 100</div>
@@ -48,14 +48,14 @@
             </li>
 
             <li class="menu-item active">
-              <a href="{{route('admin.auditions.top', 10)}}" class="menu-link">
+              <a href="{{route('admin.auditions.top')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-numeric-10-circle"></i>
                 <div data-i18n="Contestants">Top 10</div>
               </a>
             </li>
 
             <li class="menu-item active">
-              <a href="{{route('admin.auditions.top', 3)}}" class="menu-link">
+              <a href="{{route('admin.auditions.top')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-trophy-award"></i>
                 <div data-i18n="Contestants">Top 3</div>
               </a>
