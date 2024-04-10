@@ -21,32 +21,12 @@ class GuruController extends Controller
         $gurus = User::role('guru')->paginate(env('RECORDS_PER_PAGE', 10));
         return view('admin.gurus.index', compact('gurus'));
     }
-    public function updateStatus(Request $request)
+    public function create()
     {
-        $updated = User::where('id', $request->input('user_id'))->update(['is_active' => $request->input('is_active')]);
 
-        return response()->json(['success' => true]);
+        return view('admin.gurus.create-update');
     }
-    public function updateAudition(Request $request)
-    {
-        $plan = Plan::where('id', $request->input('plan_id'))->first();
 
-        $gurus = $plan->gurus ?? [];
-
-       if($request->input('status') == '1'){
-        $gurus[] = (int)$request->input('user_id');
-        $msg = 'Guru assigned to audition '.$plan->name;
-
-       }
-       else {
-        $gurus = array_diff($gurus, [$request->input('user_id')]);
-        $msg = 'Guru has been removed from audition '.$plan->name;
-       }
-
-       $pd = $plan->update(['gurus' => $gurus ]);
-        return response()->json(['success' => true, 'message'=>$msg]);
-
-    }
 
     public function store(Request $request)
     {
@@ -76,11 +56,11 @@ class GuruController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $guru = User::findOrFail($id);
-        return view('gurus.show', compact('guru'));
-    }
+    // public function show($id)
+    // {
+    //     $guru = User::findOrFail($id);
+    //     return view('gurus.show', compact('guru'));
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -90,8 +70,8 @@ class GuruController extends Controller
      */
     public function edit($id)
     {
-        $user = User::findOrFail($id);
-        return view('admin.gurus.index', compact('user'));
+        $userDetail = User::findOrFail($id);
+        return view('admin.gurus.create-update', compact('userDetail'));
     }
 
     /**
@@ -108,7 +88,7 @@ class GuruController extends Controller
         // Validate input
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
             'phone' => 'required|string|max:20',
             'is_active' => 'required|boolean',
         ]);
@@ -116,7 +96,7 @@ class GuruController extends Controller
         // Update user
         $user->update($validatedData);
 
-        return redirect()->route('admin.gurus.index')->with('success', 'Guru updated successfully.');
+        return redirect()->route('gurus.index')->with('success', 'Guru updated successfully.');
     }
 
     /**
@@ -125,11 +105,35 @@ class GuruController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-        $user->delete();
+    // public function destroy($id)
+    // {
+    //     $user = User::findOrFail($id);
+    //     $user->delete();
 
-        return redirect()->route('admin.gurus.index')->with('success', 'Guru deleted successfully.');
+    //     return redirect()->route('gurus.index')->with('success', 'Guru deleted successfully.');
+    // }
+
+    public function updateStatus(Request $request)
+    {
+        $updated = User::where('id', $request->input('user_id'))->update(['is_active' => $request->input('is_active')]);
+
+        return response()->json(['success' => true]);
+    }
+    public function updateAudition(Request $request)
+    {
+        $plan = Plan::where('id', $request->input('plan_id'))->first();
+
+        $gurus = $plan->gurus ?? [];
+
+        if ($request->input('status') == '1') {
+            $gurus[] = (int)$request->input('user_id');
+            $msg = 'Guru assigned to audition ' . $plan->name;
+        } else {
+            $gurus = array_diff($gurus, [$request->input('user_id')]);
+            $msg = 'Guru has been removed from audition ' . $plan->name;
+        }
+
+        $pd = $plan->update(['gurus' => $gurus]);
+        return response()->json(['success' => true, 'message' => $msg]);
     }
 }

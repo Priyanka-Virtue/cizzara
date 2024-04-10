@@ -1,13 +1,13 @@
 @extends('layouts.app-new')
 
 @section('content')
-<h4 class="py-3 mb-4"><span class="text-muted fw-light">Gurus /</span><?php echo date('Y') ?></h4>
-<hr class="my-5" />
+<h4 class="py-3 mb-1"><span class="text-muted fw-light">Gurus /</span><?php echo date('Y') ?></h4>
+<hr class="my-3" />
 
 <div class="card">
 
-    <h5 class="card-header">{{ isset($userDetail) ? 'Edit Guru' : 'Add Guru' }}</h5>
-    <div class="p-3">
+    <h5 class="card-header">List Gurus</h5>
+    <!-- <div class="p-3">
         <div class="row">
             <div class="col-md-10">
                 <form method="POST" action="{{ isset($userDetail) ? route('gurus.update', $userDetail->id) : route('gurus.store') }}" enctype="multipart/form-data">
@@ -31,7 +31,7 @@
 
             </div>
         </div>
-    </div>
+    </div> -->
 
 
     <div class="table-responsive text-nowrap">
@@ -48,6 +48,7 @@
                 <tr>
                     <th>Guru</th>
                     <th>Email</th>
+                    <th>Phone</th>
                     <th>Active</th>
                     <th>For Audition</th>
                     <th>Actions</th>
@@ -58,6 +59,7 @@
                 <tr>
                     <td>{{ $user->name  }}</td>
                     <td>{{ $user->email }}</td>
+                    <td>{{ $user->phone }}</td>
                     <td>
                         <div class="form-check form-switch mb-2">
                             <input class="status-switch form-check-input" type="checkbox" data-user-id="{{ $user->id }}" {{ $user->is_active == 1 ? 'checked' : '' }}>
@@ -85,11 +87,11 @@
                         <a href="{{ route('gurus.edit', $user->id) }}" class="btn btn-primary">Edit</a>
 
                         <!-- Delete Button -->
-                        <form action="{{ route('gurus.destroy', $user->id) }}" method="POST" style="display: inline;">
+                        <!-- <form action="{{ route('gurus.destroy', $user->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
+                        </form> -->
 
 
                     </td>
