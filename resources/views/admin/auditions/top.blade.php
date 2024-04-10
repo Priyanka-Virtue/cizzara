@@ -40,8 +40,8 @@
             </div>
             <div class="col-md-3">
                 <div class="input-group">
-                    <button class="btn btn-primary waves-effect" type="button">Move selected to</button>
-                    <select class="form-select status-dropdown-all" data-user-id="">
+                    <button id="btn-move" class="btn btn-primary waves-effect" type="button">Move selected to</button>
+                    <select id="status-dropdown-all" class="form-select status-dropdown-all">
                         @foreach(config('app.audition_status') as $key => $value)
                         <option value="{{$value}}">{{$value}}</option>
                         @endforeach
@@ -90,7 +90,7 @@
                 // $user = App\Models\User::where('id',$audition->user['id'])->with('details')->first();
                 @endphp
                 <tr>
-                    <td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->id }}"></td>
+                    <td><input data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}" class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->id }}"></td>
                     <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->details->first_name . ' ' . $audition->user->details->last_name }}</a></td>
                     <td>
                         @php
@@ -119,7 +119,7 @@
                     <td>
 
 
-                        <select style="min-width: 110px;" class="form-select status-dropdown" data-plan="{{ $audition }}" data-user="{{ $audition->user->id }}">
+                        <select style="min-width: 110px;" class="form-select status-dropdown" data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}">
                             @foreach(config('app.audition_status') as $key => $value)
                             <option value="{{$value}}" @if($value==$audition->status) selected @endif >{{$value}}</option>
                             @endforeach
@@ -165,35 +165,74 @@
 <script>
     $(document).ready(function() {
         $('.status-dropdown').change(function() {
-            var userId = $(this).data('user');
-            var auditionId = $(this).data('plan');
+
+            var userIds = [],
+                auditionIds = [];
+            userIds.push($(this).data('user'));
+            auditionIds.push($(this).data('plan'));
+
             var newStatus = $(this).val();
-            console.log(newStatus, auditionId, userId);
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('admin.auditions.updateStatus') }}",
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    status: newStatus,
-                    audition: auditionId,
-                    user: userId,
-                },
-                success: function(response) {
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Status updated successfully',
-                    });
-                    console.log(response);
-                },
-                error: function(xhr, status, error) {
-                    Toast.fire({
-                        icon: 'Error',
-                        title: 'Could not update status',
-                    });
-                    console.error(xhr.responseText);
-                }
-            });
+
+
+            moveSelectedTo(newStatus, userIds, auditionIds)
+
+
         });
+
+        $('#btn-move').click(async function(e) {
+            e.preventDefault();
+            var userIds = [],
+                auditionIds = [];
+            $('input[name="selectedRecords[]"]:checked').each(function() {
+                userIds.push($(this).data('user'));
+                auditionIds.push($(this).data('plan'));
+            });
+            if (userIds.length == 0) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Select at least one checkbox',
+                });
+                return;
+            }
+            var newStatus = $("#status-dropdown-all").val();
+            try {
+                await moveSelectedTo(newStatus, userIds, auditionIds);
+                window.location.replace(window.location.href);
+            } catch (error) {
+                console.error(error);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Could not update status',
+                });
+            }
+        });
+
+        function moveSelectedTo(newStatus, userIds, auditionIds) {
+            console.log(newStatus, auditionIds, userIds);
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('admin.auditions.updateStatus') }}",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        status: newStatus,
+                        audition: auditionIds,
+                        user: userIds,
+                    },
+                    success: function(response) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Status updated successfully',
+                        });
+                        resolve(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        reject(error);
+                    }
+                });
+            });
+        }
     });
 </script>
 @endsection

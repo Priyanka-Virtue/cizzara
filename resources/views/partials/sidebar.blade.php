@@ -36,11 +36,11 @@
             <li class="menu-item active">
               <a href="{{route('admin.auditions.top')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-star-check"></i>
-                <div data-i18n="Contestants">Top 500</div>
+                <div data-i18n="Contestants">Auditions</div>
               </a>
             </li>
 
-            <li class="menu-item active">
+            <!-- <li class="menu-item active">
               <a href="{{route('admin.auditions.top')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-star-circle-outline"></i>
 
@@ -60,7 +60,7 @@
                 <i class="menu-icon tf-icons mdi mdi-trophy-award"></i>
                 <div data-i18n="Contestants">Top 3</div>
               </a>
-            </li>
+            </li> -->
 
             <li class="menu-item active">
               <a href="{{route('admin.users.index')}}" class="menu-link">

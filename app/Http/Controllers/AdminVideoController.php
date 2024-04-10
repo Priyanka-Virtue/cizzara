@@ -55,11 +55,15 @@ class AdminVideoController extends Controller
 
     public function updateStatus(Request $request)
     {
+        // dd($request->all());
         $request->validate([
-            'status' => 'required|in:' . implode(',', config('app.audition_status')) . ',rejected',
+            'status' => 'required|in:' . implode(',', config('app.audition_status')),
         ]);
 
-        $updated = Audition::where('plan_id', $request->audition)->where('user_id', $request->user)->update(['status' => $request->status]);
+        foreach ($request->audition as $key => $audition) {
+            $updated = Audition::where('plan_id', $audition)->where('user_id', $request->user[$key])->update(['status' => $request->status]);
+        }
+        // $updated = Audition::where('plan_id', $request->audition)->where('user_id', $request->user)->update(['status' => $request->status]);
         return response()->json(['success' => $updated, $request->all()]);
     }
 
