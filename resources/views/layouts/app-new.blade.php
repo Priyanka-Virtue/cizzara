@@ -1,17 +1,10 @@
 <!DOCTYPE html>
 
-<html
-  lang="en"
-  class="light-style layout-menu-fixed layout-compact"
-  dir="ltr"
-  data-theme="theme-default"
-  data-assets-path="{{ asset('assets') }}"
-  data-template="vertical-menu-template-free">
-  <head>
+<html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('assets') }}" data-template="vertical-menu-template-free">
+
+<head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
     <title>The Universal Product</title>
 
@@ -23,9 +16,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&ampdisplay=swap"
-      rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&ampdisplay=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/materialdesignicons.css') }}" />
 
@@ -49,79 +40,76 @@
     <script src="{{ asset('assets/js/config.js') }}"></script>
     <!-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) -->
     <style>
-        nav svg{
+        nav svg {
             max-width: 25px !important;
         }
+
         ul.pagination {
             justify-content: center;
         }
     </style>
     @yield('head')
-  </head>
+</head>
 
-  <body>
+<body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
-      <div class="layout-container">
-        <!-- Menu -->
+        <div class="layout-container">
+            <!-- Menu -->
 
-        @include('partials.sidebar')
-        <!-- / Menu -->
+            @include('partials.sidebar')
+            <!-- / Menu -->
 
-        <!-- Layout container -->
-        <div class="layout-page">
-          <!-- Navbar -->
+            <!-- Layout container -->
+            <div class="layout-page">
+                <!-- Navbar -->
 
-          @include('partials.navbar')
+                @include('partials.navbar')
 
-          <!-- / Navbar -->
+                <!-- / Navbar -->
 
-          <!-- Content wrapper -->
-          <div class="content-wrapper">
-            <!-- Content -->
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
+                    <!-- Content -->
 
-            <div class="container-xxl flex-grow-1 container-p-y">
-            @if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-@if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-                @yield('content')
-
-
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                        @endif
+                        @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                        @endif
+                        @yield('content')
 
 
-              <!--/ Responsive Table -->
+
+
+                        <!--/ Responsive Table -->
+                    </div>
+                    <!-- / Content -->
+
+                    <!-- Footer -->
+                    @include('partials.footer')
+                    <!-- / Footer -->
+
+                    <div class="content-backdrop fade"></div>
+                </div>
+                <!-- Content wrapper -->
             </div>
-            <!-- / Content -->
-
-            <!-- Footer -->
-            @include('partials.footer')
-            <!-- / Footer -->
-
-            <div class="content-backdrop fade"></div>
-          </div>
-          <!-- Content wrapper -->
+            <!-- / Layout page -->
         </div>
-        <!-- / Layout page -->
-      </div>
 
-      <!-- Overlay -->
-      <div class="layout-overlay layout-menu-toggle"></div>
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
     </div>
     <!-- / Layout wrapper -->
 
     <div class="buy-now" style="display: none;">
-      <a
-        href="https://themeselection.com/item/materio-bootstrap-html-admin-template/" rel="no-follow"
-
-        >Upgrade to Pro</a
-      >
+        <a href="https://themeselection.com/item/materio-bootstrap-html-admin-template/" rel="no-follow">Upgrade to Pro</a>
     </div>
 
     <!-- Core JS -->
@@ -140,22 +128,22 @@
     <!-- Main JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
-<script>
-    const Toast = Swal.mixin({
-  toast: true,
-  position: 'bottom-end',
-  iconColor: '#ffcc99',
-  customClass: {
-    popup: 'colored-toast',
-  },
-  showConfirmButton: false,
-  timer: 1500,
-  timerProgressBar: true,
-});
-
-</script>
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'bottom-end',
+            iconColor: '#ffcc99',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+        });
+    </script>
     <!-- Page JS -->
 
     @yield('bottom')
-  </body>
+</body>
+
 </html>

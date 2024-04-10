@@ -106,6 +106,14 @@
 <body>
     <div class="position-relative">
 
+    @if(auth()->user())
+    <div class="layout-page">
+                <!-- Navbar -->
+
+                @include('partials.navbar')
+</div>
+@endif
+
         <div class="authentication-wrapper authentication-basic container-p-y pt-0" style="flex-direction: column;">
 
 
@@ -123,7 +131,7 @@
                     <div class="card p-2">
                         <!-- Logo -->
                         <div class="app-brand justify-content-center mt-5">
-                            <a href="#" class="app-brand-link">
+                            <a href="{{ route('welcome') }}" class="app-brand-link">
                                 <span class="app-brand-logo demo">
                                     <img class="invert" src="{{ asset('images/logo-or.png') }}" width="190px" alt="{{ config('app.name', 'The United Production') }}">
                                 </span>

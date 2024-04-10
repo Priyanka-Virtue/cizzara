@@ -1,7 +1,7 @@
 @extends('layouts.app-new')
 
 @section('content')
-<h4 class="py-3 mb-4"><span class="text-muted fw-light">Autitions /</span><?php echo date('Y') ?></h4>
+<h4 class="py-3 mb-4"><span class="text-muted fw-light">Auditions /</span><?php echo date('Y') ?></h4>
 <hr class="my-5" />
 
 <div class="card">
