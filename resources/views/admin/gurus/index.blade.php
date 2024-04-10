@@ -131,10 +131,18 @@
                 success: function(response) {
                     // Handle success, if needed
                     console.log(response);
+                    Toast.fire({
+                            icon: 'success',
+                            title: 'Status updated successfully',
+                        });
                 },
                 error: function(xhr, status, error) {
                     // Handle error, if needed
-                    console.error(xhr.responseText);
+                    // console.error(xhr.responseText);
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Could not update status',
+                    });
                 }
             });
         });
@@ -143,12 +151,12 @@
 <script>
     $(document).ready(function() {
         const toastPlacementExample = document.querySelector('.toast-placement-ex'),
-    toastPlacementBtn = document.querySelector('#showToastPlacement');
-  let selectedType, selectedPlacement, toastPlacement;
+            toastPlacementBtn = document.querySelector('#showToastPlacement');
+        let selectedType, selectedPlacement, toastPlacement;
         $('.audition-switch').change(function() {
             var userId = $(this).data('user-id');
             var planId = $(this).data('plan-id');
-            var newStatus = $(this).val();
+            var newStatus = $(this).is(':checked') ? 1 : 0;
 
             $.ajax({
                 type: 'POST',
@@ -162,31 +170,19 @@
                 success: function(response) {
                     console.log(response);
 
-                    if (toastPlacement) {
-        toastDispose(toastPlacement);
-      }
-      selectedType = 'text-dark';// document.querySelector('#selectTypeOpt').value;
-      selectedPlacement = 'top-0 end-0';// document.querySelector('#selectPlacement').value.split(' ');
-
-      toastPlacementExample.querySelector('i.mdi').classList.add(selectedType);
-      DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
-      toastPlacement = new bootstrap.Toast(toastPlacementExample);
-      toastPlacement.show();
+                    Toast.fire({
+                            icon: 'success',
+                            title: 'audition assignment updated successfully',
+                        });
 
                 },
                 error: function(xhr, status, error) {
                     console.error(xhr.responseText);
 
-                    if (toastPlacement) {
-        toastDispose(toastPlacement);
-      }
-      selectedType = 'text-dark';// document.querySelector('#selectTypeOpt').value;
-      selectedPlacement = 'top-0 end-0';// document.querySelector('#selectPlacement').value.split(' ');
-
-      toastPlacementExample.querySelector('i.mdi').classList.add(selectedType);
-      DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
-      toastPlacement = new bootstrap.Toast(toastPlacementExample);
-      toastPlacement.show();
+                    Toast.fire({
+                            icon: 'error',
+                            title: 'audition assignment failed',
+                        });
 
                 }
 
@@ -195,5 +191,4 @@
         });
     });
 </script>
-<script src="{{ asset('assets/js/ui-toasts.js') }}"></script>
 @endsection

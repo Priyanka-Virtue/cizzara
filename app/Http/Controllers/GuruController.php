@@ -33,7 +33,7 @@ class GuruController extends Controller
 
         $gurus = $plan->gurus ?? [];
 
-       if($request->input('status') == 'on' || $request->input('status') == '1'){
+       if($request->input('status') == '1'){
         $gurus[] = (int)$request->input('user_id');
         $msg = 'Guru assigned to audition '.$plan->name;
 
@@ -41,10 +41,7 @@ class GuruController extends Controller
        else {
         $gurus = array_diff($gurus, [$request->input('user_id')]);
         $msg = 'Guru has been removed from audition '.$plan->name;
-
        }
-
- 
 
        $pd = $plan->update(['gurus' => $gurus ]);
         return response()->json(['success' => true, 'message'=>$msg]);
