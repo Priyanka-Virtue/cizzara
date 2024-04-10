@@ -64,9 +64,12 @@
     <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
         <div class="card mb-4">
             <div class="card-body">
+                @if($user->details->photo == "")
+
+                @endif
                 <div class="user-avatar-section">
                     <div class=" d-flex align-items-center flex-column">
-                        <img class="img-fluid rounded mb-3 mt-4" src="{{asset('/storage/'.$user->details->photo)}}" height="120" width="120" alt="User avatar">
+                        <img class="img-fluid rounded mb-3 mt-4" src="{{ $user->details->photo == "" ? asset('/assets/img/avatars/1.png') : asset('/storage/'.$user->details->photo)}}" height="120" width="120" alt="User avatar">
                         <!-- <div class="user-info text-center">
                             <h4>{{ $user->details->first_name }}</h4>
                             <span class="badge bg-label-info rounded-pill">Pending</span>
@@ -74,7 +77,8 @@
                     </div>
                 </div>
                 <hr />
-                <form method="POST" action="{{ isset($user->details) ? route('user-details.update', $user->details->id) : route('user-details.store') }}" enctype="multipart/form-data">
+
+                <form  method="POST" action="{{ isset($user->details) ? route('user-details.update', $user->details->id) : route('user-details.store') }}" enctype="multipart/form-data">
                     @csrf
                     @if(isset($user->details))
                     @method('PUT')

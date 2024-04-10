@@ -54,3 +54,12 @@ OR
     Design changes
 
     
+#10-04-2024
+Rename TUP
+Filter and sort by not rated
+Show rating by judges in admin
+make 2 videos rating compulsory
+show top 500 directly 
+Filter by commented
+Show Comments to admin
+

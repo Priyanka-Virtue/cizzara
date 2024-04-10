@@ -17,9 +17,9 @@ class VideoRatingController extends Controller
 
         $user = auth()->user();
 
-        if (!$user->hasRole('guru')) {
-            return redirect()->back()->with('error', 'You do not have permission to rate videos.');
-        }
+        // if (!$user->hasRole('guru')) {
+        //     return redirect()->back()->with('error', 'You do not have permission to rate videos.');
+        // }
 
         // Find the video
         $video = Video::findOrFail($videoId);
@@ -29,9 +29,9 @@ class VideoRatingController extends Controller
 
         // Check if the guru is associated with the plan
         // if (!$plan->gurus()->where('guru_id', $user->id)->exists()) {
-        if (!Plan::where('id', $plan->id)->whereJsonContains('gurus', $user->id)->exists()) {
-            return redirect()->back()->with('error', 'You are not authorized to rate videos for this audition.');
-        }
+        // if (!Plan::where('id', $plan->id)->whereJsonContains('gurus', $user->id)->exists()) {
+        //     return redirect()->back()->with('error', 'You are not authorized to rate videos for this audition.');
+        // }
 
         // Validate request data
         $validator = Validator::make($request->all(), [
