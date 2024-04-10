@@ -55,7 +55,6 @@ class AdminVideoController extends Controller
 
     public function updateStatus(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'status' => 'required|in:' . implode(',', config('app.audition_status')),
         ]);
@@ -63,7 +62,7 @@ class AdminVideoController extends Controller
         foreach ($request->audition as $key => $audition) {
             $updated = Audition::where('plan_id', $audition)->where('user_id', $request->user[$key])->update(['status' => $request->status]);
         }
-        // $updated = Audition::where('plan_id', $request->audition)->where('user_id', $request->user)->update(['status' => $request->status]);
+
         return response()->json(['success' => $updated, $request->all()]);
     }
 
@@ -255,13 +254,21 @@ class AdminVideoController extends Controller
 
     public function auditionList(Request $request)
     {
-        $plan = Plan::where('name', 'SingTUV2024')->first();
+        if ($request->audition != "") {
+            $plan = Plan::where('name', $request->audition)->first();
+        } else {
+            $plan = Plan::latest()->first();
+        }
+
+        if (empty($plan))
+            return redirect()->route('admin.auditions.index')->with('error', 'Select an audition first. #65d');
 
         $query = Audition::with('user')
             ->where('auditions.plan_id', $plan->id);
 
         $auditions = $query->paginate(env('RECORDS_PER_PAGE', 10));
-        return view('admin.auditions.index', compact('auditions'));
+        $plans = Plan::all();
+        return view('admin.auditions.index', compact('auditions', 'plans'));
     }
 
 

@@ -10,7 +10,7 @@
         <div class="p-3">
             <div class="row">
 
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                     <div class="form-group">
                         <label for="status">Status:</label>
                         <select class="form-select" id="status" name="status">
@@ -21,7 +21,7 @@
                             <option value="rejected">Rejected</option>
                         </select>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="contestant">Search by Contestant Name:</label>

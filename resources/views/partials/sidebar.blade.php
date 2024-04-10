@@ -16,12 +16,12 @@
           <ul class="menu-inner py-1">
 
             <!-- Tables -->
-            <!-- <li class="menu-item active">
+            <li class="menu-item active">
               <a href="{{route('admin.videos.index')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-table"></i>
-                <div data-i18n="Videos">Videos</div>
+                <div data-i18n="Videos">All videos list</div>
               </a>
-            </li> -->
+            </li>
             @role('guru')
             <li class="menu-item active">
               <a href="{{route('admin.auditions.index')}}" class="menu-link">

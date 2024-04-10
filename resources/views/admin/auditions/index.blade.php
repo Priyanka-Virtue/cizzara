@@ -1,8 +1,33 @@
 @extends('layouts.app-new')
 
 @section('content')
-<h4 class="py-3 mb-4"><span class="text-muted fw-light">Auditions /</span><?php echo date('Y') ?></h4>
-<hr class="my-5" />
+
+<div class="row">
+    <div class="col-md-8">
+        <h4 class="py-3 mb-4"><span class="text-muted fw-light">Auditions /</span><?php echo date('Y') ?></h4>
+    </div>
+    <div class="col-md-4">
+        <form action="{{ route('admin.auditions.index') }}" method="GET">
+            <div class="input-group">
+                <select name="audition" style="min-width: 110px;" class="form-select form-select-lg">
+                    @foreach($plans as $p)
+                    <option value="{{$p->name}}" @if($p->name==request()->audition) selected @endif >{{$p->name}}</option>
+                    @endforeach
+                </select>
+                <!-- <select name="status" style="min-width: 110px;" class="form-select">
+                    <option value="">All</option>
+                    @foreach(config('app.audition_status') as $key => $value)
+                    <option value="{{$value}}" @if($value==request()->status) selected @endif >{{$value}}</option>
+                    @endforeach
+                </select> -->
+
+                <button type="submit" class="btn btn-primary waves-effect" type="button">Filter</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+<hr class="mt-0" />
 
 <div class="card">
     <h5 class="card-header">All Entries</h5>
