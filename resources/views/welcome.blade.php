@@ -963,10 +963,10 @@
             <div class="text-center">
                 <h2 class="text-lg text-white font-bold mx-4">Powered by:</h2>
                 <div class="flex justify-center items-center space-x-8">
-                    <a href="link1" class="flex justify-center items-center bg-gray-200 rounded-lg p-2 h-20 w-20">
+                    <a href="" class="flex justify-center items-center bg-gray-200 rounded-lg p-2 h-20 w-20">
                         <img src="{{ asset('images/powered-by/Roshani-Black.png') }}" alt="Roshani">
                     </a>
-                    <a href="link2" class="flex justify-center items-center bg-gray-200 rounded-lg p-2 h-20 w-20">
+                    <a href="" class="flex justify-center items-center bg-gray-200 rounded-lg p-2 h-20 w-20">
                         <img style="max-height: 90px;" src="{{ asset('images/powered-by/Cizzara-Black.jpg') }}" alt="Cizzara">
                     </a>
                     <!-- Add more logos as needed -->
