@@ -170,14 +170,35 @@ class AdminVideoController extends Controller
 
             $gurus = User::whereIn('id', $plan->gurus)->get();
 
-        $topUsers = Audition::where('plan_id', $plan->id)
-            ->with('user.details')
-            ->with('user.videos');
+        // $topUsers = Audition::where('plan_id', $plan->id)
+        //     ->with('user.details')
+        //     ->with('user.videos.ratings');
 
-        if ($request->status && !empty($request->status)) {
-            $topUsers->where('status', $request->status);
-        }
-        $topUsers = $topUsers->get();
+        // if ($request->status && !empty($request->status)) {
+        //     $topUsers->where('status', $request->status);
+        // }
+        // $topUsers = $topUsers->paginate(env('RECORDS_PER_PAGE', 10));
+
+        $topUsers = Audition::where('plan_id', $plan->id)
+    ->with('user.details')
+    ->with(['user.videos' => function ($query) {
+        $query->withCount('ratings');
+    }])
+    ->whereHas('user.videos') // Ensure the user has at least one video
+    ->when($request->status, function ($query, $status) {
+        return $query->where('status', $status);
+    })
+    ->get()
+    ->sortByDesc(function ($audition) {
+        return $audition->user->videos->avg('ratings_count');
+    });
+
+$topUsers = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage($topUsers);
+
+$perPage = env('RECORDS_PER_PAGE', 10);
+$currentPage = $topUsers->currentPage();
+$currentPageItems = $topUsers->slice(($currentPage - 1) * $perPage, $perPage)->all();
+$topUsers = new \Illuminate\Pagination\LengthAwarePaginator($currentPageItems, $topUsers->count(), $perPage, $currentPage);
 
         $paginatedTopUsers = [];
 

@@ -90,75 +90,81 @@
                 @php
 
                 $planName = App\Models\Plan::where('id',$audition->plan_id)->first()->name;
-                $rowno = strtoupper( str_split($planName)[0] .str_split($planName)[2] . (strlen($audition->id) < 2 ? '0' : '').$audition->id);
-                @endphp
-                <tr>
-                    <td><input data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}" class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->id }}">&nbsp; {{ $rowno }}</td>
-                    <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->details->first_name . ' ' . $audition->user->details->last_name }}</a></td>
+                $rowno = strtoupper( str_split($planName)[0] .str_split($planName)[2] . (strlen($audition->id) < 2 ? '0' : '' ).$audition->id);
+                    @endphp
+                    <tr>
+                        <td><input data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}" class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->id }}">&nbsp; {{ $rowno }}</td>
+                        <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->details->first_name . ' ' . $audition->user->details->last_name }}</a></td>
 
 
 
-                    <td>
-                        @php
-                        $videoRatings = [];
+                        <td>
+                            @php
+                            $videoRatings = [];
 
-                        foreach ($audition->user->videos as $video) {
+                            foreach ($audition->user->videos as $video) {
 
-                        echo '<a href="'. route('admin.videos.show', $video) .'">' .$video->original_name.' </a>
-                        <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>
-                        <br />';
+                            echo '<a href="'. route('admin.videos.show', $video) .'">' .$video->original_name.' </a>
+                            <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>
+                            <br />';
 
-                        $averageRating = $video->ratings->avg('rating');
-                        $videoRatings[] = $averageRating;
-                        }
-
-
-                        if (count($videoRatings) > 1) {
-                        $userAverageRating = array_sum($videoRatings) / count($videoRatings);
-                        } else {
-                        $userAverageRating = $videoRatings[0] ?? 0;
-                        }
+                            $averageRating = $video->ratings->avg('rating');
+                            $videoRatings[] = $averageRating;
+                            }
 
 
-                        @endphp
-                    </td>
+                            if (count($videoRatings) > 1) {
+                            $userAverageRating = array_sum($videoRatings) / count($videoRatings);
+                            } else {
+                            $userAverageRating = $videoRatings[0] ?? 0;
+                            }
 
-                    <td>
-                        <select style="min-width: 110px;" class="form-select status-dropdown" data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}">
-                            @foreach(config('app.audition_status') as $key => $value)
-                            <option value="{{$value}}" @if($value==$audition->status) selected @endif >{{$value}}</option>
+
+                            @endphp
+                        </td>
+
+                        <td>
+                            <select style="min-width: 110px;" class="form-select status-dropdown" data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}">
+                                @foreach(config('app.audition_status') as $key => $value)
+                                <option value="{{$value}}" @if($value==$audition->status) selected @endif >{{$value}}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        @foreach($gurus ?? [] as $guru)
+                        <td>
+
+
+
+                            @foreach ($audition->user->videos as $video)
+                            @foreach($video->ratings as $guru_rating)
+                            @if($guru_rating->guru_id == $guru->id)
+                            {{$guru_rating->rating}}
+                            @endif
                             @endforeach
-                        </select>
-                    </td>
-                    @foreach($gurus ?? [] as $guru)
-                    <td>
 
-                    @php
-                        $videoRatings = [];
+<br/>
+                            @endforeach
+                        </td>
+                        @endforeach
+                        <td>{{ $userAverageRating }}</td>
+                        <td>{{ $audition->user->email }}</td>
 
-                        foreach ($audition->user->videos as $video) {
-                        }
-                </td>
-                    @endforeach
-                    <td>{{ $userAverageRating }}</td>
-                    <td>{{ $audition->user->email }}</td>
-
-                    <td>{{ $audition->user->details->phone }}</td>
-                    <td>{{ $audition->user->details->date_of_birth }}</td>
-                    <td>{{ $audition->user->details->education }}</td>
-                    <td>{{ $audition->user->details->occupation }}</td>
-                    <td>{{ $audition->user->details->city }}</td>
-                    <td>{{ $audition->user->details->state }}</td>
-                    <td>{{ $audition->user->details->pin_code }}</td>
-                    <td>{{ $audition->user->details->address }}</td>
+                        <td>{{ $audition->user->details->phone }}</td>
+                        <td>{{ $audition->user->details->date_of_birth }}</td>
+                        <td>{{ $audition->user->details->education }}</td>
+                        <td>{{ $audition->user->details->occupation }}</td>
+                        <td>{{ $audition->user->details->city }}</td>
+                        <td>{{ $audition->user->details->state }}</td>
+                        <td>{{ $audition->user->details->pin_code }}</td>
+                        <td>{{ $audition->user->details->address }}</td>
 
 
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="4">No records found.</td>
-                </tr>
-                @endforelse
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4">No records found.</td>
+                    </tr>
+                    @endforelse
             </tbody>
         </table>
     </div>
