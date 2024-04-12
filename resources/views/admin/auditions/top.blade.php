@@ -69,7 +69,10 @@
                     <th>Contestant</th>
                     <th>Videos</th>
                     <th>Action</th>
-                    <th>Rating</th>
+                    @foreach($gurus ?? [] as $guru)
+                    <th>{{$guru->name}}</th>
+                    @endforeach
+                    <th>Avg Rating</th>
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Birthdate</th>
@@ -85,13 +88,16 @@
 
                 @forelse ($topUsers as $audition)
                 @php
-                //print_r($audition->user);
 
-                // $user = App\Models\User::where('id',$audition->user['id'])->with('details')->first();
+                $planName = App\Models\Plan::where('id',$audition->plan_id)->first()->name;
+                $rowno = strtoupper( str_split($planName)[0] .str_split($planName)[2] . (strlen($audition->id) < 2 ? '0' : '').$audition->id);
                 @endphp
                 <tr>
-                    <td><input data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}" class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->id }}"></td>
+                    <td><input data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}" class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->id }}">&nbsp; {{ $rowno }}</td>
                     <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->details->first_name . ' ' . $audition->user->details->last_name }}</a></td>
+
+
+
                     <td>
                         @php
                         $videoRatings = [];
@@ -116,17 +122,24 @@
 
                         @endphp
                     </td>
+
                     <td>
-
-
                         <select style="min-width: 110px;" class="form-select status-dropdown" data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}">
                             @foreach(config('app.audition_status') as $key => $value)
                             <option value="{{$value}}" @if($value==$audition->status) selected @endif >{{$value}}</option>
                             @endforeach
                         </select>
-
-
                     </td>
+                    @foreach($gurus ?? [] as $guru)
+                    <td>
+
+                    @php
+                        $videoRatings = [];
+
+                        foreach ($audition->user->videos as $video) {
+                        }
+                </td>
+                    @endforeach
                     <td>{{ $userAverageRating }}</td>
                     <td>{{ $audition->user->email }}</td>
 

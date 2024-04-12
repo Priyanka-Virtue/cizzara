@@ -146,29 +146,31 @@ class VideoController extends Controller
         $audition = Audition::where('plan_id', $plan->id)->where('user_id', $user->id)->first();
 
         $validator = Validator::make($request->all(), [
-            'style' => [
-                'required',
-                Rule::unique('videos')->where(function ($query) use ($request, $audition) {
-                    return $query->where('user_id', Auth::id())
-                        ->where('style', $request->style)
-                        ->where('status', $audition->status);
-                }),
-            ],
+            // 'style' => [
+            //     'required',
+            //     Rule::unique('videos')->where(function ($query) use ($request, $audition) {
+            //         return $query->where('user_id', Auth::id());
+            //             ->where('style', $request->style)
+            //             ->where('status', $audition->status);
+            //     }),
+            // ],
             'videoTitle' => 'required',
             'videoFile' => [
                 'required',
                 'mimetypes:video/*',
                 'max:100000',
-                function ($attribute, $value, $fail) use ($audition) {
-                    $uploaded_videos_count = Video::where('user_id', Auth::id())->where('status', $audition->status)->count();
-                    if ($uploaded_videos_count >= env('MAX_VIDEO_FILE_UPLOAD', 2)) {
-                        $fail('You have reached the maximum limit of ' . env('MAX_VIDEO_FILE_UPLOAD', 2) . ' videos.');
-                    }
-                },
+                // function ($attribute, $value, $fail) use ($audition) {
+                //     $uploaded_videos_count = Video::where('user_id', Auth::id())->where('status', $audition->status)->count();
+                //     if ($uploaded_videos_count >= env('MAX_VIDEO_FILE_UPLOAD', 2)) {
+                //         $fail('You have reached the maximum limit of ' . env('MAX_VIDEO_FILE_UPLOAD', 2) . ' videos.');
+                //     }
+                // },
             ],
-        ], [
-            'style.unique' => 'You have already uploaded a video with this style.'
-        ]);
+        ],
+        // [
+        //     'style.unique' => 'You have already uploaded a video with this style.'
+        // ]
+    );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -196,7 +198,7 @@ class VideoController extends Controller
             $video->description = $request->videoDescription;
             $video->save();
 
-            return redirect()->back()->withInput()->with('success', 'Video uploaded successfully.');
+            return redirect()->route('thank-you')->withInput()->with('success', 'Video uploaded successfully.');
         }
 
         return redirect()->back()->withErrors(['message' => 'No video file found.'])->withInput();

@@ -164,9 +164,11 @@ class AdminVideoController extends Controller
         } else {
             $plan = Plan::latest()->first();
         }
-
+;
         if (empty($plan))
             return redirect()->route('admin.auditions.top')->with('error', 'Select an audition first. #65d');
+
+            $gurus = User::whereIn('id', $plan->gurus)->get();
 
         $topUsers = Audition::where('plan_id', $plan->id)
             ->with('user.details')
@@ -180,7 +182,7 @@ class AdminVideoController extends Controller
         $paginatedTopUsers = [];
 
         $plans = Plan::all();
-        return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers', 'plans'));
+        return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers', 'plans', 'gurus'));
 
 
         // Retrieve the top 3 users with their average ratings

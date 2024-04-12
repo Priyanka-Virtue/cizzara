@@ -26,4 +26,8 @@ class Plan extends Model
     {
         return $this->hasMany(Video::class);
     }
+    public function getName($id)
+    {
+        return Plan::find($id)->name;
+    }
 }

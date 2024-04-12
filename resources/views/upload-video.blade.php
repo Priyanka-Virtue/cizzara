@@ -129,9 +129,9 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
 <form action="{{ route('video.upload') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="main-container">
-        <h2>Select the type of your video</h2>
-        <p>You can add upto {{env('MAX_VIDEO_FILE_UPLOAD', 2)}} different style videos, note that you can upload video only once for the selected type</p>
-        <div class="radio-buttons">
+        <!-- <h2>Select the type of your video</h2> -->
+        <div class="alert alert-info" >You can add upto {{env('MAX_VIDEO_FILE_UPLOAD', 2)}} different style videos, however If you upload only one video it won't affect the ranking and won't affect chance to be selected for next round.</div>
+        <!-- <div class="radio-buttons">
             @foreach($styles as $style => $style_details)
             @if(!in_array($style, $uploaded_videos_types))
             <label class="custom-radio">
@@ -154,10 +154,7 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
             </label>
             @endif
             @endforeach
-
-
-
-        </div>
+        </div> -->
 
     </div>
     <div class="form-group">

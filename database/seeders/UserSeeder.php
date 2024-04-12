@@ -69,14 +69,14 @@ class UserSeeder extends Seeder
         $j3->assignRole('guru');
 
         $plans = Plan::create([
-            'name' => 'SingTUV2024',
+            'name' => 'SingTUP2024',
             'is_active' => 1,
             'price' => '10',
             'gurus' => json_encode([$j1->id, $j2->id, $j3->id])
         ]);
 
         $plans = Plan::create([
-            'name' => 'DanceTUV2023',
+            'name' => 'DanceTUP2024',
             'is_active' => 0,
             'price' => '999.99',
             'gurus' => json_encode([$j1->id, $j2->id, $j3->id])

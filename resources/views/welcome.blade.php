@@ -14,9 +14,7 @@
 
     <!-- Styles -->
     <style>
-        span.mdi {
-            color: #ef4444;
-        }
+
 
         /* ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com */
         *,
@@ -835,7 +833,8 @@
 
         .bg-gray-200 {
             background-color: #fff;
-            border: 2px solid red;
+            border: 2px solid #ef4444;
+            box-shadow: 10px 5px 15px #ef4444;
         }
 
         .h-20 {
@@ -865,6 +864,10 @@
         .mx-4 {
             margin-bottom: 20px;
             margin-top: 50px;
+        }
+
+        span.mdi {
+            color: #ef4444;
         }
     </style>
 </head>
@@ -953,10 +956,6 @@
                         </svg>
                         <h2 class="text-xl font-semibold text-gray-900 dark:text-white">$10.00</h2>
                     </a>
-
-
-
-
                 </div>
             </div>
 
