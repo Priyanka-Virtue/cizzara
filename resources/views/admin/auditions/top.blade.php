@@ -191,7 +191,7 @@
     <div class="justify-content-center">
         <div class="col-md-6 mx-auto">
             <hr />
-            {{-- $paginatedTopUsers->appends(request()->input())->links() --}}
+            {{$topUsers->appends(request()->input())->links()}}
         </div>
     </div>
 

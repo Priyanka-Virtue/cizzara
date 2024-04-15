@@ -177,72 +177,37 @@ class AdminVideoController extends Controller
         if (empty($plan))
             return redirect()->route('admin.auditions.top')->with('error', 'Select an audition first. #65d');
 
-            $gurus = User::whereIn('id', $plan->gurus)->get();
+        $gurus = User::whereIn('id', $plan->gurus)->get();
 
         $topUsers = Audition::where('plan_id', $plan->id)
-    ->with('user.details')
-    ->with(['user.videos' => function ($query) {
-        $query->withCount('ratings');
-    }])
-    ->whereHas('user.videos') // Ensure the user has at least one video
-    ->when($request->status, function ($query, $status) {
-        return $query->where('status', $status);
-    })
-    ->when($sort, function ($query, $sort) {
-        switch($sort) {
-            case 'highest-rating':
-                return $query->orderBy('auditions.avg_rating', 'desc');
-            case 'lowest-rating':
-                return $query->orderBy('auditions.avg_rating', 'asc');
-            case 'pending-rating':
-                    return $query->orderBy('auditions.avg_rating', 'asc');
-            default:
-                return $query->orderBy('auditions.avg_rating', 'desc');
-        }
+            ->with('user.details')
+            ->with(['user.videos' => function ($query) {
+                $query->withCount('ratings');
+            }])
+            ->whereHas('user.videos') // Ensure the user has at least one video
+            ->when($request->status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            ->when($sort, function ($query, $sort) {
+                switch ($sort) {
+                    case 'highest-rating':
+                        return $query->orderBy('auditions.avg_rating', 'desc');
+                    case 'lowest-rating':
+                        return $query->orderBy('auditions.avg_rating', 'asc');
+                    case 'pending-rating':
+                        return $query->orderBy('auditions.avg_rating', 'asc');
+                    default:
+                        return $query->orderBy('auditions.avg_rating', 'desc');
+                }
+            })
+            // ->orderBy('auditions.avg_rating', 'desc')
+            ->take(100) // Retrieve only 2 records
+            ->paginate(env('RECORDS_PER_PAGE', 10));
 
-    })
-    ->orderBy('auditions.avg_rating', 'desc')
-    ->take(1) // Retrieve only 2 records
-    ->paginate(env('RECORDS_PER_PAGE', 10));
 
-
-$paginatedTopUsers = [];
+        $paginatedTopUsers = [];
         $plans = Plan::all();
         return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers', 'plans', 'gurus'));
-
-
-        // Retrieve the top 3 users with their average ratings
-        // $topUsers = User::select('users.*', DB::raw('IFNULL(AVG(video_ratings.rating), 0) as average_rating'))
-        // ->whereHas('details')
-        //     ->join('videos', 'users.id', '=', 'videos.user_id')
-        //     ->leftJoin('video_ratings', 'videos.id', '=', 'video_ratings.video_id')
-        //     ->where('videos.plan_id', $plan->id)
-        //     ->groupBy('users.id')
-        //     ->orderByDesc('average_rating')
-        //     ->take($request->top ?? 3)
-        //     ->get();
-
-        // // Manually create a LengthAwarePaginator instance for the top users
-        // $perPage = env('RECORDS_PER_PAGE', 10); // Set per page to 2 for the first page
-        // $currentPage = $request->query('page', 1);
-
-        // // Calculate the offset based on the current page
-        // $offset = ($currentPage - 1) * $perPage;
-
-        // // Get the items for the current page
-        // $items = collect(array_slice($topUsers->toArray(), $offset, $perPage));
-
-        // // Create a LengthAwarePaginator instance
-        // $paginatedTopUsers = new LengthAwarePaginator(
-        //     $items,
-        //     count($topUsers), // Total count of items
-        //     $perPage, // Per page
-        //     $currentPage // Current page
-        // );
-        // $topUsers = $items;
-
-        // $paginatedTopUsers->setPath($request->url());
-        // return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers'));
     }
 
     public function exportToppers(Request $request)
@@ -250,7 +215,7 @@ $paginatedTopUsers = [];
         $selectedRecordIds = $request->input('selectedRecords');
 
         $topUsers = Audition::
-        // where('plan_id', $plan->id)
+            // where('plan_id', $plan->id)
             with('user.details')
             ->with('user.videos');
 
@@ -263,7 +228,6 @@ $paginatedTopUsers = [];
                 $plan = Plan::latest()->first();
             }
             $selectedRecords = $topUsers->where('plan_id', $plan->id)->get();
-
         }
 
         return Excel::download(new ContestantsExport($selectedRecords), 'toppers.xlsx');

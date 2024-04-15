@@ -93,7 +93,7 @@ class LoginController extends Controller
             return redirect('/admin/auditions/top');
         }
         else if ($user->hasRole('guru')) {
-            return redirect('/admin/auditions');
+            return redirect('/admin/videos');
         }
         else {
 

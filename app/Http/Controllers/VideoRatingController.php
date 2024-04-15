@@ -67,7 +67,7 @@ class VideoRatingController extends Controller
         $totalRatings += $v->ratings()->avg('rating');
     }
     $overallAverageRating = $totalRatings / $totalVideos;
-    dd($overallAverageRating);
+    // dd($overallAverageRating);
     // $audition->overall_average_rating = $overallAverageRating;
     // $audition->save();
 

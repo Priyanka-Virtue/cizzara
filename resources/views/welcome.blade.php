@@ -14,8 +14,6 @@
 
     <!-- Styles -->
     <style>
-
-
         /* ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com */
         *,
         ::after,
@@ -714,7 +712,7 @@
         }
 
         .dark\:bg-gray-800\/50 {
-            background-color: rgb(31 41 55 / 0.5)
+            background-color: rgb(31 41 55 / 0.8)
         }
 
         .dark\:bg-red-800\/20 {
@@ -722,7 +720,10 @@
         }
 
         .dark\:bg-dots-lighter {
-            background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E")
+            background-image: url("{{ asset('images/bg.jpg') }}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            /* url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E") */
         }
 
         .dark\:bg-gradient-to-bl {
@@ -869,12 +870,23 @@
         span.mdi {
             color: #ef4444;
         }
+
+        .overlay {
+            min-width: 100%;
+            min-height: 100%;
+            position: absolute;
+            background-color: rgb(0 0 0 / 0.7);
+
+        }
     </style>
 </head>
 
 <body class="antialiased" style="background-color: #4b5563;">
+
     <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100xx dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
+
         @if (Route::has('login'))
+
         <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
             @auth
             <span class="text-gray-600">Hello {{ Auth::user()->name }} </span> &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -897,7 +909,7 @@
         </div>
         @endif
 
-        <div class="max-w-7xl mx-auto p-6 lg:p-8">
+        <div class="max-w-7xl mx-auto p-6 lg:p-8  z-10">
             <div class="flex justify-center">
                 <img src="{{ asset('images/logo-or.png') }}" width="190px" alt="{{ config('app.name', 'The United Production') }}">
             </div>
@@ -921,13 +933,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
                     <a disabled href="#" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
                         <div>
-                            <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
-                                <span class="mdi mdi-human-female-dance mdi-24px"></span>
+                            <div class="h-16 w-16 flex items-center justify-center rounded-full">
+                                <!-- <span class="mdi mdi-human-female-dance mdi-24px"></span> -->
+                                <img src="{{ asset('images/dancelogo-768x432.png') }}" width="220px" alt="Dancing Competition">
                             </div>
 
                             <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Dancing Competition</h2>
 
-                            <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                            <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed  dark:text-white">
                                 Upload Your Audition by clicking here, you will be redirected to the registration and payment page
                             </p>
                         </div>
@@ -940,13 +953,14 @@
 
                     <a href="{{ route('goToPayment', ['SingTUP2024']) }}" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
                         <div>
-                            <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
-                                <span class="mdi mdi-microphone-settings mdi-24px"></span>
+                            <div class="h-16 w-16 flex items-center justify-center rounded-full">
+                                <!-- <span class="mdi mdi-microphone-settings mdi-24px"></span> -->
+                                <img src="{{ asset('images/singinglogo-768x432.png') }}" width="220px" alt="Singing Competition">
                             </div>
 
-                            <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Audition Competition</h2>
+                            <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Singing Competition</h2>
 
-                            <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                            <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed  dark:text-white">
                                 Upload Your Audition by clicking here, you will be redirected to the registration and payment page
                             </p>
                         </div>
@@ -984,6 +998,7 @@
                 </div>
             </div>
         </div>
+        <div class="overlay">dd</div>
     </div>
 </body>
 
