@@ -58,6 +58,7 @@ Route::middleware(['role:guru|admin'])->group(function () {
     Route::get('/admin/videos', [AdminVideoController::class, 'index'])->name('admin.videos.index');
     // Route::put('/admin/videos/{video}/status', [AdminVideoController::class, 'updateStatus'])->name('admin.videos.updateStatus');
     Route::get('/admin/videos/{video}', [AdminVideoController::class, 'show'])->name('admin.videos.show');
+    Route::get('/admin/videos/{guru}/{video}', [AdminVideoController::class, 'showByGuru'])->name('admin.videos.show-by-guru');
 
     Route::post('/admin/{video}/rate_video', [VideoRatingController::class, 'rateVideo'])->name('guru.rate.video');
 
@@ -78,7 +79,8 @@ Route::middleware(['role:guru|admin'])->group(function () {
 
         // Route::get('/admin/auditions', [AdminVideoController::class, 'auditionList'])->name('admin.auditions.index');
         // Route::get('/admin/auditions/top/{top?}', [AdminVideoController::class, 'topList'])->name('admin.auditions.top');
-        Route::get('/admin/auditions/top/{audition?}/{status?}', [AdminVideoController::class, 'topList'])->name('admin.auditions.top');
+        // Route::get('/admin/auditions/top/{audition?}/{status?}', [AdminVideoController::class, 'topList'])->name('admin.auditions.top');
+        Route::get('/admin/auditions/top/{audition?}/{status?}/{top?}/{sort?}', [AdminVideoController::class, 'topList'])->name('admin.auditions.top');
         Route::post('/admin/auditions/top/updateStatus', [AdminVideoController::class, 'updateStatus'])->name('admin.auditions.updateStatus');
 
         Route::get('/admin/auditions/{audition}', [AdminVideoController::class, 'audition'])->name('admin.auditions.show');

@@ -195,10 +195,11 @@ class VideoController extends Controller
             $video->title = $request->videoTitle;
             $video->style = $request->style;
             $video->status = $audition->status;
+            $video->audition_id = $audition->id;
             $video->description = $request->videoDescription;
             $video->save();
 
-            return redirect()->route('thank-you')->withInput()->with('success', 'Video uploaded successfully.');
+            return redirect()->route('thank-you')->withInput()->with('success', 'Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.');
         }
 
         return redirect()->back()->withErrors(['message' => 'No video file found.'])->withInput();

@@ -46,6 +46,14 @@ class AdminVideoController extends Controller
 
         return view('admin.show', compact('video'));
     }
+    public function showByGuru($guru, $video)
+    {
+
+        $video = Video::find($video);
+        $video->auditionDetails = $video->auditionDetails();
+
+        return view('admin.show-by-guru', compact('video'));
+    }
 
     public function user($user_id)
     {
@@ -159,25 +167,17 @@ class AdminVideoController extends Controller
 
     public function topList(Request $request)
     {
+        $sort = $request->sort ?? 'highest-rating';
         if ($request->audition != "") {
             $plan = Plan::where('name', $request->audition)->first();
         } else {
             $plan = Plan::latest()->first();
         }
-;
+
         if (empty($plan))
             return redirect()->route('admin.auditions.top')->with('error', 'Select an audition first. #65d');
 
             $gurus = User::whereIn('id', $plan->gurus)->get();
-
-        // $topUsers = Audition::where('plan_id', $plan->id)
-        //     ->with('user.details')
-        //     ->with('user.videos.ratings');
-
-        // if ($request->status && !empty($request->status)) {
-        //     $topUsers->where('status', $request->status);
-        // }
-        // $topUsers = $topUsers->paginate(env('RECORDS_PER_PAGE', 10));
 
         $topUsers = Audition::where('plan_id', $plan->id)
     ->with('user.details')
@@ -188,20 +188,25 @@ class AdminVideoController extends Controller
     ->when($request->status, function ($query, $status) {
         return $query->where('status', $status);
     })
-    ->get()
-    ->sortByDesc(function ($audition) {
-        return $audition->user->videos->avg('ratings_count');
-    });
+    ->when($sort, function ($query, $sort) {
+        switch($sort) {
+            case 'highest-rating':
+                return $query->orderBy('auditions.avg_rating', 'desc');
+            case 'lowest-rating':
+                return $query->orderBy('auditions.avg_rating', 'asc');
+            case 'pending-rating':
+                    return $query->orderBy('auditions.avg_rating', 'asc');
+            default:
+                return $query->orderBy('auditions.avg_rating', 'desc');
+        }
 
-$topUsers = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage($topUsers);
+    })
+    ->orderBy('auditions.avg_rating', 'desc')
+    ->take(1) // Retrieve only 2 records
+    ->paginate(env('RECORDS_PER_PAGE', 10));
 
-$perPage = env('RECORDS_PER_PAGE', 10);
-$currentPage = $topUsers->currentPage();
-$currentPageItems = $topUsers->slice(($currentPage - 1) * $perPage, $perPage)->all();
-$topUsers = new \Illuminate\Pagination\LengthAwarePaginator($currentPageItems, $topUsers->count(), $perPage, $currentPage);
 
-        $paginatedTopUsers = [];
-
+$paginatedTopUsers = [];
         $plans = Plan::all();
         return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers', 'plans', 'gurus'));
 

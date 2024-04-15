@@ -36,7 +36,7 @@
             <li class="menu-item active">
               <a href="{{route('admin.auditions.top')}}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-star-check"></i>
-                <div data-i18n="Contestants">Auditions</div>
+                <div data-i18n="Contestants">Top 500</div>
               </a>
             </li>
 

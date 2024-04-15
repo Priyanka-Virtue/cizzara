@@ -21,6 +21,12 @@
                     <option value="{{$value}}" @if($value==request()->status) selected @endif >{{$value}}</option>
                     @endforeach
                 </select>
+                <select name="sort" style="min-width: 50px;" class="form-select">
+                    <option value="highest-rating">Sort Highest Rating</option>
+                    <option value="lowest-rating">Sort Lowest Rating</option>
+                    <option value="pending-rating">Sort Pending to Rate</option>
+                    <option value="comments">Sort Has comments</option>
+                </select>
 
                 <button type="submit" class="btn btn-primary waves-effect" type="button">Filter</button>
             </div>
@@ -31,6 +37,7 @@
 <hr class="mt-0" />
 
 <div class="card">
+
     <h5 class="card-header">Top contestants</h5>
 
     <div class="p-3">
@@ -57,7 +64,20 @@
                     </div>
                 </form>
             </div>
+
         </div>
+
+
+        <!-- <div class="row mt-2">
+            <div class="col-md-2">
+                <select name="sort" style="min-width: 50px;" class="form-select">
+                    <option value="highest-rating">Highest Rating</option>
+                    <option value="lowest-rating">Lowest Rating</option>
+                    <option value="pending-rating">Pending to Rate</option>
+                    <option value="comments">Has comments</option>
+                </select>
+            </div>
+        </div> -->
     </div>
 
 
@@ -138,11 +158,11 @@
                             @foreach ($audition->user->videos as $video)
                             @foreach($video->ratings as $guru_rating)
                             @if($guru_rating->guru_id == $guru->id)
-                            {{$guru_rating->rating}}
+                            <a href="{{ route('admin.videos.show-by-guru', ['video'=>$video, 'guru'=>$guru ]) }}">{{$guru_rating->rating}}</a>
                             @endif
                             @endforeach
 
-<br/>
+                            <br />
                             @endforeach
                         </td>
                         @endforeach

@@ -67,8 +67,16 @@
             <tbody class="table-border-bottom-0">
                 @forelse ($auditions as $audition)
                 <tr>
-                @role('admin')<td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->user->id }}"></td>@endrole
-                    <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->details->first_name.' '.$audition->user->details->last_name }}</a></td>
+                @role('admin')<td><input class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->user->id }}"></td>
+                <td>
+                        <a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->details->first_name.' '.$audition->user->details->last_name }}</a>
+                    </td>
+                @endrole
+                @role('guru')
+                    <td>
+                        {{ $audition->user->details->first_name.' '.$audition->user->details->last_name }}
+                    </td>
+                    @endrole
                     <td>
                     @php
                         $guruRatings = [];
