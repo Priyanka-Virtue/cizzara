@@ -28,11 +28,11 @@ class ContestantsExport implements FromCollection, WithMapping, WithHeadings
 
         $videos = '';
         $links = '';
-        $types = '';
+        // $types = '';
         foreach ($audition->user->videos as $i => $video) {
             $videos .= ($i+1).'.) ' .  $video->original_name . ' ';
             $links .= ($i+1).'.) ' .  route('admin.videos.show', $video) . ' ';
-            $types .= ($i+1).'.) ' .  $video->style . ' ';
+            // $types .= ($i+1).'.) ' .  $video->style . ' ';
 
             $averageRating = $video->ratings->avg('rating');
             $videoRatings[] = $averageRating;
@@ -49,7 +49,7 @@ class ContestantsExport implements FromCollection, WithMapping, WithHeadings
             $audition->user->details->first_name . ' ' . $audition->user->details->last_name,
             $videos,
             $links,
-            $types,
+            // $types,
             $userAverageRating,
             $audition->user->email,
             $audition->user->details->phone,
@@ -70,7 +70,7 @@ class ContestantsExport implements FromCollection, WithMapping, WithHeadings
             'name',
             'videos',
             'links',
-            'types',
+            // 'types',
             'Average Rating',
             'email',
             'phone',

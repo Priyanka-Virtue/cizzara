@@ -712,7 +712,7 @@
         }
 
         .dark\:bg-gray-800\/50 {
-            background-color: rgb(31 41 55 / 0.8)
+            background-color: rgb(31 41 55 / 0.5)
         }
 
         .dark\:bg-red-800\/20 {
@@ -832,19 +832,6 @@
             }
         }
 
-        .bg-gray-200 {
-            background-color: #fff;
-            border: 2px solid #ef4444;
-            box-shadow: 10px 5px 15px #ef4444;
-        }
-
-        .h-20 {
-            height: 150px;
-        }
-
-        .w-20 {
-            width: 200px;
-        }
 
         .space-x-8 {
             gap: 2rem;
@@ -877,6 +864,18 @@
             position: absolute;
             background-color: rgb(0 0 0 / 0.7);
 
+        }
+        .aud-img{
+            max-width: 250px;
+  height: auto;
+        }
+        .pwrd-img{
+            width: 140px;
+            height: 90px;
+            padding: 10px;
+            background-color: #fff;
+            border: 2px solid #ef4444;
+            box-shadow: 2px 3px 5px #ef4444;
         }
     </style>
 </head>
@@ -911,7 +910,7 @@
 
         <div class="max-w-7xl mx-auto p-6 lg:p-8  z-10">
             <div class="flex justify-center">
-                <img src="{{ asset('images/logo-or.png') }}" width="190px" alt="{{ config('app.name', 'The United Production') }}">
+                <img src="{{ asset('images/logo-or.png') }}" width="230px" alt="{{ config('app.name', 'The United Production') }}">
             </div>
 
             <div class="mt-16">
@@ -933,12 +932,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
                     <a disabled href="#" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
                         <div>
-                            <div class="h-16 w-16 flex items-center justify-center rounded-full">
+                            <div class="flex items-center rounded-full">
                                 <!-- <span class="mdi mdi-human-female-dance mdi-24px"></span> -->
-                                <img src="{{ asset('images/dancelogo-768x432.png') }}" width="220px" alt="Dancing Competition">
+                                <img src="{{ asset('images/dancelogo-768x432.png') }}" class="aud-img" alt="Dancing Competition">
                             </div>
 
-                            <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Dancing Competition</h2>
+                            <!-- <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Dancing Competition</h2> -->
 
                             <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed  dark:text-white">
                                 Upload Your Audition by clicking here, you will be redirected to the registration and payment page
@@ -953,12 +952,12 @@
 
                     <a href="{{ route('goToPayment', ['SingTUP2024']) }}" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
                         <div>
-                            <div class="h-16 w-16 flex items-center justify-center rounded-full">
+                            <div class="flex items-center rounded-full">
                                 <!-- <span class="mdi mdi-microphone-settings mdi-24px"></span> -->
-                                <img src="{{ asset('images/singinglogo-768x432.png') }}" width="220px" alt="Singing Competition">
+                                <img src="{{ asset('images/singinglogo-768x432.png') }}" class="aud-img" alt="Singing Competition">
                             </div>
 
-                            <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Singing Competition</h2>
+                            <!-- <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Singing Competition</h2> -->
 
                             <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed  dark:text-white">
                                 Upload Your Audition by clicking here, you will be redirected to the registration and payment page
@@ -974,12 +973,12 @@
             </div>
 
             <div class="text-center">
-                <h2 class="text-lg text-white font-bold mx-4">Powered by:</h2>
+                <h2 class="text-xl text-white font-bold mx-4">Powered by:</h2>
                 <div class="flex justify-center items-center space-x-8">
-                    <a href="" class="flex justify-center items-center bg-gray-200 rounded-lg p-2 h-20 w-20">
+                    <a href="" class="flex justify-center items-center bg-gray-200 rounded-lg pwrd-img">
                         <img src="{{ asset('images/powered-by/Roshani-Black.png') }}" alt="Roshani">
                     </a>
-                    <a href="" class="flex justify-center items-center bg-gray-200 rounded-lg p-2 h-20 w-20">
+                    <a href="" class="flex justify-center items-center bg-gray-200 rounded-lg pwrd-img">
                         <img style="max-height: 90px;" src="{{ asset('images/powered-by/Cizzara-Black.jpg') }}" alt="Cizzara">
                     </a>
                     <!-- Add more logos as needed -->

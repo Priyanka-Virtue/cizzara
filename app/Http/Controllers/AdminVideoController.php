@@ -201,7 +201,7 @@ class AdminVideoController extends Controller
                 }
             })
             // ->orderBy('auditions.avg_rating', 'desc')
-            ->take(100) // Retrieve only 2 records
+            ->take($request->top ?? 500)
             ->paginate(env('RECORDS_PER_PAGE', 10));
 
 
