@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('style')->nullable();
             $table->enum('status', config('app.audition_status'))->default('pending');
+            $table->enum('state', config('app.audition_status'))->default('pending');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
             $table->foreign('audition_id')->references('id')->on('auditions')->onDelete('cascade');

@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('auditions', function (Blueprint $table) {
             $table->enum('status', config('app.audition_status'))->default('pending')->after('plan_id');
+            $table->enum('state', config('app.audition_status'))->default('pending')->after('status');
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration
     {
         Schema::table('auditions', function (Blueprint $table) {
             $table->removeColumn('status');
+            $table->removeColumn('state');
         });
     }
 };

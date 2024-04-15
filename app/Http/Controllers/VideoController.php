@@ -43,8 +43,10 @@ class VideoController extends Controller
             return view('audition', compact('userDetail'));
         } else {
             $audition = Audition::where('plan_id', $plan_id)->where('user_id', $user_id)->first();
-
             if ($audition) {
+                if($audition->status == 'disqualified'){
+                    return view('thanks');
+                }
                 $videos = Video::where('user_id', $user_id)->where('plan_id', $plan_id)->where('status', $audition->status)->get();
                 if (count($videos) >= env('MAX_VIDEO_FILE_UPLOAD')) {
                     return view('thanks');
