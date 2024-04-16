@@ -25,7 +25,7 @@
                     <option value="highest-rating">Sort Highest Rating</option>
                     <option value="lowest-rating">Sort Lowest Rating</option>
                     <option value="pending-rating">Sort Pending to Rate</option>
-                    <option value="comments">Sort Has comments</option>
+                    <option value="has-comments">Sort Has comments</option>
                 </select>
 
                 <button type="submit" class="btn btn-primary waves-effect" type="button">Filter</button>
@@ -108,83 +108,94 @@
 
                 @forelse ($topUsers as $audition)
                 @php
+                $prefix = 'DS';
+                $season = 'S01';
+                if($audition->plan_id == 1){
+                $prefix = 'SS';
+                }
 
+                $zeros = 3 - strlen($audition->id);
+                $zeros = str_repeat("0",$zeros);
                 $planName = App\Models\Plan::where('id',$audition->plan_id)->first()->name;
-                $rowno = strtoupper( str_split($planName)[0] .str_split($planName)[2] . (strlen($audition->id) < 2 ? '0' : '' ).$audition->id);
-                    @endphp
-                    <tr>
-                        <td><input data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}" class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->id }}">&nbsp; {{ $rowno }}</td>
-                        <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->details->first_name . ' ' . $audition->user->details->last_name }}</a></td>
+
+
+                $rowno = $prefix.$season.$zeros.$audition->id;
+                @endphp
+                <tr>
+                    <td><input data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}" class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->id }}">&nbsp; {{ $rowno }}</td>
+                    <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->details->first_name . ' ' . $audition->user->details->last_name }}</a></td>
 
 
 
-                        <td>
-                            @php
-                            $videoRatings = [];
+                    <td>
+                        @php
+                        $videoRatings = [];
 
-                            foreach ($audition->user->videos as $video) {
-
-                            echo '<a href="'. route('admin.videos.show', $video) .'">' .$video->original_name.' </a>
-                            <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>
-                            <br />';
-
-                            $averageRating = $video->ratings->avg('rating');
-                            $videoRatings[] = $averageRating;
-                            }
+                        foreach ($audition->user->videos as $video) {
 
 
-                            if (count($videoRatings) > 1) {
-                            $userAverageRating = array_sum($videoRatings) / count($videoRatings);
-                            } else {
-                            $userAverageRating = $videoRatings[0] ?? 0;
-                            }
+                        echo '<a href="'. route('admin.videos.show', $video) .'">' .$video->original_name.' </a>
+                        <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>
+                        <br />';
+
+                        $averageRating = $video->ratings->avg('rating');
+                        $videoRatings[] = $averageRating;
+                        }
 
 
-                            @endphp
-                        </td>
-
-                        <td>
-                            <select style="min-width: 110px;" class="form-select status-dropdown" data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}">
-                                @foreach(config('app.audition_status') as $key => $value)
-                                <option value="{{$value}}" @if($value==$audition->status) selected @endif >{{$value}}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        @foreach($gurus ?? [] as $guru)
-                        <td>
+                        if (count($videoRatings) > 1) {
+                        $userAverageRating = array_sum($videoRatings) / count($videoRatings);
+                        } else {
+                        $userAverageRating = $videoRatings[0] ?? 0;
+                        }
 
 
+                        @endphp
+                    </td>
 
-                            @foreach ($audition->user->videos as $video)
+                    <td>
+                        <select style="min-width: 110px;" class="form-select status-dropdown" data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}">
+                            @foreach(config('app.audition_status') as $key => $value)
+                            <option value="{{$value}}" @if($value==$audition->status) selected @endif >{{$value}}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    @foreach($gurus ?? [] as $guru)
+                    <td>
+                        @foreach ($audition->user->videos as $video)
                             @foreach($video->ratings as $guru_rating)
-                            @if($guru_rating->guru_id == $guru->id)
-                            <a href="{{ route('admin.videos.show-by-guru', ['video'=>$video, 'guru'=>$guru ]) }}">{{$guru_rating->rating}}</a>
-                            @endif
-                            @endforeach
+                                @if($guru_rating->guru_id == $guru->id)
+                                    <a href="{{ route('admin.videos.show-by-guru', ['video'=>$video, 'guru'=>$guru ]) }}">{{$guru_rating->rating}}</a>
+                                    @if($guru_rating->comments != "")
+                                        <i type="button" class="mdi mdi-comment" data-bs-toggle="tooltip" data-bs-placement="auto" title="{{$guru_rating->comments}}">
 
-                            <br />
+                                        </i>
+                                    @endif
+                                @endif
                             @endforeach
-                        </td>
+                        <br />
                         @endforeach
-                        <td>{{ $userAverageRating }}</td>
-                        <td>{{ $audition->user->email }}</td>
+                    </td>
+                    @endforeach
+                    <td>{{ $userAverageRating }}</td>
+                    <td>{{ $audition->user->email }}</td>
 
-                        <td>{{ $audition->user->details->phone }}</td>
-                        <td>{{ $audition->user->details->date_of_birth }}</td>
-                        <td>{{ $audition->user->details->education }}</td>
-                        <td>{{ $audition->user->details->occupation }}</td>
-                        <td>{{ $audition->user->details->city }}</td>
-                        <td>{{ $audition->user->details->state }}</td>
-                        <td>{{ $audition->user->details->pin_code }}</td>
-                        <td>{{ $audition->user->details->address }}</td>
+                    <td>{{ $audition->user->details->phone }}</td>
+                    <td>{{ $audition->user->details->date_of_birth }}</td>
+                    <td>{{ $audition->user->details->education }}</td>
+                    <td>{{ $audition->user->details->occupation }}</td>
+                    <td>{{ $audition->user->details->city }}</td>
+                    <td>{{ $audition->user->details->state }}</td>
+                    <td>{{ $audition->user->details->pin_code }}</td>
+                    <td>{{ $audition->user->details->address }}</td>
 
 
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4">No records found.</td>
-                    </tr>
-                    @endforelse
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="4">No records found.</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

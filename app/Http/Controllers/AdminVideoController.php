@@ -168,6 +168,7 @@ class AdminVideoController extends Controller
     public function topList(Request $request)
     {
         $sort = $request->sort ?? 'highest-rating';
+
         if ($request->audition != "") {
             $plan = Plan::where('name', $request->audition)->first();
         } else {
@@ -183,9 +184,19 @@ class AdminVideoController extends Controller
             ->with('user.details')
             ->with(['user.videos' => function ($query) {
                 $query->withCount('ratings');
-            }])
-            ->whereHas('user.videos') // Ensure the user has at least one video
-            ->when($request->status, function ($query, $status) {
+            }]);
+            // ->with(['user.videos.ratings' => function ($query) {
+            //     $query->withCount('comments');
+            // }]);
+            if($sort == 'has-comments') {
+                $topUsers = $topUsers->whereHas('user.videos.ratings', function ($query) {
+                    $query->where('comments', '!=', '');
+                });
+            }
+            else {
+            $topUsers = $topUsers->whereHas('user.videos');
+            }
+            $topUsers = $topUsers->when($request->status, function ($query, $status) {
                 return $query->where('status', $status);
             })
             ->when($sort, function ($query, $sort) {

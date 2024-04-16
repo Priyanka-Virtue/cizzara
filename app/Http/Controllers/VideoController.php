@@ -195,7 +195,7 @@ class VideoController extends Controller
             $video->file_path = $path;
             $video->original_name = $oname;
             $video->title = $request->videoTitle;
-            $video->style = $request->style;
+            
             $video->status = $audition->status;
             $video->audition_id = $audition->id;
             $video->description = $request->videoDescription;

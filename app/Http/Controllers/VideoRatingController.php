@@ -68,8 +68,8 @@ class VideoRatingController extends Controller
     }
     $overallAverageRating = $totalRatings / $totalVideos;
     // dd($overallAverageRating);
-    // $audition->overall_average_rating = $overallAverageRating;
-    // $audition->save();
+    $audition->overall_average_rating = $overallAverageRating;
+    $audition->save();
 
 
         if($request->comments != "" && ( $request->send_to_contestant != "")) {
