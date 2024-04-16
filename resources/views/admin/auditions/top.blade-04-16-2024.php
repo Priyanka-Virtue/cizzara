@@ -42,13 +42,9 @@
 
     <div class="p-3">
         <div class="row">
-            @role('admin')
             <div class="col-md-5">
                 @include('partials.export-btns')
             </div>
-            @endrole
-
-            @role('admin')
             <div class="col-md-3">
                 <div class="input-group">
                     <button id="btn-move" class="btn btn-primary waves-effect" type="button">Move selected to</button>
@@ -60,7 +56,6 @@
 
                 </div>
             </div>
-            @endrole
             <div class="col-md-3">
                 <form action="{{ route('admin.users.index') }}" method="GET">
                     <div class="input-group">
@@ -69,8 +64,6 @@
                     </div>
                 </form>
             </div>
-
-            @role('admin')
             <div class="col-md-1 d-flex justify-content-end">
                 <div class="btn-group">
                     <button type="button" class="btn btn-outline-primary btn-icon rounded-pill dropdown-toggle hide-arrow waves-effect waves-light" data-bs-toggle="dropdown" aria-expanded="false">
@@ -86,12 +79,20 @@
                     </ul>
                 </div>
             </div>
-            @endrole
 
         </div>
 
 
-
+        <!-- <div class="row mt-2">
+            <div class="col-md-2">
+                <select name="sort" style="min-width: 50px;" class="form-select">
+                    <option value="highest-rating">Highest Rating</option>
+                    <option value="lowest-rating">Lowest Rating</option>
+                    <option value="pending-rating">Pending to Rate</option>
+                    <option value="comments">Has comments</option>
+                </select>
+            </div>
+        </div> -->
     </div>
 
 
@@ -102,16 +103,11 @@
                     <td><input class="form-check-input" type="checkbox" name="selectAll" id="selectAll" value="selectAll"></td>
                     <th>Contestant</th>
                     <th>Videos</th>
-                    @role('admin')
                     <th>Action</th>
                     @foreach($gurus ?? [] as $guru)
                     <th>{{$guru->name}}</th>
                     @endforeach
                     <th>Avg Rating</th>
-                    @endrole
-                    @role('guru')
-                    <th>Rating</th>
-                    @endrole
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Birthdate</th>
@@ -172,7 +168,6 @@
                         @endphp
                     </td>
 
-                    @role('admin')
                     <td>
                         <select style="min-width: 110px;" class="form-select status-dropdown" data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}">
                             @foreach(config('app.audition_status') as $key => $value)
@@ -185,7 +180,7 @@
                         @foreach ($audition->user->videos as $video)
                         @foreach($video->ratings as $guru_rating)
                         @if($guru_rating->guru_id == $guru->id)
-                        <a href="{{ route('admin.videos.show-by-guru', ['video'=>$video, 'guru'=>$guru ]) }}">{{$guru_rating->rating}}/10</a>
+                        <a href="{{ route('admin.videos.show-by-guru', ['video'=>$video, 'guru'=>$guru ]) }}">{{$guru_rating->rating}}</a>
                         @if($guru_rating->comments != "")
                         <i class="mdi mdi-comment" data-bs-toggle="tooltip" data-bs-placement="auto" title="{{$guru_rating->comments}}">
                         </i>
@@ -203,21 +198,6 @@
                     </td>
                     @endforeach
                     <td>{{ $userAverageRating }}</td>
-                    @endrole
-
-@role('guru')
-<td>
-                        @foreach ($audition->user->videos as $video)
-                            {{ $video->guruRatings->rating ?? 'N/A' }} / 10
-                            @if($video->guruRatings->comments != "")
-                        <i class="mdi mdi-comment" data-bs-toggle="tooltip" data-bs-placement="auto" title="{{$video->guruRatings->comments}}">
-                        </i>
-                        @endif
-                            <br/>
-                        @endforeach
-                    </td>
-@endrole
-
                     <td>{{ $audition->user->email }}</td>
 
                     <td>{{ $audition->user->details->phone }}</td>
