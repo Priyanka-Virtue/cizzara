@@ -137,7 +137,7 @@
                 popup: 'colored-toast',
             },
             showConfirmButton: false,
-            timer: 1500,
+            timer: 4500,
             timerProgressBar: true,
         });
     </script>

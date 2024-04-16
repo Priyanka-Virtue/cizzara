@@ -72,6 +72,9 @@ Route::middleware(['role:guru|admin'])->group(function () {
 
         Route::post('/admin/gurus/updateStatus', [GuruController::class, 'updateStatus'])->name('admin.gurus.update-status');
         Route::post('/admin/gurus/updateAudition', [GuruController::class, 'updateAudition'])->name('admin.gurus.assign-audition');
+        Route::post('/admin/gurus/ratingReminder', [GuruController::class, 'ratingReminder'])->name('admin.gurus.send-rating-reminder');
+
+
 
 
         Route::get('/admin/users', [AdminVideoController::class, 'userList'])->name('admin.users.index');

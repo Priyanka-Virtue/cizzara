@@ -57,15 +57,15 @@ OR
     
     h 4) add faq & terms and conditions content
     
-    5) add filter comments to gurus & admin both
-    6) add comment icon in list in which guru has added comment
+    Done for Admin 5) add filter comments to gurus & admin both
+    Done 6) add comment icon in list in which guru has added comment
     
-    x 7) change format of serial no.
+    Done 7) change format of serial no.
     -first two chars contest name
     -next three chars season name
     -next four chars starting with 0001
     for eg. DSS010001 dancing super star season 1
-    8) notify guru for pending reviews
+    Done 8) notify guru for pending reviews
 
     
 #10-04-2024

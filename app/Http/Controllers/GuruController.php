@@ -7,6 +7,7 @@ use App\Http\Requests\StoreGuruRequest;
 use App\Http\Requests\UpdateGuruRequest;
 use App\Models\Plan;
 use App\Models\User;
+use App\Notifications\RatingReminder;
 use Illuminate\Http\Request;
 
 class GuruController extends Controller
@@ -135,5 +136,10 @@ class GuruController extends Controller
 
         $pd = $plan->update(['gurus' => $gurus]);
         return response()->json(['success' => true, 'message' => $msg]);
+    }
+    public function ratingReminder(Request $request){
+        $guru = User::findOrFail($request->input('guru_id'));
+        $guru->notify(new RatingReminder($guru));
+        return response()->json(['success' => true, 'message' => 'Rating reminder sent successfully to '.$guru->name]);
     }
 }

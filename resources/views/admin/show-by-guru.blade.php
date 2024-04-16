@@ -141,10 +141,12 @@
                                 @endforeach
                             </div>
 
+                           @if($ratedByGuru['comments'])
                             <div class="form-floating form-floating-outline my-3">
-                                <textarea class="form-control" id="comments" name="comments" rows="3">{{ $ratedByGuru['comments'] }}</textarea>
-                                <label for="comments">Comments by Guru</label>
+                                <h6 for="comments">Comments by Guru</h6>
+                                {{ $ratedByGuru['comments'] }}
                             </div>
+                            @endif
 
 
 

@@ -18,9 +18,9 @@ class VideoRatingController extends Controller
 
         $user = auth()->user();
 
-        // if (!$user->hasRole('guru')) {
-        //     return redirect()->back()->with('error', 'You do not have permission to rate videos.');
-        // }
+        if (!$user->hasRole('guru')) {
+            return redirect()->back()->with('error', 'You do not have permission to rate videos.');
+        }
 
         // Find the video
         $video = Video::findOrFail($videoId);

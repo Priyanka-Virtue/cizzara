@@ -56,13 +56,28 @@
 
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <form action="{{ route('admin.users.index') }}" method="GET">
                     <div class="input-group">
                         <input type="text" class="form-control" id="contestant" name="contestant" placeholder="Search by Contestant Name" aria-label="Search by Contestant Name" aria-describedby="button-addon2">
                         <button type="submit" name="submit" value="submit" class="btn btn-primary waves-effect" id="button-addon2">Search</button>
                     </div>
                 </form>
+            </div>
+            <div class="col-md-1 d-flex justify-content-end">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-primary btn-icon rounded-pill dropdown-toggle hide-arrow waves-effect waves-light" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="mdi mdi-account-reactivate mdi-24px" data-bs-toggle="tooltip" data-bs-placement="auto" title="Send Rating Reminder"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" style="">
+                        @foreach($gurus ?? [] as $guru)
+
+                        <li><a class="dropdown-item waves-effect" href="javascript:void(0);" onclick="$(this).sendRatingReminder({{$guru->id}})">{{$guru->name}}</a></li>
+                        @endforeach
+
+
+                    </ul>
+                </div>
             </div>
 
         </div>
@@ -163,16 +178,23 @@
                     @foreach($gurus ?? [] as $guru)
                     <td>
                         @foreach ($audition->user->videos as $video)
-                            @foreach($video->ratings as $guru_rating)
-                                @if($guru_rating->guru_id == $guru->id)
-                                    <a href="{{ route('admin.videos.show-by-guru', ['video'=>$video, 'guru'=>$guru ]) }}">{{$guru_rating->rating}}</a>
-                                    @if($guru_rating->comments != "")
-                                        <i type="button" class="mdi mdi-comment" data-bs-toggle="tooltip" data-bs-placement="auto" title="{{$guru_rating->comments}}">
-
-                                        </i>
-                                    @endif
-                                @endif
-                            @endforeach
+                        @foreach($video->ratings as $guru_rating)
+                        @if($guru_rating->guru_id == $guru->id)
+                        <a href="{{ route('admin.videos.show-by-guru', ['video'=>$video, 'guru'=>$guru ]) }}">{{$guru_rating->rating}}</a>
+                        @if($guru_rating->comments != "")
+                        <i class="mdi mdi-comment" data-bs-toggle="tooltip" data-bs-placement="auto" title="{{$guru_rating->comments}}">
+                        </i>
+                        @endif
+                        @endif
+                        @php
+                        $ratedGurus[] = $guru_rating->guru_id;
+                        @endphp
+                        @endforeach
+                        @if(in_array($guru->id, $ratedGurus) == false)
+                        <!-- <i role="button" class="mdi mdi-account-reactivate" data-bs-toggle="tooltip" data-bs-placement="auto" title="Send Rating Reminder">
+                        </i> -->
+                        &mdash;
+                        @endif
                         <br />
                         @endforeach
                     </td>
@@ -228,6 +250,30 @@
 
 
         });
+
+        $.fn.sendRatingReminder = function(guruId) {
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('admin.gurus.send-rating-reminder') }}",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    guru_id: guruId
+                },
+                success: function(response) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: response.message,
+                    });
+                },
+                error: function(xhr, status, error) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: error,
+                    });
+
+                }
+            })
+        }
 
         $('#btn-move').click(async function(e) {
             e.preventDefault();
