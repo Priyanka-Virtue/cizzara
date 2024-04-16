@@ -127,11 +127,11 @@
 
                 @forelse ($topUsers as $audition)
                 @php
-                $prefix = 'DS';
+                <!-- $prefix = 'DS';
                 $season = 'S01';
                 if($audition->plan_id == 1){
                 $prefix = 'SS';
-                }
+                } -->
 
                 $zeros = 3 - strlen($audition->id);
                 $zeros = str_repeat("0",$zeros);

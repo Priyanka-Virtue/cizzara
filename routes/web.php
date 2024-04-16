@@ -9,9 +9,11 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\VideoRatingController;
 use App\Models\Payment;
 use App\Models\Audition;
+use App\Models\Plan;
 use App\Models\UserDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,13 +27,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', ['plans' => Plan::all()]);
 })->name('welcome');
 
 Auth::routes(['verify' => true]);
 
 Route::get('/home', function () {
-    return view('welcome');
+    return view('welcome', ['plans' => Plan::all()]);
 })->name('home');
 Route::group(['middleware' => ['auth', 'verified']], function () {
     // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -55,6 +57,14 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
 // ========== Admin ================
 Route::middleware(['role:guru|admin'])->group(function () {
+
+    Route::get('buckets', function(){
+        $disk = 's3';
+        $heroImage = Storage::get('hero.png');
+        $uploadedPath = Storage::disk($disk)->put('hero.png', $heroImage);
+        return Storage::disk($disk)->url($uploadedPath);
+    });
+
     Route::get('/admin/videos', [AdminVideoController::class, 'index'])->name('admin.videos.index');
     // Route::put('/admin/videos/{video}/status', [AdminVideoController::class, 'updateStatus'])->name('admin.videos.updateStatus');
     Route::get('/admin/videos/{video}', [AdminVideoController::class, 'show'])->name('admin.videos.show');

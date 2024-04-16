@@ -9,6 +9,8 @@ use App\Models\UserDetail;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -148,30 +150,16 @@ class VideoController extends Controller
         $audition = Audition::where('plan_id', $plan->id)->where('user_id', $user->id)->first();
 
         $validator = Validator::make($request->all(), [
-            // 'style' => [
-            //     'required',
-            //     Rule::unique('videos')->where(function ($query) use ($request, $audition) {
-            //         return $query->where('user_id', Auth::id());
-            //             ->where('style', $request->style)
-            //             ->where('status', $audition->status);
-            //     }),
-            // ],
+
             'videoTitle' => 'required',
             'videoFile' => [
                 'required',
                 'mimetypes:video/*',
                 'max:100000',
-                // function ($attribute, $value, $fail) use ($audition) {
-                //     $uploaded_videos_count = Video::where('user_id', Auth::id())->where('status', $audition->status)->count();
-                //     if ($uploaded_videos_count >= env('MAX_VIDEO_FILE_UPLOAD', 2)) {
-                //         $fail('You have reached the maximum limit of ' . env('MAX_VIDEO_FILE_UPLOAD', 2) . ' videos.');
-                //     }
-                // },
+
             ],
         ],
-        // [
-        //     'style.unique' => 'You have already uploaded a video with this style.'
-        // ]
+
     );
 
         if ($validator->fails()) {
@@ -186,8 +174,21 @@ class VideoController extends Controller
             $fileName = uniqid() . '.' . $videoFile->getClientOriginalExtension();
             $oname = $videoFile->getClientOriginalName();
 
-            $path = $videoFile->storeAs('videos/' . $plan->name, $fileName, 'public');
+            // $path = $videoFile->storeAs('videos/' . $plan->name, $fileName, 'public');
 
+$folder = $plan->name;
+
+// TODO::create folder when creating plan
+if (!Storage::disk('s3')->exists($folder)) {
+    Storage::disk('s3')->makeDirectory($folder);
+}
+
+            $path = $videoFile->storeAs(
+                $folder,
+                $fileName,
+                's3'
+            );
+            // $path = Storage::disk('s3')->put($folder, $fileName, 'public');
             $video = new Video();
             $video->user_id = $user->id;
             $video->plan_id = $plan->id;
@@ -195,7 +196,7 @@ class VideoController extends Controller
             $video->file_path = $path;
             $video->original_name = $oname;
             $video->title = $request->videoTitle;
-            
+
             $video->status = $audition->status;
             $video->audition_id = $audition->id;
             $video->description = $request->videoDescription;
