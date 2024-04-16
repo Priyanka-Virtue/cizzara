@@ -46,7 +46,7 @@ class VideoController extends Controller
         } else {
             $audition = Audition::where('plan_id', $plan_id)->where('user_id', $user_id)->first();
             if ($audition) {
-                if($audition->status == 'disqualified'){
+                if ($audition->status == 'disqualified') {
                     return view('thanks');
                 }
                 $videos = Video::where('user_id', $user_id)->where('plan_id', $plan_id)->where('status', $audition->status)->get();
@@ -149,18 +149,20 @@ class VideoController extends Controller
 
         $audition = Audition::where('plan_id', $plan->id)->where('user_id', $user->id)->first();
 
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make(
+            $request->all(),
+            [
 
-            'videoTitle' => 'required',
-            'videoFile' => [
-                'required',
-                'mimetypes:video/*',
-                'max:100000',
+                'videoTitle' => 'required',
+                'videoFile' => [
+                    'required',
+                    'mimetypes:video/*',
+                    'max:100000',
 
+                ],
             ],
-        ],
 
-    );
+        );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -176,12 +178,12 @@ class VideoController extends Controller
 
             // $path = $videoFile->storeAs('videos/' . $plan->name, $fileName, 'public');
 
-$folder = $plan->name;
+            $folder = $plan->name;
 
-// TODO::create folder when creating plan
-if (!Storage::disk('s3')->exists($folder)) {
-    Storage::disk('s3')->makeDirectory($folder);
-}
+            // TODO::create folder when creating plan
+            if (!Storage::disk('s3')->exists($folder)) {
+                Storage::disk('s3')->makeDirectory($folder);
+            }
 
             $path = $videoFile->storeAs(
                 $folder,
@@ -206,5 +208,20 @@ if (!Storage::disk('s3')->exists($folder)) {
         }
 
         return redirect()->back()->withErrors(['message' => 'No video file found.'])->withInput();
+    }
+
+
+    public function generatePreSignedUrl()
+    {
+        $filePath = 'path/to/your/file.txt'; // Set your file path here
+        $client = Storage::disk('s3')->getDriver()->getAdapter()->getClient();
+        $command = $client->getCommand('PutObject', [
+            'Bucket' => 'your-bucket-name',
+            'Key'    => $filePath,
+        ]);
+        $request = $client->createPresignedRequest($command, '+20 minutes');
+        $preSignedUrl = (string) $request->getUri();
+
+        return response()->json(['url' => $preSignedUrl]);
     }
 }

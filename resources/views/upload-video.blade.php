@@ -175,3 +175,25 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
 </form>
 
 @endsection
+
+@section('bottom')
+<script>
+fetch('/get-pre-signed-url')
+    .then(response => response.json())
+    .then(data => {
+        const preSignedUrl = data.url;
+
+        // File upload
+        const fileInput = document.getElementById('file-input');
+        const file = fileInput.files[0];
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', preSignedUrl, true);
+        xhr.upload.addEventListener('progress', function(event) {
+            const percent = (event.loaded / event.total) * 100;
+            console.log('Upload Progress: ' + percent + '%');
+            // Update progress UI here
+        });
+        xhr.send(file);
+    });
+</script>
+@endsection
