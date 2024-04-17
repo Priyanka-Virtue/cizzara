@@ -82,7 +82,7 @@
                         </li>
                         <li class="mb-3">
                             <span class="h6">Status:</span>
-                            <span class="badge bg-label-success rounded-pill text-uppercase">{{$video->status}}</span>
+                            <span class="badge bg-label-info rounded-pill text-uppercase">{{$video->auditionDetails->status}}</span>
                         </li>
 
 
@@ -194,6 +194,8 @@
     <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
         <div class="card mb-4">
             <div class="card-body">
+                @if($video->auditionDetails->status != 'disqualified')
+
                 <a class="btn btn-primary mb-2" href="{{ Illuminate\Support\Facades\Storage::disk('s3')->url($video->file_path)  }}">
                     <span class="mdi mdi-download"></span> Download Video
                 </a>
@@ -202,6 +204,11 @@
                     <source src="{{ asset('storage/' . $video->file_path) }}">
                     Your browser does not support the video tag.
                 </video>
+                    @else
+                    <div class="alert alert-danger">
+                    Video has been removed from bucket since it's disqualified
+                    </div>
+                    @endif
                 <!-- <form action="{{ route('guru.rate.video', $video->id) }}" method="post">
                     @csrf
                     <label for="rating">Rate this video:</label>

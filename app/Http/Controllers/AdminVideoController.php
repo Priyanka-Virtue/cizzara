@@ -219,7 +219,7 @@ class AdminVideoController extends Controller
         }
 
         if ($request->status != '') {
-            $topUsers = $topUsers->where('status', $status);
+            $topUsers = $topUsers->where('status', $request->status);
         } else {
             $topUsers = $topUsers->where('status', '!=', 'disqualified');
         }

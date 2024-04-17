@@ -146,6 +146,7 @@ $ratedGurus = [];
 
                     <td>
                         @php
+                        
                         $videoRatings = [];
 
                         foreach ($audition->user->videos as $video) {
