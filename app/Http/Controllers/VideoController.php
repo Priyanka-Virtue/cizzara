@@ -170,56 +170,57 @@ class VideoController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $path = $request->filePath;
-        $oname = $request->oname;
-        $video = new Video();
-        $video->user_id = $user->id;
-        $video->plan_id = $plan->id;
-        $video->stripe_payment_id = $payment->stripe_payment_id;
-        $video->file_path = $path;
-        $video->original_name = $oname;
-        $video->title = $request->videoTitle;
+        // $path = $request->filePath;
+        // $oname = $request->oname;
+        // $video = new Video();
+        // $video->user_id = $user->id;
+        // $video->plan_id = $plan->id;
+        // $video->stripe_payment_id = $payment->stripe_payment_id;
+        // $video->file_path = $path;
+        // $video->original_name = $oname;
+        // $video->title = $request->videoTitle;
 
-        $video->status = $audition->status;
-        $video->audition_id = $audition->id;
-        $video->description = $request->videoDescription;
-        $video->save();
+        // $video->status = $audition->status;
+        // $video->audition_id = $audition->id;
+        // $video->description = $request->videoDescription;
+        // $video->save();
+        // $successMessage = "Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.";
+        // session()->flash('success', $successMessage);
+        // return response()->json(['success' => true, 'message' => $successMessage], 200);
 
-        return response()->json(['success' => true, 'message' => 'Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.'], 200);
 
-        
 
-        // if ($request->hasFile('videoFile')) {
-        //     $videoFile = $request->file('videoFile');
+        if ($request->hasFile('videoFile')) {
+            $videoFile = $request->file('videoFile');
 
-        //     $fileName = uniqid() . '.' . $videoFile->getClientOriginalExtension();
-        //     $oname = $videoFile->getClientOriginalName();
+            $fileName = uniqid() . '.' . $videoFile->getClientOriginalExtension();
+            $oname = $videoFile->getClientOriginalName();
 
-        //     // $path = $videoFile->storeAs('videos/' . $plan->name, $fileName, 'public');
+            $path = $videoFile->storeAs('videos/' . $plan->name, $fileName, 'public');
 
-        //     $folder = $plan->name;
+            $folder = $plan->name;
 
-        //     $path = $videoFile->storeAs(
-        //         $folder,
-        //         $fileName,
-        //         's3'
-        //     );
-        //     // $path = Storage::disk('s3')->put($folder, $fileName, 'public');
-        //     $video = new Video();
-        //     $video->user_id = $user->id;
-        //     $video->plan_id = $plan->id;
-        //     $video->stripe_payment_id = $payment->stripe_payment_id;
-        //     $video->file_path = $path;
-        //     $video->original_name = $oname;
-        //     $video->title = $request->videoTitle;
+            /* $path = $videoFile->storeAs(
+                $folder,
+                $fileName,
+                's3'
+            );*/
 
-        //     $video->status = $audition->status;
-        //     $video->audition_id = $audition->id;
-        //     $video->description = $request->videoDescription;
-        //     $video->save();
+            $video = new Video();
+            $video->user_id = $user->id;
+            $video->plan_id = $plan->id;
+            $video->stripe_payment_id = $payment->stripe_payment_id;
+            $video->file_path = $path;
+            $video->original_name = $oname;
+            $video->title = $request->videoTitle;
 
-        //     return redirect()->route('thank-you')->withInput()->with('success', 'Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.');
-        // }
+            $video->status = $audition->status;
+            $video->audition_id = $audition->id;
+            $video->description = $request->videoDescription;
+            $video->save();
+
+            return redirect()->route('thank-you')->withInput()->with('success', 'Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.');
+        }
 
         return redirect()->back()->withErrors(['message' => 'No video file found.'])->withInput();
     }

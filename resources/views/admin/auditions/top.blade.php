@@ -114,6 +114,7 @@ $ratedGurus = [];
                     @role('guru')
                     <th>Rating</th>
                     @endrole
+                    @role('admin')
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Birthdate</th>
@@ -123,6 +124,7 @@ $ratedGurus = [];
                     <th>State</th>
                     <th>Zip</th>
                     <th>Address</th>
+                    @endrole
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -140,13 +142,17 @@ $ratedGurus = [];
                 @endphp
                 <tr>
                     <td><input data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}" class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->id }}">&nbsp; {{ $rowno }}</td>
-                    <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->details->first_name . ' ' . $audition->user->details->last_name }}</a></td>
 
+                    @role('admin')
+                    <td><a href="{{ route('admin.users.show', $audition->user) }}">{{ $audition->user->details->first_name . ' ' . $audition->user->details->last_name }}</a></td>
+                    @else
+                    <td>{{ $audition->user->details->first_name . ' ' . $audition->user->details->last_name }}</td>
+                    @endrole
 
 
                     <td>
                         @php
-                        
+
                         $videoRatings = [];
 
                         foreach ($audition->user->videos as $video) {
@@ -156,7 +162,7 @@ $ratedGurus = [];
                         <span class="badge rounded-pill bg-label-secondary">'.$video->style.'</span>
                         <br />';
 
-                        $averageRating = $video->ratings->avg('rating');
+                        echo $averageRating = $video->ratings->avg('rating');
                         $videoRatings[] = $averageRating;
                         }
 
@@ -216,7 +222,7 @@ $ratedGurus = [];
                         @endforeach
                     </td>
 @endrole
-
+@role('admin')
                     <td>{{ $audition->user->email }}</td>
 
                     <td>{{ $audition->user->details->phone }}</td>
@@ -227,7 +233,7 @@ $ratedGurus = [];
                     <td>{{ $audition->user->details->state }}</td>
                     <td>{{ $audition->user->details->pin_code }}</td>
                     <td>{{ $audition->user->details->address }}</td>
-
+@endrole
 
                 </tr>
                 @empty
@@ -248,7 +254,7 @@ $ratedGurus = [];
 </div>
 
 @endsection
-
+@role('admin')
 @section('bottom')
 <script src="{{ asset('assets/js/export.js') }}"></script>
 <script>
@@ -350,3 +356,4 @@ $ratedGurus = [];
     });
 </script>
 @endsection
+@endrole
