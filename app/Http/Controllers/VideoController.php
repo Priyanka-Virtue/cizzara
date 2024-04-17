@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-
+// use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use Illuminate\Filesystem\AwsS3V3Adapter;
 class VideoController extends Controller
 {
     public function index(Request $request)
@@ -156,7 +157,7 @@ class VideoController extends Controller
                 'videoTitle' => 'required',
                 'videoFile' => [
                     'required',
-                    'mimetypes:video/*',
+                    // 'mimetypes:video/*',
                     'max:100000',
 
                 ],
@@ -168,44 +169,54 @@ class VideoController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        $path = 'TNSS-S1/file-'(time()).'.jpg';
+        $oname = 'file-'(time()).'.jpg';
+        $video = new Video();
+        $video->user_id = $user->id;
+        $video->plan_id = $plan->id;
+        $video->stripe_payment_id = $payment->stripe_payment_id;
+        $video->file_path = $path;
+        $video->original_name = $oname;
+        $video->title = $request->videoTitle;
 
+        $video->status = $audition->status;
+        $video->audition_id = $audition->id;
+        $video->description = $request->videoDescription;
+        $video->save();
 
-        if ($request->hasFile('videoFile')) {
-            $videoFile = $request->file('videoFile');
+        return response()->json(['success' => true, 'message' => 'Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.'], 200);
 
-            $fileName = uniqid() . '.' . $videoFile->getClientOriginalExtension();
-            $oname = $videoFile->getClientOriginalName();
+        // if ($request->hasFile('videoFile')) {
+        //     $videoFile = $request->file('videoFile');
 
-            // $path = $videoFile->storeAs('videos/' . $plan->name, $fileName, 'public');
+        //     $fileName = uniqid() . '.' . $videoFile->getClientOriginalExtension();
+        //     $oname = $videoFile->getClientOriginalName();
 
-            $folder = $plan->name;
+        //     // $path = $videoFile->storeAs('videos/' . $plan->name, $fileName, 'public');
 
-            // TODO::create folder when creating plan
-            if (!Storage::disk('s3')->exists($folder)) {
-                Storage::disk('s3')->makeDirectory($folder);
-            }
+        //     $folder = $plan->name;
 
-            $path = $videoFile->storeAs(
-                $folder,
-                $fileName,
-                's3'
-            );
-            // $path = Storage::disk('s3')->put($folder, $fileName, 'public');
-            $video = new Video();
-            $video->user_id = $user->id;
-            $video->plan_id = $plan->id;
-            $video->stripe_payment_id = $payment->stripe_payment_id;
-            $video->file_path = $path;
-            $video->original_name = $oname;
-            $video->title = $request->videoTitle;
+        //     $path = $videoFile->storeAs(
+        //         $folder,
+        //         $fileName,
+        //         's3'
+        //     );
+        //     // $path = Storage::disk('s3')->put($folder, $fileName, 'public');
+        //     $video = new Video();
+        //     $video->user_id = $user->id;
+        //     $video->plan_id = $plan->id;
+        //     $video->stripe_payment_id = $payment->stripe_payment_id;
+        //     $video->file_path = $path;
+        //     $video->original_name = $oname;
+        //     $video->title = $request->videoTitle;
 
-            $video->status = $audition->status;
-            $video->audition_id = $audition->id;
-            $video->description = $request->videoDescription;
-            $video->save();
+        //     $video->status = $audition->status;
+        //     $video->audition_id = $audition->id;
+        //     $video->description = $request->videoDescription;
+        //     $video->save();
 
-            return redirect()->route('thank-you')->withInput()->with('success', 'Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.');
-        }
+        //     return redirect()->route('thank-you')->withInput()->with('success', 'Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.');
+        // }
 
         return redirect()->back()->withErrors(['message' => 'No video file found.'])->withInput();
     }
@@ -213,11 +224,12 @@ class VideoController extends Controller
 
     public function generatePreSignedUrl()
     {
-        $filePath = 'path/to/your/file.txt'; // Set your file path here
-        $client = Storage::disk('s3')->getDriver()->getAdapter()->getClient();
+        $filePath = 'TNSS-S1/file-'.time().'.jpg'; // Set your file path here
+        $client = Storage::disk('s3')->getClient();
         $command = $client->getCommand('PutObject', [
-            'Bucket' => 'your-bucket-name',
+            'Bucket' => env('AWS_BUCKET'),
             'Key'    => $filePath,
+            'ACL'    => 'public-read',
         ]);
         $request = $client->createPresignedRequest($command, '+20 minutes');
         $preSignedUrl = (string) $request->getUri();

@@ -74,6 +74,10 @@ class UserSeeder extends Seeder
             'price' => '10',
             'gurus' => json_encode([$j1->id, $j2->id, $j3->id])
         ]);
+        // TODO::create folder when creating plan
+        if (!Storage::disk('s3')->exists($folder)) {
+            Storage::disk('s3')->makeDirectory($folder);
+        }
 
         $plans = Plan::create([
             'name' => 'DanceTUP2024',
@@ -81,5 +85,10 @@ class UserSeeder extends Seeder
             'price' => '999.99',
             'gurus' => json_encode([$j1->id, $j2->id, $j3->id])
         ]);
+
+        // TODO::create folder when creating plan
+        if (!Storage::disk('s3')->exists($folder)) {
+            Storage::disk('s3')->makeDirectory($folder);
+        }
     }
 }
