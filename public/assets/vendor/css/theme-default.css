@@ -174,9 +174,9 @@ button.list-group-item-primary.active {
   background: radial-gradient(rgba(144, 85, 253, 0.2) 0, rgba(144, 85, 253, 0.3) 40%, rgba(144, 85, 253, 0.4) 50%, rgba(144, 85, 253, 0.5) 60%, rgba(255, 255, 255, 0) 70%);
 }
 .btn-outline-primary:hover {
-  color: #9c6868 !important;
-  background-color: #f7f3ff !important;
-  border-color: #c8aafe !important;
+    color: #9c6868 !important;
+    background-color: #fff3f3 !important;
+    border-color: #795151 !important;
 }
 .btn-check:focus + .btn-outline-primary, .btn-outline-primary:focus {
   color: #9c6868;
