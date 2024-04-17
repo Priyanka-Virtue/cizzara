@@ -22,6 +22,7 @@ class Video extends Model
         'title',
         'description',
         'status',
+        'state',
         'rating'
     ];
 

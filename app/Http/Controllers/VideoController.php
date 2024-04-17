@@ -150,6 +150,7 @@ class VideoController extends Controller
 
         $audition = Audition::where('plan_id', $plan->id)->where('user_id', $user->id)->first();
 
+        #TODO: Disable validation and add to S3 Bucket
         $validator = Validator::make(
             $request->all(),
             [
@@ -157,7 +158,7 @@ class VideoController extends Controller
                 'videoTitle' => 'required',
                 'videoFile' => [
                     'required',
-                    // 'mimetypes:video/*',
+                    'mimetypes:image/*',
                     'max:100000',
 
                 ],
@@ -169,8 +170,8 @@ class VideoController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $path = 'TNSS-S1/file-'(time()).'.jpg';
-        $oname = 'file-'(time()).'.jpg';
+        $path = $request->filePath;
+        $oname = $request->oname;
         $video = new Video();
         $video->user_id = $user->id;
         $video->plan_id = $plan->id;
@@ -222,9 +223,12 @@ class VideoController extends Controller
     }
 
 
-    public function generatePreSignedUrl()
+    public function generatePreSignedUrl(Request $request)
     {
-        $filePath = 'TNSS-S1/file-'.time().'.jpg'; // Set your file path here
+        $folder = $request->plan;
+        $fileExtension =  $request->fileExtension ?? 'mp4';
+        $filePath = $folder.'/'.uniqid() . '-' .time().'.'.$fileExtension; // Set your file path here
+
         $client = Storage::disk('s3')->getClient();
         $command = $client->getCommand('PutObject', [
             'Bucket' => env('AWS_BUCKET'),
@@ -234,6 +238,6 @@ class VideoController extends Controller
         $request = $client->createPresignedRequest($command, '+20 minutes');
         $preSignedUrl = (string) $request->getUri();
 
-        return response()->json(['url' => $preSignedUrl]);
+        return response()->json(['url' => $preSignedUrl, 'filePath' => $filePath]);
     }
 }

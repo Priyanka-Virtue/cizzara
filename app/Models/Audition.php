@@ -31,7 +31,9 @@ class Audition extends Model
         'genre_of_singing',
         'previous_performance',
         'music_experience',
-        'music_qualification'
+        'music_qualification',
+        'status',
+        'state'
     ];
 
     // User model relationship

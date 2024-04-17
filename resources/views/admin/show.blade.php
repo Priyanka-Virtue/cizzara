@@ -125,6 +125,7 @@
                     @endphp
 
                     <div class="d-grid w-100 mt-4">
+                    @role('guru')
                         <form action="{{ route('guru.rate.video', $video->id) }}" method="post">
                             @csrf
                             <label for="rating">Rate this video:</label>
@@ -138,6 +139,7 @@
                                 </label>
                                 @endforeach
                             </div>
+
                             @if(!$ratedByGuru)
                             <div class="form-floating form-floating-outline my-3">
                                 <textarea class="form-control" id="comments" name="comments" rows="3" placeholder="Your comments, eg ask for different style">{{ old('comments') }}</textarea>
@@ -156,7 +158,9 @@
                             </div>
                             @endif
 
+
                         </form>
+                        @endrole
                         @can('admin')
                         <hr />
                         <form action="{{ route('admin.videos.updateStatus', $video) }}" method="POST">
@@ -190,7 +194,10 @@
     <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
         <div class="card mb-4">
             <div class="card-body">
-                {{ Illuminate\Support\Facades\Storage::disk('s3')->url($video->file_path)  }}
+                <a class="btn btn-primary mb-2" href="{{ Illuminate\Support\Facades\Storage::disk('s3')->url($video->file_path)  }}">
+                    <span class="mdi mdi-download"></span> Download Video
+                </a>
+
                 <video width="100%" controls>
                     <source src="{{ asset('storage/' . $video->file_path) }}">
                     Your browser does not support the video tag.

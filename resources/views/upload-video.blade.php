@@ -126,53 +126,31 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
 @endphp
 
 <div class="progress bg-label-primary" id="progress-wrapper" style="display: none;">
-                      <div id="upload-progress" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 2%" upload-progress="2" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+    <div id="upload-progress" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 2%" upload-progress="2" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
 <form name="upload-video" action="{{ route('video.upload') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="main-container">
 
         <!-- <h2>Select the type of your video</h2> -->
         <div class="alert alert-info">You can add upto {{env('MAX_VIDEO_FILE_UPLOAD', 2)}} different style videos, however If you upload only one video it won't affect the ranking and won't affect chance to be selected for next round.</div>
-        <!-- <div class="radio-buttons">
-            @foreach($styles as $style => $style_details)
-            @if(!in_array($style, $uploaded_videos_types))
-            <label class="custom-radio">
-                <input type="radio" value="{{$style}}" name="style" required>
-                <span class="radio-btn"><i class="mdi mdi-check"></i>
-                    <div class="hobbies-icon">
-                        <img src="{{$style_details['img']}}">
-                        <h3 class="">{{$style}}</h3>
-                    </div>
-                </span>
-            </label>
-            @else
-            <label disabled class="custom-radio disabled">
-                <span class="radio-btn disabled"><i class="mdi mdi-check"></i>
-                    <div class="hobbies-icon">
-                        <img src="{{$style_details['img']}}">
-                        <h3 class="mb-0">{{$style}}</h3>Video Uploaded
-                    </div>
-                </span>
-            </label>
-            @endif
-            @endforeach
-        </div> -->
+
 
     </div>
-    <div class="form-group">
+    <div class="form-group mb-2">
         <label for="videoTitle">Video Title</label>
         <input type="text" class="form-control" id="videoTitle" name="videoTitle" required>
         <input type="hidden" id="plan" name="plan" value="{{request()->plan}}">
 
     </div>
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label for="videoDescription">Video Description</label>
         <textarea class="form-control" id="videoDescription" name="videoDescription" rows="3"></textarea>
     </div>
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label for="videoFile">Choose Video File</label>
-        <input type="file" class="form-control-file" id="videoFile" name="videoFile" required>Max file size allowed: {{env('MAX_VIDEO_FILE_SIZE', 100000) / 1000}}MB
+        <input type="file" class="form-control" id="videoFile" name="videoFile" required>
+        Max file size allowed: {{env('MAX_VIDEO_FILE_SIZE', 100000) / 1000}}MB
         <!-- <input type="file" accept="video/*" class="form-control-file" id="videoFile" name="videoFile" required>Max file size allowed: {{env('MAX_VIDEO_FILE_SIZE', 100000) / 1000}}MB -->
     </div>
     <button type="submit" class="btn btn-primary">Upload Video</button>
@@ -205,15 +183,40 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
 
     $("form[name='upload-video']").submit(function(e) {
         e.preventDefault();
-        thisform = $(this);
-        fetch('/get-pre-signed-url')
+        const fileInput = document.getElementById('videoFile');
+        const file = fileInput.files[0];
+        const fileName = file.name;
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+
+        const maxSizeBytes = 100 * 1024 * 1024; // 100MB in bytes
+    if (file.size > maxSizeBytes) {
+        alert('File size exceeds maximum limit (100MB). Please choose a smaller file.');
+        return;
+    }
+
+    // Validate file type (allow only videos)
+    const allowedExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv']; // Add more video extensions if needed
+
+    if (!allowedExtensions.includes(fileExtension)) {
+        // alert('Invalid file type. Please choose a video file (mp4, avi, mov, wmv, flv, mkv).');
+        // return;
+    }
+
+        fetch('/get-pre-signed-url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fileName: fileName,
+                    fileExtension: fileExtension,
+                    plan: '{{request()->plan}}',
+                    _token: '{{ csrf_token() }}'
+                })
+            })
             .then(response => response.json())
             .then(data => {
                 const preSignedUrl = data.url;
-
-                // File upload
-                const fileInput = document.getElementById('videoFile');
-                const file = fileInput.files[0];
                 const xhr = new XMLHttpRequest();
                 xhr.open('PUT', preSignedUrl, true);
                 xhr.upload.addEventListener('progress', function(event) {
@@ -221,25 +224,19 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
                     console.log('Upload Progress: ' + percent + '%');
                     $('#progress-wrapper').show();
                     $('#upload-progress').width(percent + '%');
-                    $('#upload-progress').attr('upload-progress', percent );
+                    $('#upload-progress').attr('upload-progress', percent);
                     // Update progress UI here
                 });
                 xhr.addEventListener('load', function() {
                     if (xhr.status === 200) {
                         console.log('File Upload Successful');
-                        // File upload successful, now send title and description
-                        // const title = document.getElementById('videoTitle').value;
-                        // const description = document.getElementById('description-input').value;
+
                         const formElement = document.querySelector("form[name='upload-video']");
+                        const formData = new FormData(formElement);
 
-            // Create FormData object from the entire form
-            const formData = new FormData(formElement);
-
-            // Remove the video file input from the FormData object
-            formData.delete('videoFile');
-                        // const formData = new FormData(thisform);
                         formData.append('plan', '{{request()->plan}}');
-                        // formData.append('description', description);
+                        formData.append('filePath', data.filePath);
+                        formData.append('oname', fileName);
                         // formData.delete('videoFile');
                         fetch("{{ route('video.upload') }}", {
                                 method: 'POST',
@@ -248,7 +245,9 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
                             .then(response => {
                                 console.log('Response:', response);
                                 if (response.ok) {
+
                                     console.log('Metadata stored successfully');
+                                    window.location.href = 'thank-you';
                                     // Do something if metadata is stored successfully
                                 } else {
                                     console.error('Failed to store metadata');

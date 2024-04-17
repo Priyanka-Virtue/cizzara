@@ -38,7 +38,7 @@ Route::get('/home', function () {
 Route::group(['middleware' => ['auth', 'verified']], function () {
     // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-    Route::get('/get-pre-signed-url', [VideoController::class, 'generatePreSignedUrl'])->name('get-pre-signed-url');
+    Route::post('/get-pre-signed-url', [VideoController::class, 'generatePreSignedUrl'])->name('get-pre-signed-url');
 
     Route::get('/payment/{plan?}', [PaymentController::class, 'charge'])->name('goToPayment');
     Route::post('payment/process-payment/{plan?}', [PaymentController::class, 'processPayment'])->name('processPayment');

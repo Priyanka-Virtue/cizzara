@@ -9,10 +9,13 @@ use App\Models\Plan;
 use App\Models\User;
 use App\Models\Video;
 use App\Models\VideoRating;
+
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -68,10 +71,30 @@ class AdminVideoController extends Controller
         ]);
 
         foreach ($request->audition as $key => $audition) {
-            $updated = Audition::where('plan_id', $audition)->where('user_id', $request->user[$key])->update(['status' => $request->status]);
+            // $updated = Audition::where('plan_id', $audition)->where('user_id', $request->user[$key])->update(['status' => $request->status]);
+            $audi = Audition::where('plan_id', $audition)
+                ->where('user_id', $request->user[$key])
+                ->first();
+
+            $updated = $audi->update(['status' => $request->status]);
+
+            $d = [];
+            if ($updated && ($request->status == 'rejected' || $request->status == 'disqualified')) {
+                // Assuming you have the file URL stored in a column named 'file_url'
+                $videos = Video::where('audition_id', $audi->id)->get();
+                foreach ($videos as $video) {
+                    // Extracting the filename from the URL
+                    // $filename = basename($video->fileUrl);
+
+                    // Deleting the file from S3 bucket
+                    $deleted = Storage::disk('s3')->delete($video->file_path);
+                    $d[] = $deleted;
+                    Log::info($deleted);
+                }
+            }
         }
 
-        return response()->json(['success' => $updated, $request->all()]);
+        return response()->json(['success' => $updated, $audi]);
     }
 
 
@@ -181,36 +204,37 @@ class AdminVideoController extends Controller
         $gurus = User::whereIn('id', $plan->gurus)->get();
 
         $topUsers = Audition::where('plan_id', $plan->id)
+
             ->with('user.details')
             ->with(['user.videos' => function ($query) {
                 $query->withCount('ratings');
             }]);
-            // ->with(['user.videos.ratings' => function ($query) {
-            //     $query->withCount('comments');
-            // }]);
-            if($sort == 'has-comments') {
-                $topUsers = $topUsers->whereHas('user.videos.ratings', function ($query) {
-                    $query->where('comments', '!=', '');
-                });
-            }
-            else {
+
+        if ($sort == 'has-comments') {
+            $topUsers = $topUsers->whereHas('user.videos.ratings', function ($query) {
+                $query->where('comments', '!=', '');
+            });
+        } else {
             $topUsers = $topUsers->whereHas('user.videos');
+        }
+
+        if ($request->status != '') {
+            $topUsers = $topUsers->where('status', $status);
+        } else {
+            $topUsers = $topUsers->where('status', '!=', 'disqualified');
+        }
+        $topUsers = $topUsers->when($sort, function ($query, $sort) {
+            switch ($sort) {
+                case 'highest-rating':
+                    return $query->orderBy('auditions.avg_rating', 'desc');
+                case 'lowest-rating':
+                    return $query->orderBy('auditions.avg_rating', 'asc');
+                case 'pending-rating':
+                    return $query->orderBy('auditions.avg_rating', 'asc');
+                default:
+                    return $query->orderBy('auditions.avg_rating', 'desc');
             }
-            $topUsers = $topUsers->when($request->status, function ($query, $status) {
-                return $query->where('status', $status);
-            })
-            ->when($sort, function ($query, $sort) {
-                switch ($sort) {
-                    case 'highest-rating':
-                        return $query->orderBy('auditions.avg_rating', 'desc');
-                    case 'lowest-rating':
-                        return $query->orderBy('auditions.avg_rating', 'asc');
-                    case 'pending-rating':
-                        return $query->orderBy('auditions.avg_rating', 'asc');
-                    default:
-                        return $query->orderBy('auditions.avg_rating', 'desc');
-                }
-            })
+        })
             // ->orderBy('auditions.avg_rating', 'desc')
             ->take($request->top ?? 500)
             ->paginate(env('RECORDS_PER_PAGE', 10));

@@ -1,7 +1,9 @@
 @extends('layouts.app-new')
 
 @section('content')
-
+@php
+$ratedGurus = [];
+@endphp
 
 <div class="row">
     <div class="col-md-6">
@@ -127,18 +129,14 @@
 
                 @forelse ($topUsers as $audition)
                 @php
-                <!-- $prefix = 'DS';
-                $season = 'S01';
-                if($audition->plan_id == 1){
-                $prefix = 'SS';
-                } -->
+
 
                 $zeros = 3 - strlen($audition->id);
                 $zeros = str_repeat("0",$zeros);
                 $planName = App\Models\Plan::where('id',$audition->plan_id)->first()->name;
 
 
-                $rowno = $prefix.$season.$zeros.$audition->id;
+                $rowno = $planName.$zeros.$audition->id;
                 @endphp
                 <tr>
                     <td><input data-plan="{{ $audition->plan_id }}" data-user="{{ $audition->user->id }}" class="form-check-input" type="checkbox" name="selectedRecords[]" value="{{ $audition->id }}">&nbsp; {{ $rowno }}</td>
@@ -209,7 +207,7 @@
 <td>
                         @foreach ($audition->user->videos as $video)
                             {{ $video->guruRatings->rating ?? 'N/A' }} / 10
-                            @if($video->guruRatings->comments != "")
+                            @if($video->guruRatings?->comments != "")
                         <i class="mdi mdi-comment" data-bs-toggle="tooltip" data-bs-placement="auto" title="{{$video->guruRatings->comments}}">
                         </i>
                         @endif
@@ -322,7 +320,7 @@
         });
 
         function moveSelectedTo(newStatus, userIds, auditionIds) {
-            console.log(newStatus, auditionIds, userIds);
+
             return new Promise(function(resolve, reject) {
                 $.ajax({
                     type: 'POST',
@@ -334,6 +332,7 @@
                         user: userIds,
                     },
                     success: function(response) {
+                        console.log(response);
                         Toast.fire({
                             icon: 'success',
                             title: 'Status updated successfully',
