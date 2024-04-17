@@ -247,7 +247,7 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
                                 if (response.ok) {
 
                                     console.log('Metadata stored successfully');
-                                    window.location.href = 'thank-you';
+                                    window.location.href = "{{ route('thank-you') }}";
                                     // Do something if metadata is stored successfully
                                 } else {
                                     console.error('Failed to store metadata');

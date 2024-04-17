@@ -187,6 +187,8 @@ class VideoController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.'], 200);
 
+        
+
         // if ($request->hasFile('videoFile')) {
         //     $videoFile = $request->file('videoFile');
 
