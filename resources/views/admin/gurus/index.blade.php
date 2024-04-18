@@ -6,7 +6,8 @@
 
 <div class="card">
 
-    <h5 class="card-header">List Gurus</h5>
+    <h5 class="card-header">List Gurus  <a class="btn btn-outline-primary float-end" href="{{route('gurus.create')}}">Add Guru</a></h5>
+
     <!-- <div class="p-3">
         <div class="row">
             <div class="col-md-10">
@@ -35,14 +36,7 @@
 
 
     <div class="table-responsive text-nowrap">
-        <div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2000">
-            <div class="toast-header">
-                <i class="mdi mdi-home me-2"></i>
-                <div class="me-auto fw-medium">Bootstrap</div>
-                <small class="text-muted">11 mins ago</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
+
         <table class="table">
             <thead class="table-light">
                 <tr>
