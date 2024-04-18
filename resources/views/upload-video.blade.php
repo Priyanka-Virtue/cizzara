@@ -181,7 +181,7 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
     //         });
     // });
 
-    $("form[name='upload-videoXXX']").submit(function(e) {
+    $("form[name='upload-video']").submit(function(e) {
         e.preventDefault();
         const fileInput = document.getElementById('videoFile');
         const file = fileInput.files[0];

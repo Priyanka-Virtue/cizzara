@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 namespace App\Http\Controllers;
 
@@ -27,16 +27,7 @@ class VideoController extends Controller
         if (!$is_paid)
             return redirect()->route('home')->with('error', 'You need to make payment first');
 
-        // if ($plan_id) {
-        #TODO: make relation between Audition and Videos
-        // $audition = Audition::where('plan_id', $plan_id)->where('user_id', $user_id)->first();
-        // $videos = Video::where('user_id', $user_id)->where('plan_id', $plan_id)->where('status', $audition->status)->get();
 
-        // // Allow up to 2 video uploads
-        // if (count($videos) >= env('MAX_VIDEO_FILE_UPLOAD')) {
-        //     return view('thanks');
-        // }
-        // }
 
         if ($request->has('step') && $request->step == 'profile') {
             $userDetail = UserDetail::where('user_id', Auth::id())->first();
@@ -158,7 +149,7 @@ class VideoController extends Controller
                 'videoTitle' => 'required',
                 'videoFile' => [
                     'required',
-                    'mimetypes:image/*',
+                    'mimetypes:video/*',
                     'max:100000',
 
                 ],
@@ -170,57 +161,57 @@ class VideoController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // $path = $request->filePath;
-        // $oname = $request->oname;
-        // $video = new Video();
-        // $video->user_id = $user->id;
-        // $video->plan_id = $plan->id;
-        // $video->stripe_payment_id = $payment->stripe_payment_id;
-        // $video->file_path = $path;
-        // $video->original_name = $oname;
-        // $video->title = $request->videoTitle;
+        $path = $request->filePath;
+        $oname = $request->oname;
+        $video = new Video();
+        $video->user_id = $user->id;
+        $video->plan_id = $plan->id;
+        $video->stripe_payment_id = $payment->stripe_payment_id;
+        $video->file_path = $path;
+        $video->original_name = $oname;
+        $video->title = $request->videoTitle;
 
-        // $video->status = $audition->status;
-        // $video->audition_id = $audition->id;
-        // $video->description = $request->videoDescription;
-        // $video->save();
-        // $successMessage = "Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.";
-        // session()->flash('success', $successMessage);
-        // return response()->json(['success' => true, 'message' => $successMessage], 200);
+        $video->status = $audition->status;
+        $video->audition_id = $audition->id;
+        $video->description = $request->videoDescription;
+        $video->save();
+        $successMessage = "Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.";
+        session()->flash('success', $successMessage);
+        return response()->json(['success' => true, 'message' => $successMessage], 200);
 
 
 
-        if ($request->hasFile('videoFile')) {
-            $videoFile = $request->file('videoFile');
+        // if ($request->hasFile('videoFile')) {
+        //     $videoFile = $request->file('videoFile');
 
-            $fileName = uniqid() . '.' . $videoFile->getClientOriginalExtension();
-            $oname = $videoFile->getClientOriginalName();
+        //     $fileName = uniqid() . '.' . $videoFile->getClientOriginalExtension();
+        //     $oname = $videoFile->getClientOriginalName();
 
-            $path = $videoFile->storeAs('videos/' . $plan->name, $fileName, 'public');
+        //     $path = $videoFile->storeAs('videos/' . $plan->name, $fileName, 'public');
 
-            $folder = $plan->name;
+        //     $folder = $plan->name;
 
-            /* $path = $videoFile->storeAs(
-                $folder,
-                $fileName,
-                's3'
-            );*/
+        //     /* $path = $videoFile->storeAs(
+        //         $folder,
+        //         $fileName,
+        //         's3'
+        //     );*/
 
-            $video = new Video();
-            $video->user_id = $user->id;
-            $video->plan_id = $plan->id;
-            $video->stripe_payment_id = $payment->stripe_payment_id;
-            $video->file_path = $path;
-            $video->original_name = $oname;
-            $video->title = $request->videoTitle;
+        //     $video = new Video();
+        //     $video->user_id = $user->id;
+        //     $video->plan_id = $plan->id;
+        //     $video->stripe_payment_id = $payment->stripe_payment_id;
+        //     $video->file_path = $path;
+        //     $video->original_name = $oname;
+        //     $video->title = $request->videoTitle;
 
-            $video->status = $audition->status;
-            $video->audition_id = $audition->id;
-            $video->description = $request->videoDescription;
-            $video->save();
+        //     $video->status = $audition->status;
+        //     $video->audition_id = $audition->id;
+        //     $video->description = $request->videoDescription;
+        //     $video->save();
 
-            return redirect()->route('thank-you')->withInput()->with('success', 'Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.');
-        }
+        //     return redirect()->route('thank-you')->withInput()->with('success', 'Video uploaded successfully, you will be notified once it is qualified or disqualified for next round.');
+        // }
 
         return redirect()->back()->withErrors(['message' => 'No video file found.'])->withInput();
     }
