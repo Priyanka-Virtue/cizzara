@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -68,22 +69,26 @@ class UserSeeder extends Seeder
         ]);
         $j3->assignRole('guru');
 
+        $folder = 'TNSS-S1';
         $plans = Plan::create([
-            'name' => 'SingTUP2024',
+            'name' => $folder,
             'is_active' => 1,
-            'price' => '10',
-            'gurus' => json_encode([$j1->id, $j2->id, $j3->id])
+            'price' => '199.99',
+            'logo' => 'images/singinglogo-768x432.png'
+            // 'gurus' => json_encode([$j1->id, $j2->id, $j3->id])
         ]);
         // TODO::create folder when creating plan
         if (!Storage::disk('s3')->exists($folder)) {
             Storage::disk('s3')->makeDirectory($folder);
         }
 
+        $folder = 'TNDS-S1';
         $plans = Plan::create([
-            'name' => 'DanceTUP2024',
+            'name' => $folder,
             'is_active' => 0,
             'price' => '999.99',
-            'gurus' => json_encode([$j1->id, $j2->id, $j3->id])
+            'logo' => 'images/dancelogo-768x432.png'
+            // 'gurus' => json_encode([$j1->id, $j2->id, $j3->id])
         ]);
 
         // TODO::create folder when creating plan

@@ -47,24 +47,21 @@ OR
 
 
  # Todo:
-    Connecting AWS
-    Download video option
+    Done Connecting AWS Bucket
+    Done Download video option
     Once moved to next round, contestant should be able to add 2 new videos again
-    x 1) change logo sizes
+    Done  1) change logo sizes
     
     q 2) change bg images for portal main page
-    q 3) add links for powered by logos
+    Done  3) add links for powered by logos
     
-    h 4) add faq & terms and conditions content
+    Done  4) add faq & terms and conditions content
     
-    Done for Admin 5) add filter comments to gurus & admin both
+    Done 5) add filter comments to gurus & admin both
     Done 6) add comment icon in list in which guru has added comment
     
     Done 7) change format of serial no.
-    -first two chars contest name
-    -next three chars season name
-    -next four chars starting with 0001
-    for eg. DSS010001 dancing super star season 1
+
     Done 8) notify guru for pending reviews
 
     

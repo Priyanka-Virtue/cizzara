@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->string('logo', 800)->default('images/logo-or.png');
             $table->string('price');
             $table->boolean('is_active')->default(true);
             $table->text('gurus')->nullable();
