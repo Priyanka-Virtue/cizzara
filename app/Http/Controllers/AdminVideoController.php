@@ -25,6 +25,12 @@ class AdminVideoController extends Controller
     {
         $query = Video::with('user');
 
+        if (!auth()->user()->hasRole('admin')) {
+            $query = $query->whereHas('plan', function ($q) {
+                $q->whereJsonContains('gurus', auth()->user()->id);
+            });
+        }
+
         if (empty($request->submit)) {
             $query->where('status', '!=', 'rejected');
         } else {
@@ -201,7 +207,7 @@ class AdminVideoController extends Controller
         if (empty($plan))
             return redirect()->route('admin.auditions.top')->with('error', 'Select an audition first. #65d');
 
-        $gurus = User::whereIn('id', $plan->gurus)->get();
+        $gurus = User::whereIn('id', $plan->gurus ?? [])->get();
 
         $topUsers = Audition::where('plan_id', $plan->id)
 
@@ -209,6 +215,12 @@ class AdminVideoController extends Controller
             ->with(['user.videos' => function ($query) {
                 $query->withCount('ratings');
             }]);
+
+        if (!auth()->user()->hasRole('admin')) {
+            $topUsers = $topUsers->whereHas('plan', function ($query) {
+                $query->whereJsonContains('gurus', auth()->user()->id);
+            });
+        }
 
         if ($sort == 'has-comments') {
             $topUsers = $topUsers->whereHas('user.videos.ratings', function ($query) {
