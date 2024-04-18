@@ -202,7 +202,7 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
         // return;
     }
 
-        fetch('route{{"get-pre-signed-url")}}', {
+        fetch('{{route("get-pre-signed-url")}}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
