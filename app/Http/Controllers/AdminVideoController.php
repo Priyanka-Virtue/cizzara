@@ -215,7 +215,19 @@ class AdminVideoController extends Controller
             ->with(['user.videos' => function ($query) {
                 $query->withCount('ratings');
             }]);
-
+            // ->with(['user.videos.ratings' => function ($query) {
+            //     // $query->withCount('ratings');
+            // }]);
+        $topUsers = $topUsers->get();
+        // $videos = [];
+        $ratings = [];
+        foreach ($topUsers as $topUser) {
+            // $videos[] = $topUser->user->videos;
+            foreach ($topUser->user->videos as $videos) {
+                $ratings[] = $videos->ratings;
+            }
+        }
+        dd($ratings);
         if (!auth()->user()->hasRole('admin')) {
             $topUsers = $topUsers->whereHas('plan', function ($query) {
                 $query->whereJsonContains('gurus', auth()->user()->id);
