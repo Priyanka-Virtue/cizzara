@@ -31,6 +31,9 @@ Route::get('/', function () {
 })->name('welcome');
 
 Auth::routes(['verify' => true]);
+Route::get('/top', function () {
+    return 'yes';
+});
 
 Route::get('/home', function () {
     return view('welcome', ['plans' => Plan::all()]);
