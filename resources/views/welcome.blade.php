@@ -860,16 +860,18 @@
 
         .overlay {
             min-width: 100%;
-            min-height: 100%;
-            position: absolute;
+            min-height: 100vh;
+            position: fixed;
             background-color: rgb(0 0 0 / 0.7);
 
         }
-        .aud-img{
+
+        .aud-img {
             max-width: 250px;
-  height: auto;
+            height: auto;
         }
-        .pwrd-img{
+
+        .pwrd-img {
             width: 140px;
             height: 90px;
             padding: 10px;
@@ -882,76 +884,91 @@
 
 <body class="antialiased" style="background-color: #4b5563;">
 
-    <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100xx dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
+    <div
+        class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100xx dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
 
         @if (Route::has('login'))
 
-        <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
-            @auth
-            <span class="text-gray-600">Hello {{ Auth::user()->name }} </span> &nbsp;&nbsp;|&nbsp;&nbsp;
-            <a class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500" href="{{ route('logout') }}" onclick="event.preventDefault();
+            <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+                @auth
+                    <span class="text-gray-600">Hello {{ Auth::user()->name }} </span> &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+                        href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                {{ __('Logout') }}
-            </a>
+                        {{ __('Logout') }}
+                    </a>
 
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-            </form>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                @else
+                    <a href="{{ route('login') }}"
+                        class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log
+                        in</a>
 
-            @else
-            <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in</a>
-
-            @if (Route::has('register'))
-            <a href="{{ route('register') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
-            @endif
-            @endauth
-        </div>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}"
+                            class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
+                    @endif
+                @endauth
+            </div>
         @endif
 
         <div class="max-w-7xl mx-auto p-6 lg:p-8  z-10">
             <div class="flex justify-center">
-                <img src="{{ asset('images/logo-or.png') }}" width="230px" alt="{{ config('app.name', 'The United Production') }}">
+                <img src="{{ asset('images/logo-or.png') }}" width="230px"
+                    alt="{{ config('app.name', 'The United Production') }}">
             </div>
 
             <div class="mt-16">
                 @if (session('error'))
-                <div class="alert alert-danger  text-gray-900 dark:text-white">
-                    {{ session('error') }}
-                </div>
+                    <div class="alert alert-danger  text-gray-900 dark:text-white">
+                        {{ session('error') }}
+                    </div>
                 @endif
                 @if (session('success'))
-                <div class="alert alert-success  text-gray-900 dark:text-white">
-                    {{ session('success') }}
-                </div>
+                    <div class="alert alert-success  text-gray-900 dark:text-white">
+                        {{ session('success') }}
+                    </div>
                 @endif
                 @if (session('status'))
-                <div class="alert alert-info  text-gray-900 dark:text-white">
-                    {{ session('status') }}
-                </div>
+                    <div class="alert alert-info  text-gray-900 dark:text-white">
+                        {{ session('status') }}
+                    </div>
                 @endif
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-                    @foreach($plans as $plan)
-                    <a @if($plan->is_active) href="{{ route('goToPayment', [$plan->name]) }}" @else  disabled href="#" @endif class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                        <div>
-                            <div class="flex items-center rounded-full">
-                                <!-- <span class="mdi mdi-human-female-dance mdi-24px"></span> -->
-                                <img src="{{ asset($plan->logo) }}" class="aud-img" alt="$plan->name">
+                    @foreach ($plans as $plan)
+                        <a @if ($plan->is_active) href="{{ route('goToPayment', [$plan->name]) }}" @else  disabled href="#" @endif
+                            class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            <div>
+                                <div class="flex items-center rounded-full">
+                                    <!-- <span class="mdi mdi-human-female-dance mdi-24px"></span> -->
+                                    <img src="{{ asset($plan->logo) }}" class="aud-img" alt="$plan->name">
+                                </div>
+
+                                <!-- <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Dancing Competition</h2> -->
+
+                                <p
+                                    class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed  dark:text-white">
+                                    Upload Your Audition by clicking here, you will be redirected to the registration
+                                    and payment page
+                                </p>
                             </div>
 
-                            <!-- <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Dancing Competition</h2> -->
+                            <div style="display: flex;justify-content: space-between;flex-direction: column;">
+                                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">${{ $plan->price }}
+                                </h2>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                                </svg>
 
-                            <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed  dark:text-white">
-                                Upload Your Audition by clicking here, you will be redirected to the registration and payment page
-                            </p>
-                        </div>
-
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
-                        </svg>
-                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">${{$plan->price}}</h2>
-                    </a>
-@endforeach
-                   {{-- <a href="{{ route('goToPayment', ['Singing Super Star TUP 2024']) }}" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            </div>
+                        </a>
+                    @endforeach
+                    {{-- <a href="{{ route('goToPayment', ['Singing Super Star TUP 2024']) }}" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
                         <div>
                             <div class="flex items-center rounded-full">
                                 <!-- <span class="mdi mdi-microphone-settings mdi-24px"></span> -->
@@ -976,11 +993,14 @@
             <div class="text-center">
                 <h2 class="text-xl text-white font-bold mx-4">Powered by:</h2>
                 <div class="flex justify-center items-center space-x-8">
-                    <a href="https://cizzara.com" class="flex justify-center items-center bg-gray-200 rounded-lg pwrd-img">
+                    <a href="https://cizzara.com"
+                        class="flex justify-center items-center bg-gray-200 rounded-lg pwrd-img">
                         <img src="{{ asset('images/powered-by/Roshani-Black.png') }}" alt="Roshani">
                     </a>
-                    <a href="https://cizzara.com" class="flex justify-center items-center bg-gray-200 rounded-lg pwrd-img">
-                        <img style="max-height: 90px;" src="{{ asset('images/powered-by/Cizzara-Black.jpg') }}" alt="Cizzara">
+                    <a href="https://cizzara.com"
+                        class="flex justify-center items-center bg-gray-200 rounded-lg pwrd-img">
+                        <img style="max-height: 90px;" src="{{ asset('images/powered-by/Cizzara-Black.jpg') }}"
+                            alt="Cizzara">
                     </a>
                     <!-- Add more logos as needed -->
                 </div>
@@ -998,7 +1018,7 @@
                 </div>
             </div>
         </div>
-        <div class="overlay">dd</div>
+        <div class="overlay"></div>
     </div>
 </body>
 
