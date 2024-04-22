@@ -61,12 +61,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 // ========== Admin ================
 Route::middleware(['role:guru|admin'])->group(function () {
 
-    Route::get('buckets', function(){
-        $disk = 's3';
-        $heroImage = Storage::get('hero.png');
-        $uploadedPath = Storage::disk($disk)->put('hero.png', $heroImage);
-        return Storage::disk($disk)->url($uploadedPath);
-    });
+    
 
     Route::get('/admin/videos', [AdminVideoController::class, 'index'])->name('admin.videos.index');
     // Route::put('/admin/videos/{video}/status', [AdminVideoController::class, 'updateStatus'])->name('admin.videos.updateStatus');
