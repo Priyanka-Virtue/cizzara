@@ -189,9 +189,10 @@ class AdminVideoController extends Controller
 
         $paginatedTopUsers->setPath($request->url());
         $audition = $plan->id;
-        return view('admin.auditions.top', compact('paginatedTopUsers', 'topUsers', 'audition'));
-    }
 
+
+        return view('admin.auditions.top-old', compact('paginatedTopUsers', 'topUsers', 'audition'));
+    }
 
 
     public function topList(Request $request)
@@ -218,16 +219,17 @@ class AdminVideoController extends Controller
             // ->with(['user.videos.ratings' => function ($query) {
             //     // $query->withCount('ratings');
             // }]);
-        $topUsers = $topUsers->get();
+        // $topUsers = $topUsers->get();
         // $videos = [];
-        $ratings = [];
-        foreach ($topUsers as $topUser) {
-            // $videos[] = $topUser->user->videos;
-            foreach ($topUser->user->videos as $videos) {
-                $ratings[] = $videos->ratings;
-            }
-        }
-        dd($ratings);
+        // $ratings = [];
+        // foreach ($topUsers as $topUser) {
+        //     // $videos[] = $topUser->user->videos;
+        //     foreach ($topUser->user->videos as $video) {
+        //         echo $topUser->user->videos->count();
+        //         $ratings[] = $video->ratings;
+        //     }
+        // }
+        // dd($ratings);
         if (!auth()->user()->hasRole('admin')) {
             $topUsers = $topUsers->whereHas('plan', function ($query) {
                 $query->whereJsonContains('gurus', auth()->user()->id);

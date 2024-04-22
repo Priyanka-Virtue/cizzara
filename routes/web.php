@@ -31,9 +31,7 @@ Route::get('/', function () {
 })->name('welcome');
 
 Auth::routes(['verify' => true]);
-Route::get('/top', function () {
-    return 'yes';
-});
+Route::get('/top/{plan?}', [VideoRatingController::class, 'countAvg']);
 
 Route::get('/home', function () {
     return view('welcome', ['plans' => Plan::all()]);
@@ -61,7 +59,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 // ========== Admin ================
 Route::middleware(['role:guru|admin'])->group(function () {
 
-    
+
 
     Route::get('/admin/videos', [AdminVideoController::class, 'index'])->name('admin.videos.index');
     // Route::put('/admin/videos/{video}/status', [AdminVideoController::class, 'updateStatus'])->name('admin.videos.updateStatus');

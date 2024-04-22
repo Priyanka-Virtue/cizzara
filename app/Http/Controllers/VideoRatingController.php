@@ -13,6 +13,53 @@ use Illuminate\Support\Facades\Validator;
 
 class VideoRatingController extends Controller
 {
+    public function countAvg(Request $request, $video = null)
+    {
+        // $plan = Plan::find(1);
+
+        // if ($request->audition != "") {
+        //     $plan = Plan::where('name', $request->audition)->first();
+        // } else {
+        //     $plan = Plan::latest()->first();
+        // }
+
+        $audition = Audition::findOrFail($video->audition_id)->with(['user.videos.ratings' => function ($query) {
+            // $query->withCount('ratings');
+        }])->first();
+        $plan = $video->plan;
+        $gurus = User::whereIn('id', $plan->gurus ?? [])->get();
+        foreach ($gurus ?? [] as $guru) {
+
+            $ratedGurusCount[$guru->id] = 0;
+            $sumRatingByVideos[$guru->id] = 0;
+
+            foreach ($audition->user->videos as $video) {
+                foreach ($video->ratings as $guru_rating) {
+                    if ($guru_rating->guru_id == $guru->id) {
+                        $ratedGurusCount[$guru->id] += 1;
+                        $sumRatingByVideos[$guru->id] += $guru_rating->rating;
+                    }
+                }
+            }
+        }
+
+        $totl = 0;
+        $totalRatedGurus = 0;
+        foreach ($sumRatingByVideos ?? []  as $guru => $guruTotal) {
+
+            if ($guruTotal != 0 && $ratedGurusCount[$guru] != 0) {
+                $totl += ($guruTotal / $ratedGurusCount[$guru]);
+                $totalRatedGurus++;
+            }
+        }
+        //print_r($ratedGurusCount);
+        //echo '<br>'.$totl;
+        //echo '<br>'.$totalRatedGurus;
+        return number_format((float) $totl / $totalRatedGurus, 2);
+
+
+    }
+
     public function rateVideo(Request $request, $videoId)
     {
 
@@ -44,7 +91,7 @@ class VideoRatingController extends Controller
         }
 
         // Find the video
-        $video = Video::findOrFail($videoId);
+        // $video = Video::findOrFail($videoId);
 
         // Create a new video rating
         $video->ratings()->create([
@@ -53,26 +100,27 @@ class VideoRatingController extends Controller
             'comments' => $request->comments,
         ]);
 
-        $averageRating = $video->ratings()->avg('rating');
+        $averageRating = $this->countAvg($request, $video);
+        // $averageRating = $video->ratings()->avg('rating');
 
-    // Update the audition table with the calculated average rating for that video
-    $audition = Audition::findOrFail($video->audition_id);
-    $audition->avg_rating = $averageRating;
-    $audition->save();
+        // Update the audition table with the calculated average rating for that video
+        $audition = Audition::find($video->audition_id);
+        $audition->avg_rating = $averageRating;
+        $audition->save();
 
-    $allVideos = $audition->videos;
-    $totalRatings = 0;
-    $totalVideos = count($allVideos);
-    foreach ($allVideos as $v) {
-        $totalRatings += $v->ratings()->avg('rating');
-    }
-    $overallAverageRating = $totalRatings / $totalVideos;
-    // dd($overallAverageRating);
-    $audition->overall_average_rating = $overallAverageRating;
-    $audition->save();
+        // $allVideos = $audition->videos;
+        // $totalRatings = 0;
+        // $totalVideos = count($allVideos);
+        // foreach ($allVideos as $v) {
+        //     $totalRatings += $v->ratings()->avg('rating');
+        // }
+        // $overallAverageRating = $totalRatings / $totalVideos;
+        // // dd($overallAverageRating);
+        // $audition->overall_average_rating = $overallAverageRating;
+        // $audition->save();
 
 
-        if($request->comments != "" && ( $request->send_to_contestant != "")) {
+        if ($request->comments != "" && ($request->send_to_contestant != "")) {
             $contestant = User::find($video->user_id);
             $contestant->notify(new GurusCommentNotification($request->comments));
         }

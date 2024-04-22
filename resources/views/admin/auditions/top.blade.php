@@ -178,15 +178,15 @@
                                             '</span>
                         <br />';
 
-                                        $averageRating = $video->ratings->avg('rating');
-                                        $videoRatings[] = $averageRating;
+                                        /* $averageRating = $video->ratings->avg('rating');
+                                        $videoRatings[] = $averageRating; */
                                     }
 
-                                    if (count($videoRatings) > 1) {
+                                    /*if (count($videoRatings) > 1) {
                                         $userAverageRating = array_sum($videoRatings) / count($videoRatings);
                                     } else {
                                         $userAverageRating = $videoRatings[0] ?? 0;
-                                    }
+                                    }*/
 
                                 @endphp
                             </td>
@@ -202,10 +202,18 @@
                                     </select>
                                 </td>
                                 @foreach ($gurus ?? [] as $guru)
+                                    @php
+                                        $ratedGurusCount[$guru->id] = 0;
+                                        $sumRatingByVideos[$guru->id] = 0;
+                                    @endphp
                                     <td>
                                         @foreach ($audition->user->videos as $video)
                                             @foreach ($video->ratings as $guru_rating)
                                                 @if ($guru_rating->guru_id == $guru->id)
+                                                    @php
+                                                        $ratedGurusCount[$guru->id] += 1;
+                                                        $sumRatingByVideos[$guru->id] += $guru_rating->rating;
+                                                    @endphp
                                                     <a
                                                         href="{{ route('admin.videos.show-by-guru', ['video' => $video, 'guru' => $guru]) }}">{{ $guru_rating->rating }}/10</a>
                                                     @if ($guru_rating->comments != '')
@@ -216,16 +224,38 @@
                                                 @endif
                                                 @php
                                                     $ratedGurus[] = $guru_rating->guru_id;
+
                                                 @endphp
                                             @endforeach
                                             @if (in_array($guru->id, $ratedGurus) == false)
                                                 &mdash;
                                             @endif
                                             <br />
+                                            
                                         @endforeach
+
+
                                     </td>
                                 @endforeach
-                                <td>{{ $userAverageRating }}</td>
+                                <td>
+                                    @php
+//print_r($sumRatingByVideos);
+$totl = 0;
+$totalRatedGurus = 0;
+foreach ($sumRatingByVideos ?? []  as $guru => $guruTotal) {
+
+    if($guruTotal != 0 && $ratedGurusCount[$guru] != 0){
+$totl += ($guruTotal / $ratedGurusCount[$guru]);
+$totalRatedGurus++;
+}
+
+}
+//print_r($ratedGurusCount);
+//echo '<br>'.$totl;
+//echo '<br>'.$totalRatedGurus;
+echo $all_avg =  number_format((float) $totl / $totalRatedGurus, 2) . ' / 10';
+                                    @endphp
+                                    </td>
                             @endrole
 
                             @role('guru')
