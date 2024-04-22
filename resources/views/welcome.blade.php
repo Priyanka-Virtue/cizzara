@@ -11,10 +11,10 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/materialdesignicons.css') }}" />
-@php
-    $bgs = ['5.png', '7.png', '14.png', '6.png', '3.png', '4.png'];
-    $bg = $bgs[array_rand($bgs)];
-@endphp
+    @php
+        $bgs = ['5.png', '7.png', '14.png', '6.png', '3.png', '4.png'];
+        $bg = $bgs[array_rand($bgs)];
+    @endphp
     <!-- Styles -->
     <style>
         /* ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com */
@@ -723,7 +723,7 @@
         }
 
         .dark\:bg-dots-lighter {
-            background-image: url("{{ asset('images/'.$bg) }}");
+            background-image: url("{{ asset('images/' . $bg) }}");
             background-repeat: no-repeat;
             background-size: cover;
             /* url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E") */
@@ -1010,15 +1010,22 @@
             </div>
 
 
+<hr style="border: 1px solid rgba(100,100,100,0.1);
+  margin-top: 100px;" />
+            <div class="flex justify-center sm:items-center" style="flex-direction: column; margin-top: 2rem" >
 
-            <div class="flex justify-center mt-16 px-0 sm:items-center sm:justify-between">
-                <div class="text-center text-sm sm:text-left">
-                    &nbsp;
-                </div>
+                {{-- <div class="text-center text-sm sm:text-center"> --}}
+                    <img src="{{ asset('images/cards.png') }}" alt="all payment cards">
+                    <img src="{{ asset('images/secure.png') }}" style="max-width: 120px;" alt="100% secure">
+                    <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">
+                        Copyright &copy; <?php echo date('Y'); ?> The United Production.<br />All rights reserved. Powered by
+                        Cizzara Studios.
+                    </div>
+                {{-- </div> --}}
 
-                <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">
-                    Copy &copy; <?php echo date('Y'); ?>
-                </div>
+                {{-- <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">
+                    Copyright &copy; <?php echo date('Y'); ?> The United Production.<br/>All rights reserved. Powered by Cizzara Studios.
+                </div> --}}
             </div>
         </div>
         <div class="overlay"></div>

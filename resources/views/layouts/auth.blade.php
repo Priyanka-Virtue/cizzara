@@ -181,6 +181,24 @@
         <p class="text_icon">Need Help?</p>
     </div>
 
+    <hr style="border: 1px solid rgba(100,100,100,0.1);
+  margin-top: 100px;" />
+            <div class="d-flex justify-content-center align-items-center" style="flex-direction: column; margin-top: 2rem" >
+
+                {{-- <div class="text-center text-sm sm:text-center"> --}}
+                    <img src="{{ asset('images/cards.png') }}" alt="all payment cards">
+                    <img src="{{ asset('images/secure.png') }}" style="max-width: 120px;" alt="100% secure">
+                    <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">
+                        Copyright &copy; <?php echo date('Y'); ?> The United Production.<br />All rights reserved. Powered by
+                        Cizzara Studios.
+                    </div>
+                {{-- </div> --}}
+
+                {{-- <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">
+                    Copyright &copy; <?php echo date('Y'); ?> The United Production.<br/>All rights reserved. Powered by Cizzara Studios.
+                </div> --}}
+            </div>
+
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
