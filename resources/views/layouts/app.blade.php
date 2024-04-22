@@ -13,6 +13,7 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/materialdesignicons.css') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}" />
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
@@ -31,7 +32,7 @@ border-color: #9c6868 !important;
 
 </style>
 
-    </style>
+
 </head>
 <body>
     <div id="app">

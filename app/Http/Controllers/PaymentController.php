@@ -19,7 +19,7 @@ class PaymentController extends Controller
     private $price;
     public function __construct()
     {
-        $this->price = env('price', 10);
+        // $this->price = env('price', 10);
     }
     function plan_id($plan)
     {
@@ -31,20 +31,24 @@ class PaymentController extends Controller
 
         $user = Auth::user();
 
-        $plan_id = $this->plan_id($plan);
-        if (!$plan_id) {
-            // print_r($plan_id);die;
+        // $plan_id = $this->plan_id($plan);
+        // if (!$plan_id) {
+        //     return redirect()->route('home')->with('error', 'This audition is not available currently. #995');
+        // }
+        $get_plan = Plan::where('name', $plan)->first();
+        if (!$get_plan) {
             return redirect()->route('home')->with('error', 'This audition is not available currently. #995');
         }
-        if (Payment::where('user_id', $user->id)->where('plan_id', $plan_id)->where('stripe_payment_id', '!=', '')->exists()) {
+        if (Payment::where('user_id', $user->id)->where('plan_id', $get_plan->id)->where('stripe_payment_id', '!=', '')->exists()) {
             return redirect()->route('upload-video', ['plan' => $plan]);
         }
+        $this->price = $get_plan->price;
         // session()->put('plan', $plan);
         return view('payment', [
             'user' => $user,
             'intent' => $user->createSetupIntent(),
             'product' => $plan,
-            'price' => $this->price
+            'price' => $get_plan->price
         ]);
     }
 
