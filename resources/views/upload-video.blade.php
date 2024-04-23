@@ -181,7 +181,7 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
     //         });
     // });
 
-    $("form[name='upload-videoxxx']").submit(function(e) {
+    $("form[name='upload-video']").submit(function(e) {
         e.preventDefault();
         const fileInput = document.getElementById('videoFile');
         const file = fileInput.files[0];
@@ -198,8 +198,8 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
     const allowedExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv']; // Add more video extensions if needed
 
     if (!allowedExtensions.includes(fileExtension)) {
-        // alert('Invalid file type. Please choose a video file (mp4, avi, mov, wmv, flv, mkv).');
-        // return;
+        alert('Invalid file type. Please choose a video file (mp4, avi, mov, wmv, flv, mkv).');
+        return;
     }
 
         fetch('{{route("get-pre-signed-url")}}', {
