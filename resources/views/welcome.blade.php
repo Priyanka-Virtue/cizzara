@@ -1012,7 +1012,7 @@
 
 <hr style="border: 1px solid rgba(100,100,100,0.1);
   margin-top: 100px;" />
-            <div class="flex justify-center sm:items-center" style="flex-direction: column; margin-top: 2rem" >
+            <div class="flex justify-center items-center" style="flex-direction: column; margin-top: 2rem" >
 
                 {{-- <div class="text-center text-sm sm:text-center"> --}}
                     <img src="{{ asset('images/cards.png') }}" alt="all payment cards">
