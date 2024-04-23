@@ -231,7 +231,7 @@
                                                 &mdash;
                                             @endif
                                             <br />
-                                            
+
                                         @endforeach
 
 
@@ -240,7 +240,7 @@
                                 <td>
                                     @php
 //print_r($sumRatingByVideos);
-$totl = 0;
+/*$totl = 0;
 $totalRatedGurus = 0;
 foreach ($sumRatingByVideos ?? []  as $guru => $guruTotal) {
 
@@ -249,12 +249,14 @@ $totl += ($guruTotal / $ratedGurusCount[$guru]);
 $totalRatedGurus++;
 }
 
-}
+}*/
 //print_r($ratedGurusCount);
 //echo '<br>'.$totl;
 //echo '<br>'.$totalRatedGurus;
-echo $all_avg =  number_format((float) $totl / $totalRatedGurus, 2) . ' / 10';
+//echo $all_avg =  number_format((float) $totl / $totalRatedGurus, 2) . ' / 10';
                                     @endphp
+
+                                    {{ $audition->avg_rating }} / 10
                                     </td>
                             @endrole
 

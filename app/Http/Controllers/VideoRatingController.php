@@ -23,9 +23,11 @@ class VideoRatingController extends Controller
         //     $plan = Plan::latest()->first();
         // }
 
-        $audition = Audition::findOrFail($video->audition_id)->with(['user.videos.ratings' => function ($query) {
+        $audition = Audition::where('id', $video->audition_id)->with(['user.videos.ratings' => function ($query) {
             // $query->withCount('ratings');
         }])->first();
+// $rates = [];
+        // dd($audition->user->videos);
         $plan = $video->plan;
         $gurus = User::whereIn('id', $plan->gurus ?? [])->get();
         foreach ($gurus ?? [] as $guru) {
@@ -33,9 +35,12 @@ class VideoRatingController extends Controller
             $ratedGurusCount[$guru->id] = 0;
             $sumRatingByVideos[$guru->id] = 0;
 
-            foreach ($audition->user->videos as $video) {
-                foreach ($video->ratings as $guru_rating) {
+            foreach ($audition->user->videos as $uvideo) {
+                // echo($uvideo->id . '<br>');
+                foreach ($uvideo->ratings as $guru_rating) {
+
                     if ($guru_rating->guru_id == $guru->id) {
+                        // $rates[] = $guru_rating->toArray($guru_rating);
                         $ratedGurusCount[$guru->id] += 1;
                         $sumRatingByVideos[$guru->id] += $guru_rating->rating;
                     }
@@ -52,11 +57,17 @@ class VideoRatingController extends Controller
                 $totalRatedGurus++;
             }
         }
+
+        // dd($rates, $ratedGurusCount, $sumRatingByVideos,  $totl, $totalRatedGurus);
         //print_r($ratedGurusCount);
         //echo '<br>'.$totl;
         //echo '<br>'.$totalRatedGurus;
+        if($totl > 0 && $totalRatedGurus > 0)
         return number_format((float) $totl / $totalRatedGurus, 2);
 
+
+        Log::info('dbg', [$rates, $ratedGurusCount, $sumRatingByVideos,  $totl, $totalRatedGurus]);
+        return 0;
 
     }
 
