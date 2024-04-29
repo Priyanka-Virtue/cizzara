@@ -42,13 +42,14 @@ class PaymentController extends Controller
         if (Payment::where('user_id', $user->id)->where('plan_id', $get_plan->id)->where('stripe_payment_id', '!=', '')->exists()) {
             return redirect()->route('upload-video', ['plan' => $plan]);
         }
-        $this->price = $get_plan->price;
+        // $this->price = $get_plan->price;
         // session()->put('plan', $plan);
         return view('payment', [
             'user' => $user,
             'intent' => $user->createSetupIntent(),
             'product' => $plan,
-            'price' => $get_plan->price
+            // 'price' => $get_plan->price,
+            'plan' => $get_plan
         ]);
     }
 

@@ -959,9 +959,18 @@
                                 </p>
                             </div>
 
-                            <div style="display: flex;justify-content: space-between;flex-direction: column;">
-                                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">${{ $plan->price }}
+                            <div style="display: flex;justify-content: space-between;flex-direction: column; min-width: 200px">
+                                <h2 class="text-sm font-semibold text-gray-900 dark:text-white">
+@foreach ($plan->prices as $price_name => $price_amount)
+                                    @php
+
+                                    echo $price_name." $".$price_amount['Price'] . ' '.$price_amount['Note'];
+                                    echo "<hr style='border-style: dashed; margin-bottom: 10px !important' />";
+                                    @endphp
+                                @endforeach
+
                                 </h2>
+
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"

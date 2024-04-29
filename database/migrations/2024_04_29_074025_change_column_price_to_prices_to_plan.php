@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('gurus', function (Blueprint $table) {
-            $table->id();
-            $table->string('first_name');
-            $table->timestamps();
+        Schema::table('plans', function (Blueprint $table) {
+            $table->text('prices');
         });
     }
 
@@ -27,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gurus');
+        Schema::table('plans', function (Blueprint $table) {
+            $table->removeColumn('prices');
+        });
     }
 };

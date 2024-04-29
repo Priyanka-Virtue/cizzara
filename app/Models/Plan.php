@@ -15,7 +15,8 @@ class Plan extends Model
         'gurus'
     ];
     protected $casts = [
-        'gurus' => 'json'
+        'gurus' => 'json',
+        'prices' => 'json'
     ];
     // public function gurus()
     // {
