@@ -32,9 +32,9 @@ return new class extends Migration
             $table->text('prepared_songs')->nullable();
             $table->string('how_know_about_auditions')->nullable();
             $table->string('how_know_about_auditions_detail')->nullable();
+            $table->text('previous_performance')->nullable();
 
             $table->string('genre_of_singing')->nullable();
-            $table->text('previous_performance')->nullable();
             $table->text('music_experience')->nullable();
             $table->text('music_qualification')->nullable();
 

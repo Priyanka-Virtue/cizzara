@@ -10,6 +10,44 @@ use Illuminate\Support\Facades\Auth;
 
 class AuditionController extends Controller
 {
+    public $validation_fields, $validation_msgs;
+    public function __construct(){
+        $this->validation_fields = [
+            // 'auditioncity' => 'required',
+            // 'plan' => 'required',
+            // 'stagename' => 'nullable|string|max:255',
+            'why_tup_expectations' => 'required|string|max:5000',
+            'why_we_select_you' => 'required|string|max:5000',
+            'future_plan_if_win' => 'required|string|max:5000',
+            'probability' => 'required|string|max:5000',
+
+            // 'life_changing_incident' => 'nullable|string|max:5000',
+            // 'change_about_self_love_about_self' => 'nullable|string|max:5000',
+            'unique_qualities' => 'required|string|max:5000',
+            'main_goal_difficulties' => 'required|string|max:5000',
+            'biggest_strength_support' => 'required|string|max:5000',
+            'favorite_judge_why' => 'required|string|max:5000',
+            'role_model_inspiration' => 'required|string|max:5000',
+
+            // 'how_know_about_auditions' => 'required|max:5000',
+            // 'how_know_about_auditions_detail' => 'nullable|string|max:5000',
+
+
+            'written_composed_song_inspiration' => 'required|string|max:5000',
+            'prepared_songs' => 'required|string|max:5000',
+            // 'genre_of_singing' => 'nullable|string|max:300',
+            'previous_performance' => 'required|string|max:5000',
+            // 'music_experience' => 'nullable|string|max:5000',
+            // 'music_qualification' => 'nullable|string|max:5000',
+        ];
+        $this->validation_msgs = [
+            'written_composed_song_inspiration.*' => 'Please fillout your inspiration with no more than 5000 characters',
+
+            // 'genre_of_singing.*' => 'Please fillout your genre/type of your audition with no more than 300 characters',
+            // 'music_experience.*' => 'Please fillout your previous experience with no more than 5000 characters',
+            // 'music_qualification.*' => 'Please fillout your music/dancing qualification with no more than 5000 characters',
+        ];
+    }
     public function index()
     {
         // Retrieve all user details
@@ -31,31 +69,7 @@ class AuditionController extends Controller
     public function store(Request $request)
     {
         $plan = $request->plan;
-        $validatedData = $request->validate([
-            'auditioncity' => 'required',
-            // 'plan' => 'required',
-            'stagename' => 'nullable|string|max:255',
-            'why_tup_expectations' => 'nullable|string|max:5000',
-            'why_we_select_you' => 'nullable|string|max:5000',
-            'future_plan_if_win' => 'nullable|string|max:5000',
-            'opinion_new_season_tup' => 'nullable|string|max:5000',
-            'written_composed_song_inspiration' => 'nullable|string|max:5000',
-            'life_changing_incident' => 'nullable|string|max:5000',
-            'change_about_self_love_about_self' => 'nullable|string|max:5000',
-            'unique_qualities' => 'nullable|string|max:5000',
-            'main_goal_difficulties' => 'nullable|string|max:5000',
-            'biggest_strength_support' => 'nullable|string|max:5000',
-            'favorite_judge_why' => 'nullable|string|max:5000',
-            'role_model_inspiration' => 'nullable|string|max:5000',
-            'prepared_songs' => 'nullable|string|max:5000',
-            'how_know_about_auditions' => 'required|max:5000',
-            'how_know_about_auditions_detail' => 'nullable|string|max:5000',
-
-            'genre_of_singing' => 'nullable|string|max:300',
-            'previous_performance' => 'nullable|string|max:5000',
-            'music_experience' => 'nullable|string|max:5000',
-            'music_qualification' => 'nullable|string|max:5000',
-        ]);
+        $validatedData = $request->validate($this->validation_fields,$this->validation_msgs);
         $plan_id = $this->plan_id($plan);
         if (!$plan_id) {
             return redirect()->route('home')->with('error', 'Plan not found');
@@ -88,30 +102,7 @@ class AuditionController extends Controller
 
     public function update(Request $request, Audition $userDetail)
     {
-        $validatedData = $request->validate([
-            'auditioncity' => 'required',
-            'stagename' => 'nullable|string|max:5000',
-            'why_tup_expectations' => 'nullable|string|max:5000',
-            'why_we_select_you' => 'nullable|string|max:5000',
-            'future_plan_if_win' => 'nullable|string|max:5000',
-            'opinion_new_season_tup' => 'nullable|string|max:5000',
-            'written_composed_song_inspiration' => 'nullable|string|max:5000',
-            'life_changing_incident' => 'nullable|string|max:5000',
-            'change_about_self_love_about_self' => 'nullable|string|max:5000',
-            'unique_qualities' => 'nullable|string|max:5000',
-            'main_goal_difficulties' => 'nullable|string|max:5000',
-            'biggest_strength_support' => 'nullable|string|max:5000',
-            'favorite_judge_why' => 'nullable|string|max:5000',
-            'role_model_inspiration' => 'nullable|string|max:5000',
-            'prepared_songs' => 'nullable|string|max:5000',
-            'how_know_about_auditions' => 'required|max:5000',
-            'how_know_about_auditions_detail' => 'nullable|string|max:5000',
-
-            'genre_of_singing' => 'nullable|string|max:300',
-            'previous_performance' => 'nullable|string|max:5000',
-            'music_experience' => 'nullable|string|max:5000',
-            'music_qualification' => 'nullable|string|max:5000',
-        ]);
+        $validatedData = $request->validate($this->validation_fields,$this->validation_msgs);
 
         $plan = $request->plan;
         $user_id = Auth::id();

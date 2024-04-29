@@ -104,6 +104,8 @@
         cursor: not-allowed;
 
     }
+
+
 </style>
 @include('partials.steps', ['active' => 'upload'])
 @if ($errors->any())
@@ -137,18 +139,18 @@ $styles = ['Jazz'=>['img'=>'https://img.freepik.com/free-vector/sport-equipment-
 
 
     </div>
-    <div class="form-group mb-2">
+    {{-- <div class="form-group mb-2">
         <label for="videoTitle">Video Title</label>
         <input type="text" class="form-control" id="videoTitle" name="videoTitle" required>
         <input type="hidden" id="plan" name="plan" value="{{request()->plan}}">
 
-    </div>
+    </div> --}}
     <div class="form-group mb-3">
-        <label for="videoDescription">Video Description</label>
+        <label for="videoDescription">Description of your audition Video: <span class="required">*</span></label>
         <textarea class="form-control" id="videoDescription" name="videoDescription" rows="3"></textarea>
     </div>
     <div class="form-group mb-3">
-        <label for="videoFile">Choose Video File</label>
+        <label for="videoFile">Choose Video File <span class="required">*</span></label>
         <input type="file" class="form-control" id="videoFile" name="videoFile" required>
         Max file size allowed: {{env('MAX_VIDEO_FILE_SIZE', 100000) / 1000}}MB
         <!-- <input type="file" accept="video/*" class="form-control-file" id="videoFile" name="videoFile" required>Max file size allowed: {{env('MAX_VIDEO_FILE_SIZE', 100000) / 1000}}MB -->
