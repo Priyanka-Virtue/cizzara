@@ -14,7 +14,10 @@ class Payment extends Model
         'payment_gateway',
         'status',
         'stripe_payment_id',
-        'plan_id'
+        'plan_id',
+        'amount',
+        'members',
+        'team_type'
     ];
 
     public function user()

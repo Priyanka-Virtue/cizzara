@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 class PaypalController extends Controller
 {
-    protected $paypalClient, $plan_id, $amount, $members, $team_type;
+    protected $paypalClient;
+    public $plan_id, $amount, $members, $team_type;
     public function __construct(){
         $paypalClient = new PayPalClient;
         $this->paypalClient = $paypalClient;
@@ -21,8 +22,13 @@ class PaypalController extends Controller
         $amount = 0;
         $plan_amt = Plan::where('name', $plan)->first();
 
+
         switch ($team_type) {
             case 'Group':
+                if($members == '' || $members > $plan_amt['prices'][$team_type]['MaxMembers']) {
+                    return response()->json(['success'=>false,
+                    'message' => 'Please select number of members less than '.$plan_amt['prices'][$team_type]['MaxMembers']], 400);
+                }
                 $amount = $plan_amt['prices'][$team_type]['Price'] * $members;
                 break;
             default:
@@ -52,6 +58,8 @@ class PaypalController extends Controller
             return response()->json(['success'=>false,'message' => 'Please select valid audition.'], 400);
         }
 
+        // dd($this->plan_id, $amount);
+
         $this->paypalClient->setApiCredentials(config('paypal'));
         $token = $this->paypalClient->getAccessToken();
         $this->paypalClient->setAccessToken($token);
@@ -79,6 +87,7 @@ class PaypalController extends Controller
     }
     public function capture(Request $request)
     {
+        dd($this->plan_id);
         $data = json_decode($request->getContent(), true);
         $orderId = $data['orderId'];
         $this->paypalClient->setApiCredentials(config('paypal'));

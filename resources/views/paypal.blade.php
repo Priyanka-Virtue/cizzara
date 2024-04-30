@@ -19,7 +19,7 @@
                             Select team type
                         </label>
 
-                        <select name="plan-type" id="plan-type" class="form-control" onchange="$(this).planTypeChanged()">
+                        <select name="plan-type" id="plan-type" class="form-select mb-2" onchange="$(this).planTypeChanged()">
                             @foreach ($plan['prices'] as $price_name => $plan_amount)
                                 <option value="{{ $price_name }}">
                                     {{ $price_name . ' $' . $plan_amount['Price'] . ' ' . $plan_amount['Note'] ?? '' }}</option>
