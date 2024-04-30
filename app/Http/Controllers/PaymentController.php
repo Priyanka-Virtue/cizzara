@@ -44,7 +44,7 @@ class PaymentController extends Controller
         }
         // $this->price = $get_plan->price;
         // session()->put('plan', $plan);
-        return view('payment', [
+        return view('paypal', [
             'user' => $user,
             'intent' => $user->createSetupIntent(),
             'product' => $plan,

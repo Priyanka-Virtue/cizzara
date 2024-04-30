@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminVideoController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AuditionController;
+use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\UserDetailController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\VideoRatingController;
@@ -14,6 +15,7 @@ use App\Models\UserDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Srmklive\PayPal\Facades\PayPal;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,8 +48,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
 
         Route::group(['prefix'=>'paypal'], function(){
-            Route::post('/order/create',[\App\Http\Controllers\Front\PaypalPaymentController::class,'create']);
-            Route::post('/order/capture/',[\App\Http\Controllers\Front\PaypalPaymentController::class,'capture']);
+            Route::post('/order/create',[PaypalController::class,'create'])->name('paypal.create');
+            Route::post('/order/capture/',[PayPalController::class,'capture'])->name('paypal.capture');
         });
 
 

@@ -172,7 +172,7 @@
         paypal.Buttons({
  // Call your server to set up the transaction
              createOrder: function(data, actions) {
-                return fetch('/api/paypal/order/create', {
+                return fetch("{{ route('paypal.create') }}", {
                     method: 'POST',
                     body:JSON.stringify({
                         'course_id': "{{$plan->id}}",
@@ -190,7 +190,7 @@
 
             // Call your server to finalize the transaction
             onApprove: function(data, actions) {
-                return fetch('/api/paypal/order/capture' , {
+                return fetch("{{ route('paypal.capture') }}" , {
                     method: 'POST',
                     body :JSON.stringify({
                         orderId : data.orderID,
