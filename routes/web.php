@@ -44,10 +44,18 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/payment/{plan?}', [PaymentController::class, 'charge'])->name('goToPayment');
     Route::post('payment/process-payment/{plan?}', [PaymentController::class, 'processPayment'])->name('processPayment');
 
+
+        Route::group(['prefix'=>'paypal'], function(){
+            Route::post('/order/create',[\App\Http\Controllers\Front\PaypalPaymentController::class,'create']);
+            Route::post('/order/capture/',[\App\Http\Controllers\Front\PaypalPaymentController::class,'capture']);
+        });
+
+
+
     Route::middleware('isPaid')->group(function () {
         Route::resource('user-details', UserDetailController::class);
         Route::resource('audition', AuditionController::class);
-        
+
         Route::get('/upload-video/{plan?}', [VideoController::class, 'index'])->name('upload-video');
         Route::post('/upload-video', [VideoController::class, 'upload'])->name('video.upload');
         Route::get('/thank-you', function () {
