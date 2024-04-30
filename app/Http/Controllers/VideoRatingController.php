@@ -66,8 +66,8 @@ class VideoRatingController extends Controller
         return number_format((float) $totl / $totalRatedGurus, 2);
 
 
-        Log::info('dbg', [$rates, $ratedGurusCount, $sumRatingByVideos,  $totl, $totalRatedGurus]);
-        return 0;
+        Log::info('dbg', [ $ratedGurusCount, $sumRatingByVideos,  $totl, $totalRatedGurus]);
+        return 0; 
 
     }
 

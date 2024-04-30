@@ -27,7 +27,7 @@ class PaypalController extends Controller
                  [
                     "amount"=> [
                         "currency_code"=> "USD",
-                        "value"=> $data['amount']
+                        "value"=> 0.5//$data['amount']
                     ],
                      'description' => 'test'
                 ]
@@ -60,7 +60,7 @@ class PaypalController extends Controller
                 $transaction->payment_id = $orderId;
 
                 $transaction->user_id   = $data['user_id'];
-                $transaction->plan_id   = $data['plan_id'];
+                $transaction->plan_id   = 1;//$data['plan_id'];
                 $transaction->status   = 'COMPLETED';
                 $transaction->save();
                 // $order = Order::where('vendor_order_id', $orderId)->first();

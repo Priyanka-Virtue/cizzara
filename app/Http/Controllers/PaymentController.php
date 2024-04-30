@@ -39,14 +39,14 @@ class PaymentController extends Controller
         if (!$get_plan) {
             return redirect()->route('home')->with('error', 'This audition is not available currently. #995');
         }
-        if (Payment::where('user_id', $user->id)->where('plan_id', $get_plan->id)->where('stripe_payment_id', '!=', '')->exists()) {
+        if (Payment::where('user_id', $user->id)->where('plan_id', $get_plan->id)->where('payment_id', '!=', '')->exists()) {
             return redirect()->route('upload-video', ['plan' => $plan]);
         }
         // $this->price = $get_plan->price;
         // session()->put('plan', $plan);
         return view('paypal', [
             'user' => $user,
-            'intent' => $user->createSetupIntent(),
+            // 'intent' => $user->createSetupIntent(),
             'product' => $plan,
             // 'price' => $get_plan->price,
             'plan' => $get_plan

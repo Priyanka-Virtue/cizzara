@@ -10,7 +10,7 @@
 
     {{ __('Make Payment!') }}
 <div id="paypal-button-container"></div>
-    <form action="{{ route('processPayment', ['plan' => request()->plan]) }}" method="POST" id="subscribe-form">
+    {{-- <form action="{{ route('processPayment', ['plan' => request()->plan]) }}" method="POST" id="subscribe-form">
         <div class="form-group">
             <div class="row">
                 <div class="col-md-12">
@@ -59,26 +59,30 @@
             <button type="button" id="card-button" data-secret="{{ $intent->client_secret }}"
                 class="btn btn-primary d-grid w-100">Make Payment</button>
         </div>
-    </form>
+    </form> --}}
 
 
-    <hr style="border: 1px solid rgba(100,100,100,0.1);
-  margin-top: 50px;" />
+
     <div class="d-flex justify-content-center align-items-center" style="flex-direction: column; margin-top: 2rem">
 
         {{-- <div class="text-center text-sm sm:text-center"> --}}
         <img src="{{ asset('images/cards.png') }}" alt="all payment cards">
-        <img src="{{ asset('images/secure.png') }}" style="max-width: 120px;" alt="100% secure">
+        <div>
+        <img src="{{ asset('images/secure.png') }}" style="max-width: 110px;" alt="100% secure">
+        <img src="{{ asset('images/ssl-secure.png') }}" style="max-height: 120px;" alt="100% secure">
 
+        </div>
+<hr style="border: 1px solid rgba(100,100,100,0.1);margin-top: 15px; width: 100%;" />
+  <p>Pay with confidence with our <b>encrypted</b> payment system.</p>
         {{-- </div> --}}
 
         {{-- <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">
                     Copyright &copy; <?php echo date('Y'); ?> The United Production.<br/>All rights reserved. Powered by Cizzara Studios.
                 </div> --}}
     </div>
-    <script src="https://js.stripe.com/v3/"></script>
+    {{-- <script src="https://js.stripe.com/v3/"></script> --}}
 
-    <script>
+    {{-- <script>
         var stripe = Stripe("{{ env('STRIPE_KEY') }}");
         var elements = stripe.elements();
         var style = {
@@ -145,9 +149,10 @@
             form.appendChild(hiddenInput);
             form.submit();
         }
-    </script>
+    </script> --}}
 
 @endsection
+
 @section('bottom')
     <script>
         $.fn.planTypeChanged = function() {
@@ -165,12 +170,10 @@
         }
     </script>
 
-    <script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency=USD"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id={{ config('paypal.sandbox.client_id') }}&currency={{ config('paypal.currency') }}" ></script>
 
     <script>
-        // Render the PayPal button into #paypal-button-container
         paypal.Buttons({
- // Call your server to set up the transaction
              createOrder: function(data, actions) {
                 return fetch("{{ route('paypal.create') }}", {
                     method: 'POST',
@@ -205,11 +208,12 @@
                     // Successful capture! For demo purposes:
                   //  console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
                     var transaction = orderData.purchase_units[0].payments.captures[0];
-                    iziToast.success({
+                    console.log(transaction);
+                    /*iziToast.success({
                         title: 'Success',
                         message: 'Payment completed',
                         position: 'topRight'
-                    });
+                    });*/
                 });
             }
 

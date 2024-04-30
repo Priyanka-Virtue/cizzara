@@ -47,10 +47,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('payment/process-payment/{plan?}', [PaymentController::class, 'processPayment'])->name('processPayment');
 
 
-        Route::group(['prefix'=>'paypal'], function(){
-            Route::post('/order/create',[PaypalController::class,'create'])->name('paypal.create');
-            Route::post('/order/capture/',[PayPalController::class,'capture'])->name('paypal.capture');
-        });
+    Route::group(['prefix' => 'paypal'], function () {
+        Route::post('/order/create', [PaypalController::class, 'create'])->name('paypal.create');
+        Route::post('/order/capture/', [PayPalController::class, 'capture'])->name('paypal.capture');
+    });
 
 
 
