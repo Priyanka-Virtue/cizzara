@@ -9,7 +9,37 @@
     @endif
 
     {{ __('Make Payment!') }}
-<div id="paypal-button-container"></div>
+
+<form action="{{ route('processPayment', ['plan' => request()->plan]) }}" method="POST" id="subscribe-form">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="subscription-option">
+                        <label for="plan-type">
+                            Select team type
+                        </label>
+
+                        <select name="plan-type" id="plan-type" class="form-control" onchange="$(this).planTypeChanged()">
+                            @foreach ($plan['prices'] as $price_name => $plan_amount)
+                                <option value="{{ $price_name }}">
+                                    {{ $price_name . ' $' . $plan_amount['Price'] . ' ' . $plan_amount['Note'] ?? '' }}</option>
+                            @endforeach
+                        </select>
+
+                        <div id="group-members" style="display: none;">
+                            <label for="members">
+                                Select group members
+                            </label>
+                            <input type="number" name="members" id="members" value="" onchange="$(this).calculateTotal({{ $plan['prices']['Group']['Price'] }})"
+                                max="{{ $plan['prices']['Group']['MaxMembers'] }}" min="1" class="form-control"> X $  {{ $plan['prices']['Group']['Price'] }} <span id="total"> = $80</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        <div id="paypal-button-container"></div>
     {{-- <form action="{{ route('processPayment', ['plan' => request()->plan]) }}" method="POST" id="subscribe-form">
         <div class="form-group">
             <div class="row">
@@ -178,9 +208,10 @@
                 return fetch("{{ route('paypal.create') }}", {
                     method: 'POST',
                     body:JSON.stringify({
-                        'course_id': "{{$plan->id}}",
-                        'user_id' : "{{auth()->user()->id}}",
-                        'amount' : $("#paypalAmount").val(),
+                        'plan': "{{request()->plan}}",
+                        //'user_id' : "{{auth()->user()->id}}",
+                        'members' : $("#members").val(),
+                        'plan_type' : $("#plan-type").val(),
                     })
                 }).then(function(res) {
                     //res.json();
@@ -197,8 +228,8 @@
                     method: 'POST',
                     body :JSON.stringify({
                         orderId : data.orderID,
-                        payment_gateway_id: $("#payapalId").val(),
-                        user_id: "{{ auth()->user()->id }}",
+                        //payment_gateway_id: $("#payapalId").val(),
+                        //user_id: "{{ auth()->user()->id }}",
                     })
                 }).then(function(res) {
                    // console.log(res.json());

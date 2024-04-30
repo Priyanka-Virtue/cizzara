@@ -29,6 +29,9 @@ use Srmklive\PayPal\Facades\PayPal;
 */
 
 Route::get('/', function () {
+    // $type = 'Group';
+    // $plan_amt = Plan::where('name', 'TNDS-S1')->first();//->whereJsonContains('prices', 'Group')->first();
+    // dd($plan_amt['prices'][$type]['Price']);
     return view('welcome', ['plans' => Plan::all()]);
 })->name('welcome');
 

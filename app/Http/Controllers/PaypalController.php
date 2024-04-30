@@ -3,20 +3,54 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Models\Plan;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 class PaypalController extends Controller
 {
-    protected $paypalClient;
+    protected $paypalClient, $plan_id, $amount, $members, $team_type;
     public function __construct(){
         $paypalClient = new PayPalClient;
         $this->paypalClient = $paypalClient;
     }
+
+    public function calculateAmount($plan, $members, $team_type) {
+
+        $amount = 0;
+        $plan_amt = Plan::where('name', $plan)->first();
+
+        switch ($team_type) {
+            case 'Group':
+                $amount = $plan_amt['prices'][$team_type]['Price'] * $members;
+                break;
+            default:
+                $amount = $plan_amt['prices'][$team_type]['Price'];
+                break;
+        }
+        $this->amount = $amount;
+        $this->plan_id = $plan_amt['id'];
+        $this->members = $members;
+        $this->team_type = $team_type;
+        return $amount;
+    }
     public function create(Request $request)
     {
         $data = json_decode($request->getContent(), true);
+
+
+
+
+        if($data['plan_type'] == 'Group' && $data['members'] == ''){
+            return response()->json(['success'=>false,'message' => 'Please select number of members.'], 400);
+        }
+
+        $amount = $this->calculateAmount($data['plan'], $data['members'], $data['plan_type']);
+
+        if($amount == 0){
+            return response()->json(['success'=>false,'message' => 'Please select valid audition.'], 400);
+        }
 
         $this->paypalClient->setApiCredentials(config('paypal'));
         $token = $this->paypalClient->getAccessToken();
@@ -27,7 +61,7 @@ class PaypalController extends Controller
                  [
                     "amount"=> [
                         "currency_code"=> "USD",
-                        "value"=> 0.5//$data['amount']
+                        "value"=> $amount
                     ],
                      'description' => 'test'
                 ]
@@ -59,8 +93,11 @@ class PaypalController extends Controller
                 $transaction = new Payment();
                 $transaction->payment_id = $orderId;
 
-                $transaction->user_id   = $data['user_id'];
-                $transaction->plan_id   = 1;//$data['plan_id'];
+                $transaction->user_id   = auth()->user()->id;
+                $transaction->plan_id   = $this->plan_id;
+                $transaction->members   = $this->members;
+                $transaction->team_type = $this->team_type;
+                $transaction->amount   = $this->amount;
                 $transaction->status   = 'COMPLETED';
                 $transaction->save();
                 // $order = Order::where('vendor_order_id', $orderId)->first();
