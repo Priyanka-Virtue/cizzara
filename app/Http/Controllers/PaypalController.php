@@ -6,8 +6,14 @@ use App\Models\Payment;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 class PaypalController extends Controller
 {
+    protected $paypalClient;
+    public function __construct(){
+        $paypalClient = new PayPalClient;
+        $this->paypalClient = $paypalClient;
+    }
     public function create(Request $request)
     {
         $data = json_decode($request->getContent(), true);
