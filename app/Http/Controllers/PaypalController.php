@@ -37,16 +37,23 @@ class PaypalController extends Controller
                     ], 400);
                 }
                 $amount = $plan_amt['prices'][$team_type]['Price'] * $members;
+                $this->members = $members;
                 break;
+            case 'Duet':
+                $amount = $plan_amt['prices'][$team_type]['Price'];
+                $this->members = 2;
+                break;
+
             default:
                 $amount = $plan_amt['prices'][$team_type]['Price'];
+                $this->members = 1;
                 break;
         }
         $this->amount = $amount;
         $this->plan_id = $plan_amt['id'];
-        $this->members = $members;
+        // $this->members = $members;
         $this->team_type = $team_type;
-        return $amount;
+        return number_format($amount, 2);
     }
     public function create(Request $request)
     {
@@ -82,29 +89,28 @@ class PaypalController extends Controller
                 ]
             ],
         ]);
-// dd($order, $order->orderID);
+        // dd($order, $order->orderID);
 
-if(isset($order['id']) && $order['id'] != ''){
+        if (isset($order['id']) && $order['id'] != '') {
 
-    // DB::beginTransaction();
-        $transaction = new Payment();
-        $transaction->payment_id = $order['id'];
-        $transaction->user_id   = auth()->user()->id;
-        $transaction->plan_id   = $this->plan_id;
-        $transaction->members   = $this->members;
-        $transaction->team_type = $this->team_type;
-        $transaction->amount   = $this->amount;
-        $transaction->status   = 'PENDING';
-        $transaction->save();
-        // $mergeData = array_merge($data,['status' => TransactionStatus::PENDING, 'vendor_order_id' => $order['id']]);
+            // DB::beginTransaction();
+            $transaction = new Payment();
+            $transaction->payment_id = $order['id'];
+            $transaction->user_id   = auth()->user()->id;
+            $transaction->plan_id   = $this->plan_id;
+            $transaction->members   = $this->members;
+            $transaction->team_type = $this->team_type;
+            $transaction->amount   = $this->amount;
+            $transaction->status   = 'PENDING';
+            $transaction->save();
+            // $mergeData = array_merge($data,['status' => TransactionStatus::PENDING, 'vendor_order_id' => $order['id']]);
 
-        // Order::create($mergeData);
-        // DB::commit();
-        return response()->json($order);
-
-}
-// return response()->json(['success' => false, 'message' => 'Error creating payment. Please try again. #PDE40c2'], 400);
-dd($order);
+            // Order::create($mergeData);
+            // DB::commit();
+            return response()->json($order);
+        }
+        // return response()->json(['success' => false, 'message' => 'Error creating payment. Please try again. #PDE40c2'], 400);
+        dd($order);
         //return redirect($order['links'][1]['href'])->send();
         // echo('Create working');
     }

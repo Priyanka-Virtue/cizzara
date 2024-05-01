@@ -16,7 +16,7 @@ class Video extends Model
         'user_id',
         'style',
         'plan_id',
-        'stripe_payment_id',
+        'payment_id',
         'file_path',
         'original_name',
         'title',

@@ -33,7 +33,12 @@ class VideoController extends Controller
             return view('details', compact('userDetail'));
         } else if ($request->has('step') && $request->step == 'audition') {
             $userDetail = Audition::where('user_id', Auth::id())->where('plan_id', '=', $plan_id)->first();
-            return view('audition', compact('userDetail'));
+            $payment = Payment::where('user_id', Auth::user()->id)->where('plan_id', $plan_id)->where('status', '=', 'COMPLETED')->first();
+
+if(!$payment) {
+    return redirect()->route('goToPayment', ['plan' => $request->plan])->with('error', 'You need to make payment first');
+}
+            return view('audition', compact('userDetail', 'payment'));
         } else {
             $audition = Audition::where('plan_id', $plan_id)->where('user_id', $user_id)->first();
             if ($audition) {
@@ -53,7 +58,11 @@ class VideoController extends Controller
                 return view('upload-video');
             else if ($hasUserDetails) {
                 $userDetail = $audition;
-                return view('audition', compact('userDetail'));
+                $payment = Payment::where('user_id', Auth::user()->id)->where('plan_id', $plan_id)->where('status', '=', 'COMPLETED')->first();
+                if(!$payment) {
+                    return redirect()->route('goToPayment', ['plan' => $request->plan])->with('error', 'You need to make payment first');
+                }
+                return view('audition', compact('userDetail', 'payment'));
             }
         }
 
@@ -71,9 +80,9 @@ class VideoController extends Controller
 
     //     if ($plan_id) {
     //         $uploaded_videos_count = Payment::where('payments.user_id', $user_id)
-    //             ->where('payments.stripe_payment_id', '!=', '')
+    //             ->where('payments.payment_id', '!=', '')
     //             ->where('payments.plan_id', '=', $plan_id)
-    //             ->join('videos', 'payments.stripe_payment_id', '=', 'videos.stripe_payment_id')
+    //             ->join('videos', 'payments.payment_id', '=', 'videos.payment_id')
     //             ->count();
 
     //         // Allow up to 2 video uploads
@@ -91,22 +100,22 @@ class VideoController extends Controller
 
     //             $userDetail = Audition::where('user_id', Auth::id())->where('plan_id', '=', $plan_id)->first();
     //         } else {
-    //             $plan = Payment::where('user_id', $user_id)->where('stripe_payment_id', '!=', '')->first()->plan_id ?? '';
+    //             $plan = Payment::where('user_id', $user_id)->where('payment_id', '!=', '')->first()->plan_id ?? '';
 
     //             $userDetail = Audition::where('user_id', Auth::id())->where('plan_id', '=', $plan)->first();
     //         }
     //         return view('audition', compact('userDetail'));
     //     } else {
 
-    //         $plan = Payment::where('user_id', $user_id)->where('stripe_payment_id', '!=', '')->first()->plan_id ?? '';
+    //         $plan = Payment::where('user_id', $user_id)->where('payment_id', '!=', '')->first()->plan_id ?? '';
 
     //         $hasUserDetails = UserDetail::where('user_id', $user_id)->exists();
     //         $hasAudition = Audition::where('user_id', $user_id)->where('plan_id', $plan)->exists();
 
     //         $uploaded_videos_count = Payment::where('payments.user_id', $user_id)
-    //             ->where('payments.stripe_payment_id', '!=', '')
+    //             ->where('payments.payment_id', '!=', '')
     //             ->where('payments.plan_id', '=', $plan)
-    //             ->join('videos', 'payments.stripe_payment_id', '=', 'videos.stripe_payment_id')
+    //             ->join('videos', 'payments.payment_id', '=', 'videos.payment_id')
     //             ->count();
 
     //         if ($uploaded_videos_count >= 2) {
@@ -128,9 +137,9 @@ class VideoController extends Controller
         $user = auth()->user();
         if (!empty($request->plan)) {
             $plan = Plan::where('name', $request->plan)->first();
-            $payment = Payment::where('user_id', $user->id)->where('plan_id', $plan->id)->where('stripe_payment_id', '!=', '')->first();
+            $payment = Payment::where('user_id', $user->id)->where('plan_id', $plan->id)->where('payment_id', '!=', '')->where('status', '=', 'COMPLETED')->first();
         } else {
-            $payment = Payment::where('user_id', $user->id)->where('stripe_payment_id', '!=', '')->latest()->first() ?? "";
+            $payment = Payment::where('user_id', $user->id)->where('payment_id', '!=', '')->where('status', '=', 'COMPLETED')->latest()->first() ?? "";
             $plan = Plan::find($payment->plan_id);
         }
 
@@ -145,7 +154,7 @@ class VideoController extends Controller
             $request->all(),
             [
 
-                'videoTitle' => 'required',
+                'videoDescription' => 'required',
                 'videoFile' => [
                     'required',
                     'mimetypes:video/*',
@@ -165,7 +174,7 @@ class VideoController extends Controller
         $video = new Video();
         $video->user_id = $user->id;
         $video->plan_id = $plan->id;
-        $video->stripe_payment_id = $payment->stripe_payment_id;
+        $video->payment_id = $payment->payment_id;
         $video->file_path = $path;
         $video->original_name = $oname;
         $video->title = $request->videoTitle;
@@ -199,7 +208,7 @@ class VideoController extends Controller
         //     $video = new Video();
         //     $video->user_id = $user->id;
         //     $video->plan_id = $plan->id;
-        //     $video->stripe_payment_id = $payment->stripe_payment_id;
+        //     $video->payment_id = $payment->payment_id;
         //     $video->file_path = $path;
         //     $video->original_name = $oname;
         //     $video->title = $request->videoTitle;

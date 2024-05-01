@@ -40,7 +40,7 @@ class PaymentController extends Controller
             // dd($plan);
             return redirect()->route('home')->with('error', 'This audition is not available currently. #995');
         }
-        if (Payment::where('user_id', $user->id)->where('plan_id', $get_plan->id)->where('payment_id', '!=', '')->exists()) {
+        if (Payment::where('user_id', $user->id)->where('plan_id', $get_plan->id)->where('payment_id', '!=', '')->where('status', '=', 'COMPLETED')->exists()) {
             return redirect()->route('upload-video', ['plan' => $plan]);
         }
         // $this->price = $get_plan->price;
@@ -75,7 +75,7 @@ class PaymentController extends Controller
 
 
                 // Create or update the payment record in your database
-                $paymentRecord = Payment::updateOrCreate(['stripe_payment_id' => $paymentId, 'plan_id' => $plan_id], [
+                $paymentRecord = Payment::updateOrCreate(['payment_id' => $paymentId, 'plan_id' => $plan_id], [
                     'user_id' => $user->id,
                     'plan_id' => $plan_id
                 ]);

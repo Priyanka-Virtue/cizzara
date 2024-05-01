@@ -13,7 +13,7 @@ class Payment extends Model
         'payment_id',
         'payment_gateway',
         'status',
-        'stripe_payment_id',
+        // 'stripe_payment_id',
         'plan_id',
         'amount',
         'members',

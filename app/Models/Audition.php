@@ -33,7 +33,17 @@ class Audition extends Model
         'music_experience',
         'music_qualification',
         'status',
-        'state'
+        'state',
+        'probability',
+        'contract',
+        'rolemodel',
+        'group_together',
+        'how_long_group_together',
+        'members'
+    ];
+
+    protected $casts = [
+        'members' => 'json'
     ];
 
     // User model relationship

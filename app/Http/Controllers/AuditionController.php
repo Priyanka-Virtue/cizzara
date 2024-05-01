@@ -13,32 +13,39 @@ class AuditionController extends Controller
     public $validation_fields, $validation_msgs;
     public function __construct(){
         $this->validation_fields = [
-            // 'auditioncity' => 'required',
-            // 'plan' => 'required',
-            // 'stagename' => 'nullable|string|max:255',
+
+            'stagename' => 'nullable|string|max:255',
             'why_tup_expectations' => 'required|string|max:5000',
             'why_we_select_you' => 'required|string|max:5000',
             'future_plan_if_win' => 'required|string|max:5000',
             'probability' => 'required|string|max:5000',
 
-            // 'life_changing_incident' => 'nullable|string|max:5000',
-            // 'change_about_self_love_about_self' => 'nullable|string|max:5000',
+
             'unique_qualities' => 'required|string|max:5000',
             'main_goal_difficulties' => 'required|string|max:5000',
             'biggest_strength_support' => 'required|string|max:5000',
             'favorite_judge_why' => 'required|string|max:5000',
             'role_model_inspiration' => 'required|string|max:5000',
 
-            // 'how_know_about_auditions' => 'required|max:5000',
-            // 'how_know_about_auditions_detail' => 'nullable|string|max:5000',
+
 
 
             'written_composed_song_inspiration' => 'required|string|max:5000',
             'prepared_songs' => 'required|string|max:5000',
-            // 'genre_of_singing' => 'nullable|string|max:300',
             'previous_performance' => 'required|string|max:5000',
-            // 'music_experience' => 'nullable|string|max:5000',
-            // 'music_qualification' => 'nullable|string|max:5000',
+
+            'contract' => 'required|string|max:5000',
+            'rolemodel' => 'required|string|max:5000',
+
+            'group_together' => 'nullable|string|max:5000',
+            'how_long_group_together' => 'nullable|string|max:5000',
+
+            'members' => 'nullable|array',
+
+
+
+
+
         ];
         $this->validation_msgs = [
             'written_composed_song_inspiration.*' => 'Please fillout your inspiration with no more than 5000 characters',
@@ -74,14 +81,16 @@ class AuditionController extends Controller
         if (!$plan_id) {
             return redirect()->route('home')->with('error', 'Plan not found');
         }
-        if (!Payment::where('user_id', Auth::id())->where('plan_id', $plan_id)->where('stripe_payment_id', '!=', '')->exists()) {
+        if (!Payment::where('user_id', Auth::id())->where('plan_id', $plan_id)->where('payment_id', '!=', '')->where('status', '=', 'COMPLETED')->exists()) {
             return redirect()->route('upload-video', ['plan' => $plan]);
         }
+
+       $members_data = $validatedData['members'];
+
         $validatedData['plan_id'] = $plan_id;
         $validatedData['user_id'] = auth()->user()->id;
         // Create or update user details
-        Audition::updateOrCreate(
-            ['user_id' => auth()->id(), 'plan_id' => $plan_id], // Assuming user_id is associated with the user details
+        Audition::create(
             $validatedData
         );
 
@@ -109,11 +118,11 @@ class AuditionController extends Controller
         $plan_id = $this->plan_id($plan);
 
         if (!$plan_id) {
-            $plan = Payment::where('user_id', $user_id)->where('stripe_payment_id', '!=', '')->first()->plan_id ?? '';
+            $plan = Payment::where('user_id', $user_id)->where('payment_id', '!=', '')->where('status', '=', 'COMPLETED')->first()->plan_id ?? '';
             $plan_id = $plan;
             // return redirect()->route('home')->with('error', 'Plan not found');
         }
-        if (!Payment::where('user_id', Auth::id())->where('plan_id', $plan_id)->where('stripe_payment_id', '!=', '')->exists()) {
+        if (!Payment::where('user_id', Auth::id())->where('plan_id', $plan_id)->where('payment_id', '!=', '')->where('status', '=', 'COMPLETED')->exists()) {
             return redirect()->route('upload-video', ['plan' => $plan]);
         }
 
