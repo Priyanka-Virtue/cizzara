@@ -22,9 +22,9 @@ class VideoController extends Controller
         $plan_id = Plan::where('name', $request->plan)->first()->id ?? null;
         $user_id = Auth::id();
 
-        $is_paid = Payment::where('user_id', $user_id)->where('plan_id', '=', $plan_id)->exists();
-        if (!$is_paid)
-            return redirect()->route('home')->with('error', 'You need to make payment first');
+        // $is_paid = Payment::where('user_id', $user_id)->where('plan_id', '=', $plan_id)->where('status', '=', 'COMPLETED')->exists();
+        // if (!$is_paid)
+        //     return redirect()->route('goToPayment', ['plan' => $request->plan])->with('error', 'You need to make payment first');
 
 
 

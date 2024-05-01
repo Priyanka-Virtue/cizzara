@@ -57,16 +57,16 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
 
 
-    Route::middleware('isPaid')->group(function () {
+    // Route::middleware('isPaid')->group(function () {
         Route::resource('user-details', UserDetailController::class);
         Route::resource('audition', AuditionController::class);
 
-        Route::get('/upload-video/{plan?}', [VideoController::class, 'index'])->name('upload-video');
-        Route::post('/upload-video', [VideoController::class, 'upload'])->name('video.upload');
+        Route::get('/upload-video/{plan?}', [VideoController::class, 'index'])->name('upload-video');//->middleware('isPaid');
+        Route::post('/upload-video', [VideoController::class, 'upload'])->name('video.upload')->middleware('isPaid');
         Route::get('/thank-you', function () {
             return view('thanks');
-        })->name('thank-you');
-    });
+        })->name('thank-you')->middleware('isPaid');
+    // });
 });
 
 

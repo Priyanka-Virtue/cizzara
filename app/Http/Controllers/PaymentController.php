@@ -26,7 +26,7 @@ class PaymentController extends Controller
         return Plan::where('name', $plan)->first()->id ?? null;
 
     }
-    public function charge(String $plan)
+    public function charge(String $plan = null)
     {
 
         $user = Auth::user();
@@ -37,6 +37,7 @@ class PaymentController extends Controller
         // }
         $get_plan = Plan::where('name', $plan)->first();
         if (!$get_plan) {
+            // dd($plan);
             return redirect()->route('home')->with('error', 'This audition is not available currently. #995');
         }
         if (Payment::where('user_id', $user->id)->where('plan_id', $get_plan->id)->where('payment_id', '!=', '')->exists()) {

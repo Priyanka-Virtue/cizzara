@@ -26,6 +26,7 @@
                             @endforeach
                         </select>
 
+@if(isset($plan['prices']['Group']))
                         <div id="group-members" style="display: none;">
                             <label for="members">
                                 Select group members
@@ -33,6 +34,7 @@
                             <input type="number" name="members" id="members" value="" onchange="$(this).calculateTotal({{ $plan['prices']['Group']['Price'] }})"
                                 max="{{ $plan['prices']['Group']['MaxMembers'] }}" min="1" class="form-control"> X $  {{ $plan['prices']['Group']['Price'] }} <span id="total"> = $80</span>
                         </div>
+                        @endif
 
                     </div>
                 </div>
@@ -97,7 +99,7 @@
 
         {{-- <div class="text-center text-sm sm:text-center"> --}}
         <img src="{{ asset('images/cards.png') }}" alt="all payment cards">
-        <div>
+        <div class="d-flex justify-content-center align-items-center">
         <img src="{{ asset('images/secure.png') }}" style="max-width: 110px;" alt="100% secure">
         <img src="{{ asset('images/ssl-secure.png') }}" style="max-height: 120px;" alt="100% secure">
 
@@ -196,7 +198,7 @@
         $.fn.calculateTotal = function(price) {
             var total = 0;
             total = parseFloat(price) * $('#members').val();
-            $('#total').html(' = $' + total);
+            $('#total').html(' = $' + total.toFixed(2));
         }
     </script>
 
@@ -224,10 +226,12 @@
 
             // Call your server to finalize the transaction
             onApprove: function(data, actions) {
+                console.log(data);
                 return fetch("{{ route('paypal.capture') }}" , {
                     method: 'POST',
                     body :JSON.stringify({
                         orderId : data.orderID,
+                        //'plan': "{{request()->plan}}",
                         //payment_gateway_id: $("#payapalId").val(),
                         //user_id: "{{ auth()->user()->id }}",
                     })
@@ -238,13 +242,11 @@
 
                     // Successful capture! For demo purposes:
                   //  console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                    var transaction = orderData.purchase_units[0].payments.captures[0];
-                    console.log(transaction);
-                    /*iziToast.success({
-                        title: 'Success',
-                        message: 'Payment completed',
-                        position: 'topRight'
-                    });*/
+                    //var transaction = orderData.purchase_units[0].payments.captures[0];
+
+                    alert('Payment completed, you can now upload your video!');
+                    window.location.reload();
+
                 });
             }
 

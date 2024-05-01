@@ -30,7 +30,7 @@ class PaymentSuccessNotification extends Notification
             ->line('Your payment was successful!')
             ->line('Thank you for your purchase.')
             ->line('Payment Details:')
-            ->line('Amount: $' . ($this->payment->price))
-            ->line('Transaction ID: ' . $this->payment->stripe_payment_id);
+            ->line('Amount: $' . ($this->payment->amount))
+            ->line('Transaction ID: ' . $this->payment->payment_id);
     }
 }
