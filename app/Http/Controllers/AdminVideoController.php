@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ContestantsExport;
 use App\Exports\UsersExport;
 use App\Models\Audition;
+use App\Models\Payment;
 use App\Models\Plan;
 use App\Models\User;
 use App\Models\Video;
@@ -52,8 +53,8 @@ class AdminVideoController extends Controller
     public function show(Video $video)
     {
         $video->auditionDetails = $video->auditionDetails();
-
-        return view('admin.show', compact('video'));
+        $payment = Payment::where('payment_id', $video->payment_id)->first();
+        return view('admin.show', compact('video', 'payment'));
     }
     public function showByGuru($guru, $video)
     {

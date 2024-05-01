@@ -1,62 +1,10 @@
-
-<div class="form-floatingXXX  d-flex flex-column-reverse form-floating-outline mb-3">
-    <input type="text" class="form-control" id="stagename" name="stagename"
-        value="{{ old('stagename', isset($userDetail) ? $userDetail->stagename : '') }}" required />
-    <label for="stagename">Group Name <span class="required">*</span></label>
-</div>
-{{-- @if (isset($members)) --}}
-
 @php
-    $group_fields = ['name', 'dob', 'contact_no', 'gender'];
+    $userDetail = isset($video->auditionDetails) ? $video->auditionDetails : $userDetail; // for SHOW VIDEO ADMIN
 @endphp
-<label>Number of Group Members and Details: <span class="required">*</span></label>
-<table class="table table-bordered mb-3">
-    <tbody>
-        <tr>
-            <th>
-                Content
-            </th>
-            <th>
-                Name
-            </th>
-            <th>
-                DOB
-            </th>
-            <th>
-                Contact No.
-            </th>
-            <th>
-                Gender
-            </th>
-        </tr>
-
-        @for ($i = 0; $i < $members; $i++)
-
-            <tr>
-
-                <th>
-                    Participant {{ $i + 1 }}
-                </th>
-                @foreach ($group_fields as $key => $group_field)
-                    <td>
-                        <input type="text" class="form-control" id="members[{{ $group_field }}]"
-                            name="members[{{ $group_field }}][]" value="" required />
-                    </td>
-                @endforeach
-            </tr>
-
-        @endfor
-
-
-    </tbody>
-</table>
-
-{{-- @endif --}}
 
 <div class="form-floatingXXX  d-flex flex-column-reverse form-floating-outline mb-3">
     <textarea class="form-control" id="contract" name="contract" rows="3" required>{{ old('contract', isset($userDetail) ? $userDetail->contract : '') }}</textarea>
-    <label for="contract">Are you in a contract with any production house or same? <span
-            class="required">*</span></label>
+    <label for="contract">Are you in a contract with any production house or same? <span class="required">*</span></label>
 </div>
 
 <div class="form-floatingXXX  d-flex flex-column-reverse form-floating-outline mb-3">
@@ -64,17 +12,9 @@
     <label for="previous_performance">Have you participated in any Reality Show? <span class="required">*</span></label>
 </div>
 
-
-
 <div class="form-floatingXXX  d-flex flex-column-reverse form-floating-outline mb-3">
     <textarea class="form-control" id="group_together" name="group_together" rows="3" required>{{ old('group_together', isset($userDetail) ? $userDetail->group_together : '') }}</textarea>
-    <label for="group_together">How did you all came up together being a group? <span class="required">*</span></label>
-</div>
-
-<div class="form-floatingXXX  d-flex flex-column-reverse form-floating-outline mb-3">
-    <textarea class="form-control" id="how_long_group_together" name="how_long_group_together" rows="3" required>{{ old('how_long_group_together', isset($userDetail) ? $userDetail->how_long_group_together : '') }}</textarea>
-    <label for="how_long_group_together">For how many years you have been performing together and tell us your story?
-        <span class="required">*</span></label>
+    <label for="group_together">Have you participated in any Reality Show? <span class="required">*</span></label>
 </div>
 
 <div class="form-floatingXXX  d-flex flex-column-reverse form-floating-outline mb-3">
@@ -141,8 +81,7 @@
 
 <div class="form-floatingXXX  d-flex flex-column-reverse form-floating-outline mb-3">
     <textarea class="form-control" id="rolemodel" name="rolemodel" rows="3" required>{{ old('rolemodel', isset($userDetail) ? $userDetail->rolemodel : '') }}</textarea>
-    <label for="rolemodel">Who you consider to be your role model in Bollywood? <span
-            class="required">*</span></label>
+    <label for="rolemodel">Who you consider to be your role model in Bollywood? <span class="required">*</span></label>
 </div>
 
 <div class="form-floatingXXX  d-flex flex-column-reverse form-floating-outline mb-3">

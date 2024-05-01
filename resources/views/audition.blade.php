@@ -38,7 +38,7 @@
         @endphp
 
 
-        @include('forms.audition-'. $payment['team_type'], ['members' => $payment['members'] ?? 1 ])
+        @include('forms.audition-'. strtolower( $payment['team_type']), ['members' => $payment['members'] ?? 1 ])
 
 
         <div class="mb-3">
