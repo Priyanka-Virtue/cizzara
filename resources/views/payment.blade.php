@@ -8,6 +8,12 @@
         </div>
     @endif
 
+    @if (config('paypal.mode') == 'sandbox')
+        <div class="alert alert-warning" role="alert">
+            This is a sandbox environment, please do not use your real credit/debit card or paypal account.
+        </div>
+    @endif
+
     {{ __('Make Payment!') }}
 
     <form action="{{ route('processPayment', ['plan' => request()->plan]) }}" method="POST" id="subscribe-form">
