@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::table('payments', function (Blueprint $table) {
             $table->string('team_type', 60)->nullable()->after('status');
             $table->tinyInteger('members')->default(1)->after('team_type');
+            $table->string('amount', 100)->nullable()->after('team_type');
         });
     }
 
@@ -27,7 +28,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->dropColumn(['team_type', 'members']);
+            $table->dropColumn(['team_type', 'members', 'amount']);
         });
     }
 };
