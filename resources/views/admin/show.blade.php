@@ -214,16 +214,16 @@
                         </div>
                     @endif
                     <!-- <form action="{{ route('guru.rate.video', $video->id) }}" method="post">
-                                @csrf
-                                <label for="rating">Rate this video:</label>
-                                <div class="rating-options">
-                                    @for ($i = 1; $i <= 10; $i++)
+                                    @csrf
+                                    <label for="rating">Rate this video:</label>
+                                    <div class="rating-options">
+                                        @for ($i = 1; $i <= 10; $i++)
     <input type="radio" id="rating{{ $i }}" name="rating" value="{{ $i }}">
-                                        <label for="rating{{ $i }}">{{ $i }}</label>
+                                            <label for="rating{{ $i }}">{{ $i }}</label>
     @endfor
-                                </div>
-                                <button type="submit">Submit Rating</button>
-                            </form> -->
+                                    </div>
+                                    <button type="submit">Submit Rating</button>
+                                </form> -->
                     <hr />
                     @role('admin')
                         <label>Audition Member(s)</label>
@@ -252,18 +252,20 @@
                         </table>
                     @endrole
 
-                    <form >
-                    @php
-            $ing = 'Singing';
-            $er = 'singer';
-            $tnclink = env('TnCTNSS');
-            if (str_contains(request()->plan, 'TNDS')) {
-                $ing = 'Dancing';
-                $er = 'dancer';
-                $tnclink = env('TnCTNDS');
-            }
-        @endphp
-                    @include('partials.audition-member.'.strtolower($payment['team_type']), ['members' =>  $payment['members'] ])
+                    <form>
+                        @php
+                            $ing = 'Singing';
+                            $er = 'singer';
+                            $tnclink = env('TnCTNSS');
+                            if (str_contains(request()->plan, 'TNDS')) {
+                                $ing = 'Dancing';
+                                $er = 'dancer';
+                                $tnclink = env('TnCTNDS');
+                            }
+                        @endphp
+                        @include('partials.audition-member.' . strtolower($payment['team_type']), [
+                            'members' => $payment['members'],
+                        ])
                     </form>
 
 

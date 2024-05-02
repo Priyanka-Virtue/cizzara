@@ -10,7 +10,7 @@
             <h4 class="py-3 mb-4"><span class="text-muted fw-light">Contestants /</span><?php echo date('Y'); ?></h4>
         </div>
         <div class="col-md-6">
-            <form action="{{ route('admin.auditions.top') }}" method="GET">
+            <form action="{{ route('admin.auditions.index') }}" method="GET">
                 <div class="input-group">
                     <select name="audition" style="min-width: 110px;" class="form-select form-select-lg">
                         @foreach ($plans as $p)

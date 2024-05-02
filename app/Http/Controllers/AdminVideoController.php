@@ -62,7 +62,9 @@ class AdminVideoController extends Controller
         $video = Video::find($video);
         $video->auditionDetails = $video->auditionDetails();
 
-        return view('admin.show-by-guru', compact('video'));
+        $payment = Payment::where('payment_id', $video->payment_id)->first();
+
+        return view('admin.show-by-guru', compact('video', 'payment'));
     }
 
     public function user($user_id)
