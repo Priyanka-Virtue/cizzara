@@ -1,16 +1,19 @@
 @extends('layouts.auth', ['title' => __('Make Payment!'), 'description' => '[lan name]', 'width' => 'col-md-3', 'step' => 'Payment'])
 
 @section('content')
-
     @if (session('status'))
         <div class="alert alert-success" role="alert">
             {{ session('status') }}
         </div>
     @endif
-
+    @if (config('paypal.mode') == 'sandbox')
+        <div class="alert alert-warning" role="alert">
+            This is a sandbox environment, please do not use your real credit/debit card or paypal account.
+        </div>
+    @endif
     {{ __('Make Payment!') }}
 
-<form action="{{ route('processPayment', ['plan' => request()->plan]) }}" method="POST" id="subscribe-form">
+    <form action="{{ route('processPayment', ['plan' => request()->plan]) }}" method="POST" id="subscribe-form">
         <div class="form-group">
             <div class="row">
                 <div class="col-md-12">
@@ -19,29 +22,33 @@
                             Select team type
                         </label>
 
-                        <select name="plan-type" id="plan-type" class="form-select mb-2" onchange="$(this).planTypeChanged()">
+                        <select name="plan-type" id="plan-type" class="form-select mb-2"
+                            onchange="$(this).planTypeChanged()">
                             @foreach ($plan['prices'] as $price_name => $plan_amount)
                                 <option value="{{ $price_name }}">
-                                    {{ $price_name . ' $' . $plan_amount['Price'] . ' ' . $plan_amount['Note'] ?? '' }}</option>
+                                    {{ $price_name . ' $' . $plan_amount['Price'] . ' ' . $plan_amount['Note'] ?? '' }}
+                                </option>
                             @endforeach
                         </select>
 
-@if(isset($plan['prices']['Group']))
-                        <div id="group-members" style="display: none;">
-                            <label for="members">
-                                Select group members
-                            </label>
-                            <input type="number" name="members" id="members" value="" onchange="$(this).calculateTotal({{ $plan['prices']['Group']['Price'] }})"
-                                max="{{ $plan['prices']['Group']['MaxMembers'] }}" min="1" class="form-control"> X $  {{ $plan['prices']['Group']['Price'] }} <span id="total"> = $80</span>
-                        </div>
+                        @if (isset($plan['prices']['Group']))
+                            <div id="group-members" style="display: none;">
+                                <label for="members">
+                                    Select group members
+                                </label>
+                                <input type="number" name="members" id="members" value=""
+                                    onchange="$(this).calculateTotal({{ $plan['prices']['Group']['Price'] }})"
+                                    max="{{ $plan['prices']['Group']['MaxMembers'] }}" min="1" class="form-control">
+                                X $ {{ $plan['prices']['Group']['Price'] }} <span id="total"> = $80</span>
+                            </div>
                         @endif
 
                     </div>
                 </div>
             </div>
         </div>
-        </form>
-        <div id="paypal-button-container"></div>
+    </form>
+    <div id="paypal-button-container"></div>
     {{-- <form action="{{ route('processPayment', ['plan' => request()->plan]) }}" method="POST" id="subscribe-form">
         <div class="form-group">
             <div class="row">
@@ -100,12 +107,12 @@
         {{-- <div class="text-center text-sm sm:text-center"> --}}
         <img src="{{ asset('images/cards.png') }}" alt="all payment cards">
         <div class="d-flex justify-content-center align-items-center">
-        <img src="{{ asset('images/secure.png') }}" style="max-width: 110px;" alt="100% secure">
-        <img src="{{ asset('images/ssl-secure.png') }}" style="max-height: 120px;" alt="100% secure">
+            <img src="{{ asset('images/secure.png') }}" style="max-width: 110px;" alt="100% secure">
+            <img src="{{ asset('images/ssl-secure.png') }}" style="max-height: 120px;" alt="100% secure">
 
         </div>
-<hr style="border: 1px solid rgba(100,100,100,0.1);margin-top: 15px; width: 100%;" />
-  <p>Pay with confidence with our <b>encrypted</b> payment system.</p>
+        <hr style="border: 1px solid rgba(100,100,100,0.1);margin-top: 15px; width: 100%;" />
+        <p>Pay with confidence with our <b>encrypted</b> payment system.</p>
         {{-- </div> --}}
 
         {{-- <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">
@@ -182,7 +189,6 @@
             form.submit();
         }
     </script> --}}
-
 @endsection
 
 @section('bottom')
@@ -202,18 +208,20 @@
         }
     </script>
 
-    <script src="https://www.paypal.com/sdk/js?client-id={{ config('paypal.sandbox.client_id') }}&currency={{ config('paypal.currency') }}" ></script>
+    <script
+        src="https://www.paypal.com/sdk/js?client-id={{ config('paypal.sandbox.client_id') }}&currency={{ config('paypal.currency') }}">
+    </script>
 
     <script>
         paypal.Buttons({
-             createOrder: function(data, actions) {
+            createOrder: function(data, actions) {
                 return fetch("{{ route('paypal.create') }}", {
                     method: 'POST',
-                    body:JSON.stringify({
-                        'plan': "{{request()->plan}}",
-                        //'user_id' : "{{auth()->user()->id}}",
-                        'members' : $("#members").val(),
-                        'plan_type' : $("#plan-type").val(),
+                    body: JSON.stringify({
+                        'plan': "{{ request()->plan }}",
+                        //'user_id' : "{{ auth()->user()->id }}",
+                        'members': $("#members").val(),
+                        'plan_type': $("#plan-type").val(),
                     })
                 }).then(function(res) {
                     //res.json();
@@ -227,21 +235,21 @@
             // Call your server to finalize the transaction
             onApprove: function(data, actions) {
                 console.log(data);
-                return fetch("{{ route('paypal.capture') }}" , {
+                return fetch("{{ route('paypal.capture') }}", {
                     method: 'POST',
-                    body :JSON.stringify({
-                        orderId : data.orderID,
-                        //'plan': "{{request()->plan}}",
+                    body: JSON.stringify({
+                        orderId: data.orderID,
+                        //'plan': "{{ request()->plan }}",
                         //payment_gateway_id: $("#payapalId").val(),
                         //user_id: "{{ auth()->user()->id }}",
                     })
                 }).then(function(res) {
-                   // console.log(res.json());
+                    // console.log(res.json());
                     return res.json();
                 }).then(function(orderData) {
 
                     // Successful capture! For demo purposes:
-                  //  console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                    //  console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
                     //var transaction = orderData.purchase_units[0].payments.captures[0];
 
                     alert('Payment completed, you can now upload your video!');
