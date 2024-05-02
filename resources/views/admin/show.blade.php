@@ -115,6 +115,8 @@
                                     ->where('guru_id', $user->id)
                                     ->first();
                             }
+
+                            $video_path = Illuminate\Support\Facades\Storage::disk('s3')->url($video->file_path);
                         @endphp
 
                         <div class="d-grid w-100 mt-4">
@@ -200,12 +202,12 @@
                 <div class="card-body">
                     @if ($video->auditionDetails->status != 'disqualified')
                         <a class="btn btn-primary mb-2"
-                            href="{{ Illuminate\Support\Facades\Storage::disk('s3')->url($video->file_path) }}">
+                            href="{{ $video_path }}">
                             <span class="mdi mdi-download"></span> Download Video
                         </a>
 
                         <video width="100%" controls>
-                            <source src="{{ asset('storage/' . $video->file_path) }}">
+                            <source src="{{ $video_path }}">
                             Your browser does not support the video tag.
                         </video>
                     @else
