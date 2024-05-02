@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>The United Production</title>
-<link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
@@ -519,6 +519,10 @@
             align-self: center
         }
 
+        .self-end {
+            align-self: end
+        }
+
         .rounded-lg {
             border-radius: 0.5rem
         }
@@ -564,6 +568,11 @@
         .stroke-red-500 {
             stroke: #ef4444
         }
+
+        .stroke-green-500 {
+            stroke: #79ef44;
+        }
+
 
         .stroke-gray-400 {
             stroke: #9ca3af
@@ -852,6 +861,10 @@
             color: #fff;
         }
 
+        .text-red {
+            color: #ef4444;
+        }
+
         .mx-4 {
             margin-bottom: 20px;
             margin-top: 50px;
@@ -942,7 +955,13 @@
                 @endif
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
                     @foreach ($plans as $plan)
-                        <a @if ($plan->is_active) href="{{ route('goToPayment', [$plan->name]) }}" @else  disabled href="#" @endif
+                        @php
+                            $plan_active =
+                                $plan->is_active && ($plan->audition_start <= now() && $plan->audition_end >= now())
+                                    ? 1
+                                    : 0;
+                        @endphp
+                        <a @if ($plan_active) href="{{ route('goToPayment', [$plan->name]) }}" @else  style="cursor: not-allowed" href="#" @endif
                             class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
                             <div>
                                 <div class="flex items-center rounded-full">
@@ -959,23 +978,35 @@
                                 </p>
                             </div>
 
-                            <div style="display: flex;justify-content: space-between;flex-direction: column; min-width: 200px">
-                                <h2 class="text-sm font-semibold text-gray-900 dark:text-white">
-@foreach ($plan->prices as $price_name => $price_amount)
-                                    @php
+                            <div
+                                style="display: flex;justify-content: space-between;flex-direction: column; min-width: 200px">
+                                @if (!$plan_active)
+                                    <p class="text-sm font-semibold text-red text-right">
+                                        Auditions closed
+                                    </p>
+                                @else
+                                    <h2 class="text-sm font-semibold text-gray-900 dark:text-white">
+                                        @foreach ($plan->prices as $price_name => $price_amount)
+                                            @php
 
-                                    echo $price_name." $".$price_amount['Price'] . ' '.$price_amount['Note'];
-                                    echo "<hr style='border-style: dashed; margin-bottom: 10px !important' />";
-                                    @endphp
-                                @endforeach
+                                                echo $price_name .
+                                                    " $" .
+                                                    $price_amount['Price'] .
+                                                    ' ' .
+                                                    $price_amount['Note'];
+                                                echo "<hr style='border-style: dashed; margin-bottom: 10px !important' />";
+                                            @endphp
+                                        @endforeach
 
-                                </h2>
+                                    </h2>
 
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
-                                </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" class="self-end shrink-0 stroke-green-500 w-6 h-6 mx-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                                    </svg>
+                                @endif
+
 
                             </div>
                         </a>
@@ -1019,17 +1050,17 @@
             </div>
 
 
-<hr style="border: 1px solid rgba(100,100,100,0.1);
+            <hr style="border: 1px solid rgba(100,100,100,0.1);
   margin-top: 100px;" />
-            <div class="flex justify-center items-center" style="flex-direction: column; margin-top: 2rem" >
+            <div class="flex justify-center items-center" style="flex-direction: column; margin-top: 2rem">
 
                 {{-- <div class="text-center text-sm sm:text-center"> --}}
-                    <img src="{{ asset('images/cards.png') }}" alt="all payment cards">
-                    <img src="{{ asset('images/secure.png') }}" style="max-width: 120px;" alt="100% secure">
-                    <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">
-                        Copyright &copy; <?php echo date('Y'); ?> The United Production.<br />All rights reserved. Powered by
-                        Cizzara Studios.
-                    </div>
+                <img src="{{ asset('images/cards.png') }}" alt="all payment cards">
+                <img src="{{ asset('images/secure.png') }}" style="max-width: 120px;" alt="100% secure">
+                <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">
+                    Copyright &copy; <?php echo date('Y'); ?> The United Production.<br />All rights reserved. Powered by
+                    Cizzara Studios.
+                </div>
                 {{-- </div> --}}
 
                 {{-- <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">

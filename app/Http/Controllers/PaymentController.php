@@ -35,7 +35,10 @@ class PaymentController extends Controller
         // if (!$plan_id) {
         //     return redirect()->route('home')->with('error', 'This audition is not available currently. #995');
         // }
-        $get_plan = Plan::where('name', $plan)->first();
+        $get_plan = Plan::where('name', $plan)->where('is_active', '1')
+        ->where('audition_start', '<=', date('Y-m-d H:i:s'))
+        ->where('audition_end', '>=', date('Y-m-d H:i:s'))
+        ->first();
         if (!$get_plan) {
             // dd($plan);
             return redirect()->route('home')->with('error', 'This audition is not available currently. #995');
