@@ -66,7 +66,7 @@ class PaypalController extends Controller
             return response()->json(['success' => false, 'message' => 'Please select number of members.'], 400);
         }
 
-        $amount = $this->calculateAmount($data['plan'], $data['members'], $data['plan_type']);
+        $amount = $this->calculateAmount($data['plan'], $data['members'] ?? 1, $data['plan_type']);
 
         if ($amount == 0) {
             return response()->json(['success' => false, 'message' => 'Please select valid audition.'], 400);
