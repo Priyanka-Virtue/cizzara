@@ -33,6 +33,23 @@ Route::get('/', function () {
     // $plan_amt = Plan::where('name', 'TNDS-S1')->first();//->whereJsonContains('prices', 'Group')->first();
     // dd($plan_amt['prices'][$type]['Price']);
     return view('welcome', ['plans' => Plan::all()]);
+
+})->name('welcome');
+
+
+Route::get('/mail', function () {
+
+    $from = "test@president.com";
+    $to = "martin@gmail.com";
+    $subject = "Checking PHP mail";
+    $message = "PHP mail works just fine";
+    $headers = "From:" . $from;
+    if(mail($to,$subject,$message, $headers))
+    echo "The email message was sent.";
+    else
+    echo "The email message was not sent.";
+    
+
 })->name('welcome');
 
 Auth::routes(['verify' => true]);
