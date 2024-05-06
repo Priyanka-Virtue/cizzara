@@ -39,8 +39,8 @@ Route::get('/', function () {
 
 Route::get('/mail', function () {
 
-    $from = "test@president.com";
-    $to = "martin@gmail.com";
+    $from = "info@theunitedproduction.com";
+    $to = "mohammad.adbrains@gmail.com";
     $subject = "Checking PHP mail";
     $message = "PHP mail works just fine";
     $headers = "From:" . $from;
@@ -48,7 +48,7 @@ Route::get('/mail', function () {
     echo "The email message was sent.";
     else
     echo "The email message was not sent.";
-    
+
 
 })->name('welcome');
 
