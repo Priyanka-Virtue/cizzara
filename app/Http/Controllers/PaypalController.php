@@ -13,6 +13,7 @@ use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class PaypalController extends Controller
 {
+    // added name
     protected $paypalClient;
     public $plan_id, $amount, $members, $team_type;
     public function __construct()
