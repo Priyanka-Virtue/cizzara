@@ -8,11 +8,13 @@ use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\UserDetailController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\VideoRatingController;
+use App\Mail\MyTestEmail;
 use App\Models\Payment;
 use App\Models\Audition;
 use App\Models\Plan;
 use App\Models\UserDetail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Srmklive\PayPal\Facades\PayPal;
@@ -39,18 +41,31 @@ Route::get('/', function () {
 
 Route::get('/mail', function () {
 
-    $from = "info@theunitedproduction.com";
-    $to = "mohammad.adbrains@gmail.com";
-    $subject = "Checking PHP mail";
-    $message = "PHP mail works just fine";
-    $headers = "From:" . $from;
-    if(mail($to,$subject,$message, $headers))
-    echo "The email message was sent.";
-    else
-    echo "The email message was not sent.";
+    // $from = "info@theunitedproduction.com";
+    // $to = "mohammad.adbrains@gmail.com";
+    // $subject = "Checking PHP mail";
+    // $message = "PHP mail works just fine";
+    // $headers = "From:" . $from;
+    // if(mail($to,$subject,$message, $headers))
+    // echo "The email message was sent.";
+    // else
+    // echo "The email message was not sent.";
 
 
-})->name('welcome');
+
+// Your email sending logic
+try {
+    Mail::to('recipient@example.com')->send(new MyTestEmail());
+
+    // Email queued successfully
+    echo "Email queued for sending.";
+} catch (\Exception $e) {
+    // An error occurred while sending the email
+    echo "Error sending email: " . $e->getMessage();
+}
+
+
+})->name('mail');
 
 Auth::routes(['verify' => true]);
 Route::get('/top/{plan?}', [VideoRatingController::class, 'countAvg']);
