@@ -55,7 +55,7 @@ Route::get('/mail', function () {
 
 // Your email sending logic
 try {
-    Mail::to('mohammad.adbrains@gmail.com')->send(new MyTestEmail());
+    Auth::user()->sendEmailVerificationNotification();
 
     // Email queued successfully
     echo "Email queued for sending.";

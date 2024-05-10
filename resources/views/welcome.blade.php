@@ -833,7 +833,7 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr))
             }
         }
-        
+
 
 
         @media (min-width: 1024px) {
@@ -881,7 +881,8 @@
             min-height: 100vh;
             position: fixed;
             background-color: rgb(0 0 0 / 0.7);
-
+            top: 0;
+            left: 0;
         }
 
         .aud-img {
