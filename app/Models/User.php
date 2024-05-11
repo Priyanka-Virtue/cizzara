@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Notifications\VerifyEmailNotification;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
@@ -17,9 +21,24 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, Billable, HasRoles;
     public function sendEmailVerificationNotification()
-    {
-        $this->notify(new VerifyEmail());
-    }
+{
+    $this->notify(new VerifyEmailNotification);
+}
+//     public function sendEmailVerificationNotification()
+// {
+//     $url = URL::temporarySignedRoute(
+//         'verification.verify',
+//         now()->addMinutes(60),
+//         ['id' => $this->id, 'hash' => sha1($this->email_verification_token)]
+//     );
+
+//     $mail = new MailMessage;
+//     $mail->line('Click the button below to verify your email address:')
+//         ->action('Verify Email', $url)
+//         ->from('audition@theunitedproduction.com', 'TUP');
+
+//     Mail::to($this->email)->send($mail);
+// }
     /**
      * The attributes that are mass assignable.
      *
