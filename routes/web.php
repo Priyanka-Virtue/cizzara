@@ -13,6 +13,7 @@ use App\Models\Payment;
 use App\Models\Audition;
 use App\Models\Plan;
 use App\Models\UserDetail;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -38,7 +39,11 @@ Route::get('/', function () {
 
 })->name('welcome');
 
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
 
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 Route::get('/mail', function () {
 
     // $from = "info@theunitedproduction.com";
