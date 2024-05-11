@@ -38,7 +38,7 @@ class VerifyEmailNotification extends Notification
         $url = URL::temporarySignedRoute(
                     'verification.verify',
                     now()->addMinutes(60),
-                    ['id' => $notifiable->id, 'hash' => sha1($notifiable->email_verification_token)]
+                    ['id' => auth()->user()->id, 'hash' => sha1($notifiable->email_verification_token)]
                 );
         // Customize the mail message here
         return (new MailMessage)
