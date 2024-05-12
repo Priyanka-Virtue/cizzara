@@ -708,6 +708,9 @@
         .z-10 {
             z-index: 10
         }
+        .z-11 {
+            z-index: 11
+        }
 
         @media (prefers-reduced-motion: no-preference) {
             .motion-safe\:hover\:scale-\[1\.01\]:hover {
@@ -908,7 +911,7 @@
 
         @if (Route::has('login'))
 
-            <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+            <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-11">
                 @auth
                     <span class="text-gray-600">Hello {{ Auth::user()->name }} </span> &nbsp;&nbsp;|&nbsp;&nbsp;
                     <a class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
