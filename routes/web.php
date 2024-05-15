@@ -13,7 +13,9 @@ use App\Models\Payment;
 use App\Models\Audition;
 use App\Models\Plan;
 use App\Models\UserDetail;
+use GuzzleHttp\Client;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -44,33 +46,34 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
     return redirect('/home');
 })->middleware(['auth', 'signed'])->name('verification.verify');
-Route::get('/mail', function () {
-
-    // $from = "info@theunitedproduction.com";
-    // $to = "mohammad.adbrains@gmail.com";
-    // $subject = "Checking PHP mail";
-    // $message = "PHP mail works just fine";
-    // $headers = "From:" . $from;
-    // if(mail($to,$subject,$message, $headers))
-    // echo "The email message was sent.";
-    // else
-    // echo "The email message was not sent.";
+Route::get('/notify', function (Request $request) {
 
 
-
-// Your email sending logic
 try {
-    Auth::user()->sendEmailVerificationNotification();
+//    $vc = new VideoController();
+//    $vc->notifyAdmin($request);
+$recipient = "918866202134";
+$apiKey = env('WHATSAPP_API_KEY');
+        $url = 'https://api.whatsapp.com/send?phone=' . $recipient . '&text=' . urlencode("message");
 
+        $client = new Client(['verify'=>false]);
+       
+        $response = $client->post($url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+        dd($response->getBody()->getContents());
     // Email queued successfully
-    echo "Email queued for sending.";
+    echo "notifyAdmin queued for sending.";
 } catch (\Exception $e) {
     // An error occurred while sending the email
-    echo "Error sending email: " . $e->getMessage();
+    echo "Error sending notifyAdmin: " . $e->getMessage();
 }
 
 
-})->name('mail');
+})->name('notifyAdmin');
 
 Auth::routes(['verify' => true]);
 Route::get('/top/{plan?}', [VideoRatingController::class, 'countAvg']);

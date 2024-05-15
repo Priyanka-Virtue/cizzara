@@ -6,6 +6,7 @@ use App\Models\Plan;
 use App\Models\Audition;
 use App\Models\UserDetail;
 use App\Models\Video;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -222,6 +223,25 @@ if(!$payment) {
         // }
 
         return redirect()->back()->withErrors(['message' => 'No video file found.'])->withInput();
+    }
+
+    public function notifyAdmin(Request $request){
+       return $this->sendWhatsAppMessage('918866202134', 'New video uploaded. Check it out.');
+        // https://cizzara.com/videos/'.$request->videoId);
+    }
+    function sendWhatsAppMessage($recipient, $message) {
+        $apiKey = env('WHATSAPP_API_KEY');
+        $url = 'https://api.whatsapp.com/send?phone=' . $recipient . '&text=' . urlencode($message);
+
+        $client = new Client();
+        $response = $client->post($url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+        dd($response);
+        return $response->getStatusCode();
     }
 
 
