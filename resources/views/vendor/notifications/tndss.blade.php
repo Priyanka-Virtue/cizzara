@@ -1,5 +1,7 @@
 <x-mail::message>
- <img src="{{ asset('images/dancelogo-768x432.png') }}" alt="The Next Dancing Super Star" style="width: 100%; max-width: 600px;">
+<div style="display: flex;justify-content: center;">
+ <img src="{{ asset('images/dancelogo-768x432.png') }}" alt="The Next Dancing Super Star" style="width: 100%; max-width: 400px;">
+</div>
 {{-- Greeting --}}
 @if (! empty($greeting))
 # {{ $greeting }}
