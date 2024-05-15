@@ -8,16 +8,45 @@ OR
 - mysql>SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 
 
-### TODO:
-- Check video upload:
-    - must get correct plan id
-    - must check validition with plan id
-- DONE - add design template to all auth files and upload video
-- aws
  
 # Release
 ## 1.1
 # Features
+
+### By role
+Contestants:
+    Login/Registration/Email verify/Reset password
+    Select Audition from the available auditions
+    Payment
+    Add profile details
+    Add Audition details
+        select team type Solo, Duo, Group
+        If group, max 8 members
+        Show payment amount based on team size
+    Upload Video
+        Max 2 videos per audition/payment
+        50 MB per videos
+        Videos will stored in Amazon Bucket
+
+Admin:
+    Login/Reset password
+    Can add/Update gurus
+    Activate/Deactivate Guru login
+    Assign guru to auditions
+    - Export:
+        Only Admin can now export list for contestant and videos
+    - Admin will see Average rating by all gurus
+    - Top 500 most rated contestants first
+    - Send reminder rating emails to gurus
+
+Guru:
+    Login/Reset password
+    Can not see contestant's personal details
+    Can see the audition videos assigned to him
+    Can rate each videos 
+    Can add comment with email for any video
+
+### By functionality
     - Name change:
         Allowed name change on credit card field
     - Comments:
@@ -30,7 +59,7 @@ OR
         - Guru will rate each video
         - Admin will see Average rating by all gurus
     - Export:
-        Admin can now export list for contestant and videos
+        Only Admin can now export list for contestant and videos
     - Guru login
         Admin can create, edit, delete Guru
         Added Guru login
@@ -47,22 +76,12 @@ OR
 
 
  # Todo:
-    Done Connecting AWS Bucket
-    Done Download video option
-    Once moved to next round, contestant should be able to add 2 new videos again
-    Done  1) change logo sizes
-    
-    q 2) change bg images for portal main page
-    Done  3) add links for powered by logos
-    
-    Done  4) add faq & terms and conditions content
-    
-    Done 5) add filter comments to gurus & admin both
-    Done 6) add comment icon in list in which guru has added comment
-    
-    Done 7) change format of serial no.
-
-    Done 8) notify guru for pending reviews
+    #15-05-2024
+- Redirect outside links to new tabs
+- Add logos in email
+- If Dance only show dance TnC If Singing only show Sing tnc
+- Fix mobile blur issue (Already done)
+- Got automation tool access for whatsapp api integration
 
     
 #10-04-2024

@@ -42,9 +42,11 @@ class VerifyEmailNotification extends Notification
         );
         // Customize the mail message here
         return (new MailMessage)
+            ->greeting('Hello '.$notifiable->name.',')
             ->line('Click the button below to verify your email address:')
             ->action('Verify Email', $url)
-            ->from('audition@theunitedproduction.com', 'TUP');
+            ->from('info@theunitedproduction.com', 'TUP');
+            // ->markdown('vendor.notifications.tnsss');
     }
 
     /**

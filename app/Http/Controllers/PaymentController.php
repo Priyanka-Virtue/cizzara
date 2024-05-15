@@ -85,6 +85,7 @@ class PaymentController extends Controller
                 Log::info($paymentRecord);
                 if($paymentRecord) {
                     $paymentRecord['price'] = $this->price;
+                    $paymentRecord['plan'] = $plan;
                     $user->notify(new PaymentSuccessNotification($paymentRecord));
                     return redirect()->route('upload-video', ['plan' => $request->plan]);
                 }

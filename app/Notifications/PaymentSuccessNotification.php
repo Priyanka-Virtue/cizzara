@@ -25,12 +25,21 @@ class PaymentSuccessNotification extends Notification
 
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        $mm = (new MailMessage)
             ->subject('Payment Confirmation')
             ->line('Your payment was successful!')
             ->line('Thank you for your purchase.')
             ->line('Payment Details:')
             ->line('Amount: $' . ($this->payment->amount))
             ->line('Transaction ID: ' . $this->payment->payment_id);
+
+            // TODO: Make flexible plan name instead of hardcoaded
+            if($notifiable->plan == 'TNSS-S1') {
+                $mm->markdown('vendor.notifications.tnsss');
+            }
+            else {
+                $mm->markdown('vendor.notifications.tndss');
+            }
+            return $mm;
     }
 }

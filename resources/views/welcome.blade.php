@@ -1046,11 +1046,11 @@
             <div class="text-center">
                 <h2 class="text-xl text-white font-bold mx-4">Powered by:</h2>
                 <div class="flex justify-center items-center space-x-8">
-                    <a href="https://cizzara.com"
+                    <a target="_blank" rel="no-follow" href="https://cizzara.com"
                         class="flex justify-center items-center bg-gray-200 rounded-lg pwrd-img">
                         <img src="{{ asset('images/powered-by/Roshani-Black.png') }}" alt="Roshani">
                     </a>
-                    <a href="https://cizzara.com"
+                    <a target="_blank" rel="no-follow" href="https://cizzara.com"
                         class="flex justify-center items-center bg-gray-200 rounded-lg pwrd-img">
                         <img style="max-height: 90px;" src="{{ asset('images/powered-by/Cizzara-Black.jpg') }}"
                             alt="Cizzara">
@@ -1073,9 +1073,7 @@
                 </div>
                 {{-- </div> --}}
 
-                {{-- <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">
-                    Copyright &copy; <?php echo date('Y'); ?> The United Production.<br/>All rights reserved. Powered by Cizzara Studios.
-                </div> --}}
+
             </div>
         </div>
         <div class="overlay"></div>

@@ -6,6 +6,16 @@
         color: #000 !important;
     }
 </style>
+@php
+    //$ing = 'Singing';
+    //$er = 'singer';
+    $tnclink = env('TnCTNSS');
+    if (str_contains(request()->plan, 'TNDS')) {
+        //$ing = 'Dancing';
+       //$er = 'dancer';
+        $tnclink = env('TnCTNDS');
+    }
+@endphp
 @include('partials.steps', ['active' => 'Profile'])
 <h4 class="mb-2">Tell us about your self </h4>
 <p class="mb-4">Just few step away!</p>
@@ -367,8 +377,8 @@
         <div class="form-check">
             <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms" />
             <label class="form-check-label" for="terms-conditions">
-                I agree to privacy policy & terms of
-                <a href="{{env('TnCTNSS')}}">TNSS</a> and <a href="{{env('TnCTNDS')}}">TNDS</a>
+                I agree to
+                <a href="{{$tnclink}}">privacy policy & terms</a>
             <span style="color:red">*</span></label>
         </div>
     </div>
