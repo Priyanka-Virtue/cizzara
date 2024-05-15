@@ -708,6 +708,7 @@
         .z-10 {
             z-index: 10
         }
+
         .z-11 {
             z-index: 11
         }
@@ -879,13 +880,16 @@
             color: #ef4444;
         }
 
-        .overlay {
-            min-width: 100%;
-            min-height: 100vh;
-            position: fixed;
-            background-color: rgb(0 0 0 / 0.7);
-            top: 0;
-            left: 0;
+        @media (min-width: 768px) {
+            .overlay {
+                min-width: 100%;
+                min-height: 100vh;
+                position: fixed;
+                background-color: rgb(0 0 0 / 0.7);
+                top: 0;
+                left: 0;
+            }
+
         }
 
         .aud-img {
